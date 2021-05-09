@@ -1,0 +1,11 @@
+.idea/
+.vscode/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+PathTracer
+test
+bin
+build
+lib
