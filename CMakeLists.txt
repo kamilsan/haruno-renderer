@@ -16,6 +16,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_CODE
+  include/Color.hpp
+  include/Image.hpp src/Image.cpp
 )
 
 add_subdirectory(googletest)
@@ -28,6 +30,7 @@ add_executable(PathTracer
 
 add_executable(test
   ${PROJECT_CODE}
+  tests/ImageTest.cpp
   tests/main.cpp)
 
 target_link_libraries(test gtest gtest_main)
