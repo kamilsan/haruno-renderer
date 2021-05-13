@@ -45,7 +45,7 @@ private:
 
 Color Image::getPixel(int x, int y) const
 {
-  int index = 3*(y*width_ + x);
+  const int index = 3*(y*width_ + x);
   
   Color c;
   c.r = pixels_[index];
@@ -57,7 +57,7 @@ Color Image::getPixel(int x, int y) const
 
 void Image::setPixel(int x, int y, const Color& color)
 {
-  int index = 3*(y*width_ + x);
+  const int index = 3*(y*width_ + x);
 
   pixels_[index] = color.r;
   pixels_[index + 1] = color.g;
