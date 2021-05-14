@@ -17,7 +17,7 @@ public:
   Image(const Image& other);
   Image(Image&& other);
 
-  bool save(const char* fileName) const;
+  bool save(const char* filename) const;
 
   void clear(const Color& color);
 

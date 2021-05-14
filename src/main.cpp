@@ -1,19 +1,13 @@
-#include "Image.hpp"
+#include "Renderer.hpp"
+#include "PinholeCamera.hpp"
 
 int main()
 {
-  Image img{1920, 1080};
+  Renderer renderer;
+  auto camera = std::make_unique<PinholeCamera>();
+  const Image render = renderer.render(std::move(camera), 1920, 1080);
 
-  for(int y = 0; y < img.getHeight(); ++y)
-  {
-    for(int x = 0; x < img.getWidth(); ++x)
-    {
-      const float v = y / (img.getHeight() - 1.0f);
-      img.setPixel(x, y, Color{v});
-    }
-  }
-
-  img.save("result.ppm");
+  render.save("render.ppm");
 
   return 0;
 }

@@ -57,10 +57,10 @@ Image::Image(Image&& other)
   pixels_ = std::move(other.pixels_);
 }
 
-bool Image::save(const char* fileName) const
+bool Image::save(const char* filename) const
 {
   std::ofstream file;
-  file.open(fileName, std::ios::binary);
+  file.open(filename, std::ios::binary);
   if(!file.is_open()) return false;
 
   auto data = std::make_unique<unsigned char[]>(len_);

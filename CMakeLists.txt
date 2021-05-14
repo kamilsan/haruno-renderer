@@ -17,8 +17,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_CODE
   include/Color.hpp
+  include/Ray.hpp
+  include/Camera.hpp
+  include/PinholeCamera.hpp
+  include/Object.hpp
+  include/Sphere.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
+  include/Renderer.hpp src/Renderer.cpp
 )
 
 add_subdirectory(googletest)
@@ -33,6 +39,7 @@ add_executable(test
   ${PROJECT_CODE}
   tests/ImageTest.cpp
   tests/VectorTest.cpp
+  tests/RayTest.cpp
   tests/main.cpp)
 
 target_link_libraries(test gtest gtest_main)
