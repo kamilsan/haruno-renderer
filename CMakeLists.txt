@@ -25,10 +25,12 @@ set(PROJECT_CODE
   include/Plane.hpp
   include/Material.hpp
   include/SolidMaterial.hpp
+  include/Environment.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/Scene.hpp src/Scene.cpp
+  include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
 )
 
 add_subdirectory(googletest)

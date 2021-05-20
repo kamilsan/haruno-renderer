@@ -5,6 +5,7 @@
 #include "Material.hpp"
 #include "Scene.hpp"
 #include "Object.hpp"
+#include "Environment.hpp"
 
 #include <cmath>
 
@@ -44,18 +45,6 @@ Color Renderer::rayTrace(const Ray& ray, const Scene& scene) const
   }
   else
   {
-    const float phi = std::atan(ray.getDirection().y / ray.getDirection().z);
-    if(phi < 0)
-      return Color{0.467f, 0.384f, 0.325f};
-    else
-    {
-      const Color top{0.176f, 0.557f, 0.988f};
-      const Color horizon{0.71f, 0.259f, 0.149f};
-
-      const float lerpFactor = std::pow(phi / M_PI_2, 1/2.5f);
-      const Color sky = lerpFactor * top + (1.0f - lerpFactor) * horizon;
-
-      return sky;
-    }
+    return scene.getEnvironment().getColor(ray.getDirection());
   }
 }

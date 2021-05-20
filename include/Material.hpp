@@ -6,7 +6,7 @@ class Color;
 class Material
 {
 public:
-  virtual const Color& getAlbedo() const = 0;
+  virtual Color getAlbedo() const = 0;
 };
 
 #endif

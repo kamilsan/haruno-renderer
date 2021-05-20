@@ -8,7 +8,7 @@ class SolidMaterial : public Material
 public:
   SolidMaterial(const Color& albedo): albedo_(albedo) {}
 
-  const Color& getAlbedo() const override { return albedo_; }
+  Color getAlbedo() const override { return albedo_; }
 
 private:
   Color albedo_;
