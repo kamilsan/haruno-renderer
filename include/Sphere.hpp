@@ -17,7 +17,7 @@ public:
   const Vector& getCenter() const { return center_; }
   float getRadius() const { return radius_; }
 
-  inline float intersects(const Ray& ray) const;
+  inline float intersects(const Ray& ray) const override;
 
 private:
   Vector center_;

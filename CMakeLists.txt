@@ -22,6 +22,7 @@ set(PROJECT_CODE
   include/PinholeCamera.hpp
   include/Object.hpp
   include/Sphere.hpp
+  include/Plane.hpp
   include/Material.hpp
   include/SolidMaterial.hpp
   include/Image.hpp src/Image.cpp

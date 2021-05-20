@@ -11,7 +11,7 @@ public:
 
   virtual float intersects(const Ray& ray) const = 0;
 
-   const Material& getMaterial() const { return *material_; }
+  const Material& getMaterial() const { return *material_; }
 private:
   std::shared_ptr<Material> material_;
 };
