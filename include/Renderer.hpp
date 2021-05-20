@@ -1,21 +1,25 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-#include "Image.hpp"
-#include "Ray.hpp"
-
 #include <memory>
 
+#include "Image.hpp"
+
+class Ray;
 class Camera;
+class Scene;
 
 class Renderer
 {
 public:
-  Renderer() = default;
+  Renderer(int width, int height): width_(width), height_(height) {}
 
-  Image render(std::unique_ptr<Camera> camera, int width, int height) const;
+  Image render(std::unique_ptr<Camera> camera, const Scene& scene) const;
 private:
-  Color rayTrace(const Ray& ray) const;
+  Color rayTrace(const Ray& ray, const Scene& scene) const;
+
+  int width_;
+  int height_;
 };
 
 #endif

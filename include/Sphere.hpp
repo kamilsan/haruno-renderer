@@ -4,13 +4,15 @@
 #include "Object.hpp"
 #include "Vector.hpp"
 #include "Ray.hpp"
+#include "Material.hpp"
 
 #include <cmath>
 
 class Sphere : public Object
 {
 public:
-  Sphere(const Vector& center, float radius): center_(center), radius_(radius) {}
+  Sphere(const Vector& center, float radius, std::shared_ptr<Material> material): 
+    Object(material), center_(center), radius_(radius) {}
 
   const Vector& getCenter() const { return center_; }
   float getRadius() const { return radius_; }

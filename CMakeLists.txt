@@ -22,9 +22,12 @@ set(PROJECT_CODE
   include/PinholeCamera.hpp
   include/Object.hpp
   include/Sphere.hpp
+  include/Material.hpp
+  include/SolidMaterial.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp
+  include/Scene.hpp src/Scene.cpp
 )
 
 add_subdirectory(googletest)
