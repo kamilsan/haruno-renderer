@@ -20,6 +20,11 @@ struct Color
     return {r - other.r, g - other.g, b - other.b};
   }
 
+  Color operator*(const Color& other) const
+  {
+    return {r * other.r, g * other.g, b * other.b};
+  }
+
   Color operator*(float weight) const
   {
     return {r * weight, g * weight, b * weight};
@@ -45,6 +50,15 @@ struct Color
     r -= other.r;
     g -= other.g;
     b -= other.b;
+
+    return *this;
+  }
+
+  Color& operator*=(const Color& other)
+  {
+    r *= other.r;
+    g *= other.g;
+    b *= other.b;
 
     return *this;
   }

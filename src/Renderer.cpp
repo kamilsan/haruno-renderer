@@ -6,6 +6,7 @@
 #include "Scene.hpp"
 #include "Object.hpp"
 #include "Environment.hpp"
+#include "Light.hpp"
 
 #include <cmath>
 
@@ -40,8 +41,25 @@ Color Renderer::rayTrace(const Ray& ray, const Scene& scene) const
 
   if(object)
   {
+    Color color{};
+    const auto position = ray(t);
+    const auto normal = object->getNormal(position);
     const auto& material = object->getMaterial();
-    return material.getAlbedo();
+    const auto albedo = material.getAlbedo();
+
+    for(const auto& light : scene.getLights())
+    {
+      const auto Li = light->evaluate(position);
+      float maxT = -1;
+      const auto shadowRay = light->getShadowRay(position, maxT);
+
+      const auto occlusion = scene.occludes(shadowRay, maxT);
+
+      if(!occlusion)
+        color += Li * albedo;
+    }
+
+    return color;
   }
   else
   {

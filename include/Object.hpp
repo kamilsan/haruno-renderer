@@ -3,6 +3,7 @@
 
 class Ray;
 class Material;
+class Vector;
 
 class Object
 {
@@ -10,6 +11,7 @@ public:
   Object(std::shared_ptr<Material> material): material_(material) {}
 
   virtual float intersects(const Ray& ray) const = 0;
+  virtual Vector getNormal(const Vector& position) const = 0;
 
   const Material& getMaterial() const { return *material_; }
 private:

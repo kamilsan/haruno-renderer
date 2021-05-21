@@ -26,6 +26,9 @@ set(PROJECT_CODE
   include/Material.hpp
   include/SolidMaterial.hpp
   include/Environment.hpp
+  include/Light.hpp
+  include/DirectionalLight.hpp
+  include/PointLight.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp

@@ -18,6 +18,7 @@ public:
   float getRadius() const { return radius_; }
 
   inline float intersects(const Ray& ray) const override;
+  inline Vector getNormal(const Vector& position) const override;
 
 private:
   Vector center_;
@@ -41,6 +42,11 @@ float Sphere::intersects(const Ray& ray) const
   const float t2 = (-b + delta) * 0.5f;
 
   return (t1 < t2 ? t1 : t2);
+}
+
+Vector Sphere::getNormal(const Vector& position) const
+{
+  return (position - center_) / radius_;
 }
 
 #endif

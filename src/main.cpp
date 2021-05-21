@@ -5,6 +5,8 @@
 #include "Scene.hpp"
 #include "SolidMaterial.hpp"
 #include "SimpleEnvironment.hpp"
+#include "DirectionalLight.hpp"
+#include "PointLight.hpp"
 
 #include <memory>
 
@@ -24,6 +26,11 @@ int main()
   auto material1 = std::make_shared<SolidMaterial>(Color{1.0, 0.5, 1.0});
   auto material2 = std::make_shared<SolidMaterial>(Color{0.5, 1.0, 1.0});
   auto material3 = std::make_shared<SolidMaterial>(Color{0.9, 0.9, 0.9});
+
+  scene.addLight(std::make_shared<DirectionalLight>(Vector{0, -1, 1}, Color{1, 1, 1}, 0.2f));
+  scene.addLight(std::make_shared<DirectionalLight>(Vector{1, -1, 1}, Color{1, 0, 0}, 0.2f));
+  scene.addLight(std::make_shared<DirectionalLight>(Vector{-1, -1, 1}, Color{0, 0, 1}, 0.2f));
+  scene.addLight(std::make_shared<PointLight>(Vector{0, 2, 1}, Color{1, 1, 1}, 0.3f));
 
   scene.addObject(std::make_shared<Sphere>(Vector{0, 0, 1}, 0.5f, material1));
   scene.addObject(std::make_shared<Sphere>(Vector{1, 0, 2}, 0.5f, material2));

@@ -12,12 +12,13 @@ class Plane : public Object
 {
 public:
   Plane(const Vector& point, const Vector& normal, std::shared_ptr<Material> material): 
-    Object(material), point_(point), normal_(normal) {}
+    Object(material), point_(point), normal_(normal.normalized()) {}
 
   const Vector& getPoint() const { return point_; }
   const Vector& getNormal() const { return normal_; }
 
   inline float intersects(const Ray& ray) const override;
+  inline Vector getNormal(const Vector& position) const override;
 
 private:
   Vector point_;
@@ -31,6 +32,11 @@ float Plane::intersects(const Ray& ray) const
     return -1;
 
   return -(ray.getOrigin() - point_).dot(normal_) / don;
+}
+
+Vector Plane::getNormal(const Vector&) const
+{
+  return normal_;
 }
 
 #endif
