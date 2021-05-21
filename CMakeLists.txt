@@ -29,6 +29,8 @@ set(PROJECT_CODE
   include/Light.hpp
   include/DirectionalLight.hpp
   include/PointLight.hpp
+  include/BRDF.hpp
+  include/LambertBRDF.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp

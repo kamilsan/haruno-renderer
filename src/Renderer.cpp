@@ -7,6 +7,7 @@
 #include "Object.hpp"
 #include "Environment.hpp"
 #include "Light.hpp"
+#include "BRDF.hpp"
 
 #include <cmath>
 
@@ -52,11 +53,17 @@ Color Renderer::rayTrace(const Ray& ray, const Scene& scene) const
       const auto Li = light->evaluate(position);
       float maxT = -1;
       const auto shadowRay = light->getShadowRay(position, maxT);
+      const auto wi = shadowRay.getDirection();
+      const auto wo = (position - ray.getOrigin()).normalized();
 
       const auto occlusion = scene.occludes(shadowRay, maxT);
 
       if(!occlusion)
-        color += Li * albedo;
+      {
+        const auto f = material.getBRDF().evaluate(wi, wo);
+        const auto coswi = std::abs(wi.dot(normal));
+        color += f * coswi * Li * albedo;
+      }
     }
 
     return color;
