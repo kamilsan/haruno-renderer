@@ -1,5 +1,5 @@
 #ifndef POINT_LIGHT_HPP
-#define POINT_LIGHT
+#define POINT_LIGHT_HPP
 
 #include "Light.hpp"
 #include "Color.hpp"

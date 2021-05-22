@@ -4,8 +4,7 @@
 #include "BRDF.hpp"
 #include "Vector.hpp"
 #include "Color.hpp"
-
-#include <cmath>
+#include "Math.hpp"
 
 class LambertBRDF : public BRDF
 {
@@ -17,7 +16,7 @@ public:
 
 Color LambertBRDF::evaluate(const Vector&, const Vector&) const 
 {
-  return M_1_PI; 
+  return ONE_OVER_PI; 
 }
 
 #endif

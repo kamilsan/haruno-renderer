@@ -19,7 +19,6 @@ set(PROJECT_CODE
   include/Color.hpp
   include/Ray.hpp
   include/Camera.hpp
-  include/PinholeCamera.hpp
   include/Object.hpp
   include/Sphere.hpp
   include/Plane.hpp
@@ -31,11 +30,13 @@ set(PROJECT_CODE
   include/PointLight.hpp
   include/BRDF.hpp
   include/LambertBRDF.hpp
+  include/Math.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/Scene.hpp src/Scene.cpp
   include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
+  include/PinholeCamera.hpp src/PinholeCamera.cpp
 )
 
 add_subdirectory(googletest)

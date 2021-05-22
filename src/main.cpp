@@ -14,7 +14,7 @@ int main()
 {
   Renderer renderer{1920, 1080};
   
-  auto camera = std::make_unique<PinholeCamera>();
+  auto camera = std::make_unique<PinholeCamera>(90.0f, Vector{0, 0, -1}, Vector{0, 0, 1}, Vector{0, 1, 0});
   
   const Color zenith{0.176f, 0.557f, 0.988f};
   const Color horizon{0.71f, 0.259f, 0.149f};

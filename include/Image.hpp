@@ -1,12 +1,12 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
-#include <cmath>
 #include <memory>
 #include <vector>
 #include <utility>
 
 #include "Color.hpp"
+#include "Math.hpp"
 
 class Image
 {

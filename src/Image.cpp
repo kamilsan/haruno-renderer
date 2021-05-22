@@ -1,6 +1,5 @@
 #include "Image.hpp"
 
-#include <cmath>
 #include <cstring>
 #include <fstream>
 

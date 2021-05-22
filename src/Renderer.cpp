@@ -8,8 +8,7 @@
 #include "Environment.hpp"
 #include "Light.hpp"
 #include "BRDF.hpp"
-
-#include <cmath>
+#include "Math.hpp"
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 {

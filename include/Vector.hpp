@@ -1,7 +1,9 @@
-#pragma once
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
+#include "Math.hpp"
 
 #include <iostream>
-#include <cmath>
 
 class Vector
 {
@@ -91,3 +93,5 @@ public:
      return v*r;
   }
 };
+
+#endif

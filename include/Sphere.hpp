@@ -5,8 +5,7 @@
 #include "Vector.hpp"
 #include "Ray.hpp"
 #include "Material.hpp"
-
-#include <cmath>
+#include "Math.hpp"
 
 class Sphere : public Object
 {
