@@ -30,13 +30,14 @@ set(PROJECT_CODE
   include/PointLight.hpp
   include/BRDF.hpp
   include/LambertBRDF.hpp
-  include/Math.hpp
+  include/RNG.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/Scene.hpp src/Scene.cpp
   include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
   include/PinholeCamera.hpp src/PinholeCamera.cpp
+  include/Math.hpp src/Math.cpp
 )
 
 add_subdirectory(googletest)
@@ -52,6 +53,7 @@ add_executable(test
   tests/ImageTest.cpp
   tests/VectorTest.cpp
   tests/RayTest.cpp
+  tests/MathTest.cpp
   tests/main.cpp)
 
 target_link_libraries(test gtest gtest_main)

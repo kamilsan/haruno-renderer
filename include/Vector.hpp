@@ -1,8 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include "Math.hpp"
-
+#include <cmath>
 #include <iostream>
 
 class Vector

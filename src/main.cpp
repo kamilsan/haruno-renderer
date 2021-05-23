@@ -4,6 +4,7 @@
 #include "Plane.hpp"
 #include "Scene.hpp"
 #include "SolidMaterial.hpp"
+#include "MirrorMaterial.hpp"
 #include "SimpleEnvironment.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
@@ -12,7 +13,7 @@
 
 int main()
 {
-  Renderer renderer{1920, 1080};
+  Renderer renderer{1920, 1080, 128, 3};
   
   auto camera = std::make_unique<PinholeCamera>(90.0f, Vector{0, 0, -1}, Vector{0, 0, 1}, Vector{0, 1, 0});
   
@@ -23,18 +24,19 @@ int main()
 
   Scene scene{std::move(environment)};
 
-  auto material1 = std::make_shared<SolidMaterial>(Color{1.0, 0.5, 1.0});
-  auto material2 = std::make_shared<SolidMaterial>(Color{0.5, 1.0, 1.0});
-  auto material3 = std::make_shared<SolidMaterial>(Color{0.9, 0.9, 0.9});
+  auto materialSphere1 = std::make_shared<SolidMaterial>(Color{0.9f, 0.1f, 0.05f}, 0.6f);
+  auto materialSphere2 = std::make_shared<SolidMaterial>(Color{0.1f, 0.9f, 0.05f}, 0.6f);
+  auto materialGround = std::make_shared<SolidMaterial>(Color{1.0f, 1.0f, 1.0f}, 0.6f);
+  auto materialMirror = std::make_shared<MirrorMaterial>(Color{1.0f, 1.0f, 1.0f});
 
-  scene.addLight(std::make_shared<DirectionalLight>(Vector{0, -1, 1}, Color{1, 1, 1}, 0.2f));
-  scene.addLight(std::make_shared<DirectionalLight>(Vector{1, -1, 1}, Color{1, 0, 0}, 0.2f));
-  scene.addLight(std::make_shared<DirectionalLight>(Vector{-1, -1, 1}, Color{0, 0, 1}, 0.2f));
-  scene.addLight(std::make_shared<PointLight>(Vector{0, 2, 1}, Color{1, 1, 1}, 0.3f));
+  //scene.addLight(std::make_shared<DirectionalLight>(Vector{0, -1, 1}, Color{1, 1, 1}, 0.2f));
+  //scene.addLight(std::make_shared<DirectionalLight>(Vector{1, -1, 1}, Color{1, 0, 0}, 0.2f));
+  //scene.addLight(std::make_shared<DirectionalLight>(Vector{-1, -1, 1}, Color{0, 0, 1}, 0.2f));
+  //scene.addLight(std::make_shared<PointLight>(Vector{0, 2, 1}, Color{1, 1, 1}, 0.3f));
 
-  scene.addObject(std::make_shared<Sphere>(Vector{0, 0, 1}, 0.5f, material1));
-  scene.addObject(std::make_shared<Sphere>(Vector{1, 0, 2}, 0.5f, material2));
-  scene.addObject(std::make_shared<Plane>(Vector{0, -0.5, 2}, Vector{0, 1, 0}, material3));
+  scene.addObject(std::make_shared<Sphere>(Vector{0, 0, 1}, 0.5f, materialSphere1));
+  scene.addObject(std::make_shared<Sphere>(Vector{1, 0, 2}, 0.5f, materialMirror));
+  scene.addObject(std::make_shared<Plane>(Vector{0, -0.5, 2}, Vector{0, 1, 0}, materialGround));
 
   const Image render = renderer.render(std::move(camera), scene);
 
