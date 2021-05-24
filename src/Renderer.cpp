@@ -22,14 +22,13 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
   {
     for(int x = 0; x < width_; ++x)
     {
-      const float ndcX = aspectRatio * (2.0f * ((x + 0.5f) / (width_ - 1.0f)) - 1.0f);
-      const float ndcY = -2.0f * ((y + 0.5f) / (height_ - 1.0f)) + 1.0f;
-
-      const Ray primaryRay = camera->getCameraRay(ndcX, ndcY);
-
       Color color{};
       for(unsigned int i = 0; i < samples_; ++i)
       {
+        const float ndcX = aspectRatio * (2.0f * ((x + rng_.get()) / (width_ - 1.0f)) - 1.0f);
+        const float ndcY = -2.0f * ((y + rng_.get()) / (height_ - 1.0f)) + 1.0f;
+
+        const Ray primaryRay = camera->getCameraRay(ndcX, ndcY);
         color += rayTrace(primaryRay, scene, depth_);
       }
 

@@ -27,7 +27,6 @@ private:
 // NOTE: Ray direction is assumed to be normalized
 float Sphere::intersects(const Ray& ray) const
 {
-  // TODO: Use more numerically stable method
   Vector centerToOrigin = ray.getOrigin() - center_;
   const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
   const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
@@ -37,8 +36,10 @@ float Sphere::intersects(const Ray& ray) const
 
   delta = std::sqrt(delta);
 
-  const float t1 = (-b - delta) * 0.5f;
-  const float t2 = (-b + delta) * 0.5f;
+  const float q = -0.5f * (b + std::copysign(1.0f, b) * delta);
+
+  const float t1 = q;
+  const float t2 = c / q;
 
   return (t1 < t2 ? t1 : t2);
 }
