@@ -2,6 +2,7 @@
 #include "PinholeCamera.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include "Rectangle.hpp"
 #include "Scene.hpp"
 #include "SolidMaterial.hpp"
 #include "MirrorMaterial.hpp"
@@ -13,7 +14,7 @@
 
 int main()
 {
-  Renderer renderer{1920, 1080, 128, 3};
+  Renderer renderer{1920, 1080, 256, 3};
   
   auto camera = std::make_unique<PinholeCamera>(90.0f, Vector{0, 0, -1}, Vector{0, 0, 1}, Vector{0, 1, 0});
   
@@ -24,19 +25,21 @@ int main()
 
   Scene scene{std::move(environment)};
 
-  auto materialSphere1 = std::make_shared<SolidMaterial>(Color{0.9f, 0.1f, 0.05f}, 0.6f);
-  auto materialSphere2 = std::make_shared<SolidMaterial>(Color{0.1f, 0.9f, 0.05f}, 0.6f);
+  auto materialWall1 = std::make_shared<SolidMaterial>(Color{0.9f, 0.1f, 0.05f}, 0.6f);
+  auto materialWall2 = std::make_shared<SolidMaterial>(Color{0.1f, 0.9f, 0.05f}, 0.6f);
   auto materialGround = std::make_shared<SolidMaterial>(Color{1.0f, 1.0f, 1.0f}, 0.6f);
   auto materialMirror = std::make_shared<MirrorMaterial>(Color{1.0f, 1.0f, 1.0f});
 
-  //scene.addLight(std::make_shared<DirectionalLight>(Vector{0, -1, 1}, Color{1, 1, 1}, 0.2f));
-  //scene.addLight(std::make_shared<DirectionalLight>(Vector{1, -1, 1}, Color{1, 0, 0}, 0.2f));
-  //scene.addLight(std::make_shared<DirectionalLight>(Vector{-1, -1, 1}, Color{0, 0, 1}, 0.2f));
-  //scene.addLight(std::make_shared<PointLight>(Vector{0, 2, 1}, Color{1, 1, 1}, 0.3f));
+  scene.addLight(std::make_shared<PointLight>(Vector{0, 1.6f, 1.0f}, Color{1, 1, 1}, 1.75f));
 
-  scene.addObject(std::make_shared<Sphere>(Vector{0, 0, 1}, 0.5f, materialSphere1));
-  scene.addObject(std::make_shared<Sphere>(Vector{1, 0, 2}, 0.5f, materialMirror));
-  scene.addObject(std::make_shared<Plane>(Vector{0, -0.5, 2}, Vector{0, 1, 0}, materialGround));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1), Vector(0, 1, 0), 3, 3, materialWall1));
+  scene.addObject(std::make_shared<Rectangle>(Vector(2, 2, 2), Vector(-1, 0, 0), Vector(0, 0, -1), Vector(0, -1, 0), 3, 3, materialWall2));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialGround));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, 2, -1), Vector(0, -1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialGround));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, 2), Vector(0, 0, -1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialGround));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 0, 1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialGround));
+  scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialGround));
+  scene.addObject(std::make_shared<Sphere>(Vector(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
 
   const Image render = renderer.render(std::move(camera), scene);
 

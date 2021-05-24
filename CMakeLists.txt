@@ -22,6 +22,7 @@ set(PROJECT_CODE
   include/Object.hpp
   include/Sphere.hpp
   include/Plane.hpp
+  include/Rectangle.hpp
   include/Material.hpp
   include/SolidMaterial.hpp
   include/Environment.hpp
