@@ -1,5 +1,11 @@
 # Path Tracer
 
+### Preparation
+
+```
+git submodule update --init
+```
+
 ### Build
 
 ```

@@ -10,7 +10,7 @@ PinholeCamera::PinholeCamera(float fov, const Vector& position, const Vector& fo
   up_ = forward_.cross(right_).normalized();
 }
 
-Ray PinholeCamera::getCameraRay(float ndcX, float ndcY) const
+Ray PinholeCamera::getCameraRay(float ndcX, float ndcY, RNG&) const
 {
   const float x = ndcX * tanHalfFov_;
   const float y = ndcY * tanHalfFov_;

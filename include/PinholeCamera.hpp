@@ -15,7 +15,7 @@ public:
   const Vector& getForward() const { return forward_; }
   const Vector& getUp() const { return up_; }
 
-  Ray getCameraRay(float ndcX, float ndcY) const override;
+  Ray getCameraRay(float ndcX, float ndcY, RNG&) const override;
 private:
   float tanHalfFov_;
   Vector position_;

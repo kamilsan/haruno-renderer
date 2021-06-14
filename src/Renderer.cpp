@@ -28,7 +28,7 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
         const float ndcX = aspectRatio * (2.0f * ((x + rng_.get()) / (width_ - 1.0f)) - 1.0f);
         const float ndcY = -2.0f * ((y + rng_.get()) / (height_ - 1.0f)) + 1.0f;
 
-        const Ray primaryRay = camera->getCameraRay(ndcX, ndcY);
+        const Ray primaryRay = camera->getCameraRay(ndcX, ndcY, rng_);
         color += rayTrace(primaryRay, scene, depth_);
       }
 

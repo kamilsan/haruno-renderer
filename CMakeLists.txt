@@ -31,13 +31,14 @@ set(PROJECT_CODE
   include/PointLight.hpp
   include/BRDF.hpp
   include/LambertBRDF.hpp
-  include/RNG.hpp
   include/Image.hpp src/Image.cpp
   include/Vector.hpp src/Vector.cpp
+  include/RNG.hpp src/RNG.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/Scene.hpp src/Scene.cpp
   include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
   include/PinholeCamera.hpp src/PinholeCamera.cpp
+  include/SimpleCamera.hpp src/SimpleCamera.cpp
   include/Math.hpp src/Math.cpp
 )
 

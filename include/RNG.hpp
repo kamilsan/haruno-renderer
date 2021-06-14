@@ -4,16 +4,15 @@
 #include <chrono>
 #include <random>
 
+#include "Vector.hpp"
+
 class RNG
 {
 public:
-  RNG(): distribution_(0.0f, 1.0f)
-  {
-    const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
-    engine_ = std::mt19937(seed);
-  }
+  RNG();
 
   inline float get();
+  Vector sampleCircle();
 
 private:
   std::mt19937 engine_;
