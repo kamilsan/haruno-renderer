@@ -15,6 +15,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(Threads)
+
 set(PROJECT_CODE
   include/Color.hpp
   include/Ray.hpp
@@ -31,10 +33,13 @@ set(PROJECT_CODE
   include/PointLight.hpp
   include/BRDF.hpp
   include/LambertBRDF.hpp
+  include/ThreadPool.hpp
   include/Image.hpp src/Image.cpp
+  include/ImageTile.hpp src/ImageTile.cpp
   include/Vector.hpp src/Vector.cpp
   include/RNG.hpp src/RNG.cpp
   include/Renderer.hpp src/Renderer.cpp
+  include/RenderTileTask.hpp src/RenderTileTask.cpp
   include/Scene.hpp src/Scene.cpp
   include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
   include/PinholeCamera.hpp src/PinholeCamera.cpp
@@ -50,6 +55,8 @@ add_executable(PathTracer
   src/main.cpp
 )
 
+target_link_libraries(PathTracer ${CMAKE_THREAD_LIBS_INIT})
+
 add_executable(test
   ${PROJECT_CODE}
   tests/ImageTest.cpp
@@ -58,4 +65,4 @@ add_executable(test
   tests/MathTest.cpp
   tests/main.cpp)
 
-target_link_libraries(test gtest gtest_main)
+target_link_libraries(test gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})

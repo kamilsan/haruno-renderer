@@ -16,7 +16,7 @@
 
 int main()
 {
-  Renderer renderer{1920, 1080, 256, 3};
+  Renderer renderer{1920, 1080, 200, 8, 256, 3};
   
   auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector{0, 0, -1}, Vector{0, 0, 1}, Vector{0, 1, 0});
   

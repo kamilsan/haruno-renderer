@@ -9,92 +9,70 @@
 #include "Light.hpp"
 #include "BRDF.hpp"
 #include "Math.hpp"
+#include "ThreadPool.hpp"
+#include "RenderTileTask.hpp"
 
 #include <iostream>
+#include <functional>
+
+Renderer::Renderer(unsigned int width, unsigned int height, unsigned int numTiles, 
+  unsigned int threads, unsigned int samples, unsigned int depth): 
+  width_(width), height_(height), numTiles_(numTiles), threads_(threads), samples_(samples), depth_(depth), rng_() {}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 {
   Image result{width_, height_};
 
-  const float aspectRatio = static_cast<float>(width_) / height_;
+  const unsigned int numTilesX = std::sqrt(numTiles_);
+  const unsigned int numTilesY = std::ceil(static_cast<float>(numTiles_) / numTilesX);
+  const unsigned int tileSizeX = std::ceil(static_cast<float>(width_) / numTilesX);
+  const unsigned int tileSizeY = std::ceil(static_cast<float>(height_) / numTilesY);
 
-  for(int y = 0; y < height_; ++y)
+  ThreadPool<ImageTile> pool{threads_};
+  std::vector<std::future<ImageTile>> results{};
+  results.reserve(numTiles_);
+
+  for(unsigned int tileY = 0; tileY < numTilesY; ++tileY)
   {
-    for(int x = 0; x < width_; ++x)
+    for(unsigned int tileX = 0; tileX < numTilesX; ++tileX)
     {
-      Color color{};
-      for(unsigned int i = 0; i < samples_; ++i)
-      {
-        const float ndcX = aspectRatio * (2.0f * ((x + rng_.get()) / (width_ - 1.0f)) - 1.0f);
-        const float ndcY = -2.0f * ((y + rng_.get()) / (height_ - 1.0f)) + 1.0f;
+      const unsigned int tileId = tileY * numTilesY + tileX;
+      const unsigned int tileMinX = tileX * tileSizeX;
+      const unsigned int tileMinY = tileY * tileSizeY;
+      unsigned int tileMaxX = (tileX + 1) * tileSizeX;
+      unsigned int tileMaxY = (tileY + 1) * tileSizeY;
 
-        const Ray primaryRay = camera->getCameraRay(ndcX, ndcY, rng_);
-        color += rayTrace(primaryRay, scene, depth_);
+      if(tileMaxX > width_ - 1)
+      {
+        tileMaxX = width_ - 1;
+      }
+      if(tileMaxY > height_ - 1)
+      {
+        tileMaxY = height_ - 1;
       }
 
-      color /= samples_;
-
-      result.setPixel(x, y, color);
+      ImageTile tile{tileMinX, tileMaxX, tileMinY, tileMaxY};
+      auto result = 
+        pool.addTask(std::make_unique<RenderTileTask>(width_, height_, samples_, depth_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
+      results.emplace_back(std::move(result));
     }
-    std::cout << "Rendering... " << 100.f * y / (height_ - 1.0f) << "%\n";
+  }
+
+  for(auto& tileResult : results)
+  {
+    const auto tile = tileResult.get();
+    for(unsigned int tileY = 0; tileY < tile.getHeight(); ++tileY)
+    {
+      for(unsigned int tileX = 0; tileX < tile.getWidth(); ++tileX)
+      {
+        const auto imageX = tileX + tile.getMinX();
+        const auto imageY = tileY + tile.getMinY();
+
+        const auto color = tile.getPixel(tileX, tileY);
+        result.setPixel(imageX, imageY, color);
+      }
+    }
   }
 
   return result;
-}
-
-Color Renderer::rayTrace(const Ray& ray, const Scene& scene, int depth) const
-{
-  if(depth < 0)
-    return Color{};
-
-  float t = -1;
-  auto object = scene.intersects(ray, t);
-
-  if(object)
-  {
-    Color color{};
-    const auto position = ray(t);
-    const auto normal = object->getNormal(position);
-    const auto& material = object->getMaterial();
-    const auto albedo = material.getAlbedo();
-    const auto wo = (ray.getOrigin() - position).normalized();
-
-    for(const auto& light : scene.getLights())
-    {
-      const auto Li = light->evaluate(position);
-      float maxT = -1;
-      const auto shadowRay = light->getShadowRay(position, maxT);
-      const auto wi = shadowRay.getDirection();
-
-      const auto occlusion = scene.occludes(shadowRay, maxT);
-
-      if(!occlusion)
-      {
-        const auto f = material.getBRDF().evaluate(wi, wo);
-        const auto coswi = std::abs(wi.dot(normal));
-        color += f * coswi * Li * albedo;
-      }
-    }
-
-    Vector tangent, bitangent;
-    createOrthogonalFrame(normal, tangent, bitangent);
-    const auto wo_shading = transformFromTangentSpace(wo, normal, tangent, bitangent);
-    
-    Vector sample{};
-    float pdf = 1.0f;
-    const float f = material.getBRDF().sample(wo_shading, rng_, sample, pdf);
-    const float coswi = std::fabs(sample.y); // wi . (0, 1, 0)
-
-    Vector wi = transformToTangentSpace(sample, normal, tangent, bitangent);
-
-    const Ray secondaryRay{position + wi * 0.0001f, wi}; 
-    Color Li = rayTrace(secondaryRay, scene, depth - 1);
-    color += albedo * Li * f * coswi / pdf;
-
-    return color;
-  }
-  else
-  {
-    return scene.getEnvironment().getColor(ray.getDirection());
-  }
 }

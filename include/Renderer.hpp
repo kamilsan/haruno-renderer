@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Image.hpp"
+#include "ImageTile.hpp"
 #include "RNG.hpp"
 
 class Ray;
@@ -13,15 +14,14 @@ class Scene;
 class Renderer
 {
 public:
-  Renderer(int width, int height, unsigned int samples, unsigned int depth): 
-    width_(width), height_(height), samples_(samples), depth_(depth), rng_() {}
+  Renderer(unsigned int width, unsigned int height, unsigned int numTiles, unsigned int threads, unsigned int samples, unsigned int depth);
 
   Image render(std::unique_ptr<Camera> camera, const Scene& scene) const;
 private:
-  Color rayTrace(const Ray& ray, const Scene& scene, int depth) const;
-
-  int width_;
-  int height_;
+  unsigned int width_;
+  unsigned int height_;
+  unsigned int numTiles_;
+  unsigned int threads_;
   unsigned int samples_;
   unsigned int depth_;
   mutable RNG rng_;

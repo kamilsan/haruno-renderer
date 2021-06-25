@@ -10,6 +10,9 @@ class RNG
 {
 public:
   RNG();
+  explicit RNG(unsigned long seed);
+
+  RNG createChild(unsigned int id);
 
   inline float get();
   Vector sampleCircle();

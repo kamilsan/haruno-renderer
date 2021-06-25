@@ -8,6 +8,18 @@ RNG::RNG(): distribution_(0.0f, 1.0f)
   engine_ = std::mt19937(seed);
 }
 
+RNG::RNG(unsigned long seed): distribution_(0.0f, 1.0f)
+{
+  engine_ = std::mt19937(seed);
+}
+
+RNG RNG::createChild(unsigned int id)
+{
+  const auto randomValue = engine_();
+  const auto newSeed = randomValue + id;
+  return RNG(newSeed);
+}
+
 Vector RNG::sampleCircle()
 {
   const float r = std::sqrt(distribution_(engine_));
