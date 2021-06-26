@@ -57,9 +57,11 @@ Color RenderTileTask::rayTrace(const Ray& ray, const Scene& scene, int depth, RN
   {
     Color color{};
     const auto position = ray(t);
-    const auto normal = object->getNormal(position);
+    const auto surfaceInfo = object->getSurfaceInfo(position);
+    const auto& normal = surfaceInfo.normal;
+    const auto& uv = surfaceInfo.uv;
     const auto& material = object->getMaterial();
-    const auto albedo = material.getAlbedo();
+    const auto albedo = material.getAlbedo(uv.first, uv.second);
     const auto wo = (ray.getOrigin() - position).normalized();
 
     for(const auto& light : scene.getLights())

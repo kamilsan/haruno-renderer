@@ -26,7 +26,7 @@ set(PROJECT_CODE
   include/Plane.hpp
   include/Rectangle.hpp
   include/Material.hpp
-  include/SolidMaterial.hpp
+  include/DiffuseMaterial.hpp
   include/Environment.hpp
   include/Light.hpp
   include/DirectionalLight.hpp
@@ -34,6 +34,10 @@ set(PROJECT_CODE
   include/BRDF.hpp
   include/LambertBRDF.hpp
   include/ThreadPool.hpp
+  include/BaseTexture.hpp
+  include/SolidTexture.hpp
+  include/ImageTexture.hpp
+  include/CheckerboardTexture.hpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp
   include/Vector.hpp src/Vector.cpp

@@ -5,11 +5,14 @@
 #include "Plane.hpp"
 #include "Rectangle.hpp"
 #include "Scene.hpp"
-#include "SolidMaterial.hpp"
+#include "DiffuseMaterial.hpp"
 #include "MirrorMaterial.hpp"
 #include "SimpleEnvironment.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
+#include "SolidTexture.hpp"
+#include "ImageTexture.hpp"
+#include "CheckerboardTexture.hpp"
 
 #include <chrono>
 #include <memory>
@@ -27,20 +30,25 @@ int main()
 
   Scene scene{std::move(environment)};
 
-  auto materialWallRed = std::make_shared<SolidMaterial>(Color{0.9f, 0.1f, 0.05f}, 0.6f);
-  auto materialWallGreen = std::make_shared<SolidMaterial>(Color{0.1f, 0.9f, 0.05f}, 0.6f);
-  auto materialGround = std::make_shared<SolidMaterial>(Color{1.0f, 1.0f, 1.0f}, 0.6f);
-  auto materialMirror = std::make_shared<MirrorMaterial>(Color{1.0f, 1.0f, 1.0f});
+  auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});
+  auto floor = std::make_shared<CheckerboardTexture>(7.5f, 7.5f);
+  auto uvTest = std::make_shared<ImageTexture>("textures/uv.ppm");
+
+  auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 0.6f);
+  auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 0.6f);
+  auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.6f);
+  auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
+
 
   scene.addLight(std::make_shared<PointLight>(Vector{0, 1.6f, 1.0f}, Color{1, 1, 1}, 1.75f));
 
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1), Vector(0, 1, 0), 3, 3, materialWallRed));
-  scene.addObject(std::make_shared<Rectangle>(Vector(2, 2, 2), Vector(-1, 0, 0), Vector(0, 0, -1), Vector(0, -1, 0), 3, 3, materialWallGreen));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialGround));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, 2, -1), Vector(0, -1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialGround));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, 2), Vector(0, 0, -1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialGround));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 0, 1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialGround));
-  scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialGround));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1), Vector(0, 1, 0), 3, 3, materialUvTest));
+  scene.addObject(std::make_shared<Rectangle>(Vector(2, -1, 2), Vector(-1, 0, 0), Vector(0, 0, -1), Vector(0, 1, 0), 3, 3, materialUvTest));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialFloor));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, 2, -1), Vector(0, -1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, 2), Vector(0, 0, -1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 0, 1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
 
   const auto then = std::chrono::steady_clock::now();

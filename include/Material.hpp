@@ -13,7 +13,7 @@ public:
 
   const BRDF& getBRDF() const { return *brdf_; }
 
-  virtual Color getAlbedo() const = 0;
+  virtual Color getAlbedo(float u, float v) const = 0;
 private:
   std::unique_ptr<BRDF> brdf_;
 };

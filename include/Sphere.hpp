@@ -17,7 +17,7 @@ public:
   float getRadius() const { return radius_; }
 
   inline float intersects(const Ray& ray) const override;
-  inline Vector getNormal(const Vector& position) const override;
+  inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
 
 private:
   Vector center_;
@@ -44,9 +44,18 @@ float Sphere::intersects(const Ray& ray) const
   return (t1 < t2 ? t1 : t2);
 }
 
-Vector Sphere::getNormal(const Vector& position) const
+SurfaceInfo Sphere::getSurfaceInfo(const Vector& position) const
 {
-  return (position - center_) / radius_;
+  const auto fromCenter = position - center_;
+  const auto normal = fromCenter / radius_;
+
+  const float theta = std::acos(std::max(-1.0f, std::min(1.0f, fromCenter.y / radius_)));
+  const float phi = std::atan2(fromCenter.z, fromCenter.x);
+
+  const float u = 0.5f * phi * ONE_OVER_PI + 0.5f;
+  const float v = theta * ONE_OVER_PI;
+
+  return SurfaceInfo{normal, u, v};
 }
 
 #endif

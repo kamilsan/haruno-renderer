@@ -26,7 +26,7 @@ public:
   const Vector& getBitangent() const { return bitangent_; }
 
   inline float intersects(const Ray& ray) const override;
-  inline Vector getNormal(const Vector& position) const override;
+  inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
 
 private:
   Vector point_;
@@ -57,9 +57,14 @@ float Rectangle::intersects(const Ray& ray) const
   return t;
 }
 
-Vector Rectangle::getNormal(const Vector&) const
+SurfaceInfo Rectangle::getSurfaceInfo(const Vector& position) const
 {
-  return normal_;
+  const auto fromPlanePoint = position - point_;
+
+  const float u = fromPlanePoint.dot(tangent_) / sizeTangent_;
+  const float v = fromPlanePoint.dot(bitangent_) / sizeBitangent_;
+  
+  return SurfaceInfo{normal_, u, v};
 }
 
 #endif
