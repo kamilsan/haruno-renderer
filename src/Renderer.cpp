@@ -58,9 +58,9 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
     }
   }
 
-  for(auto& tileResult : results)
+  for(size_t i = 0; i < results.size(); ++i)
   {
-    const auto tile = tileResult.get();
+    const auto tile = results[i].get();
     for(unsigned int tileY = 0; tileY < tile.getHeight(); ++tileY)
     {
       for(unsigned int tileX = 0; tileX < tile.getWidth(); ++tileX)
@@ -72,6 +72,8 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
         result.setPixel(imageX, imageY, color);
       }
     }
+
+    std::cout << "Rendering... " << 100.f * i / (results.size() - 1.0f) << "%\n";
   }
 
   return result;

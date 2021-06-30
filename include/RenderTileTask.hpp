@@ -17,13 +17,13 @@ public:
 
   ImageTile run() override
   { 
-    renderTile(tile_, camera_, scene_, rng_);
+    renderTile();
     return tile_; 
   }
 
 private:
-  void renderTile(ImageTile& tile, const Camera& camera, const Scene& scene, RNG rng) const;
-  Color rayTrace(const Ray& ray, const Scene& scene, int depth, RNG& rng) const;
+  void renderTile();
+  Color rayTrace(const Ray& camera_ray) const;
 
   int width_;
   int height_;
