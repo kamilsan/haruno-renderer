@@ -12,8 +12,8 @@ class Scene;
 class RenderTileTask : public Task<ImageTile>
 {
 public:
-  RenderTileTask(int width, int height, unsigned int samples, unsigned int depth, 
-    ImageTile tile, const Camera& camera, const Scene& scene, RNG rng);
+  RenderTileTask(int width, int height, unsigned int samples, ImageTile tile, 
+    const Camera& camera, const Scene& scene, RNG rng);
 
   ImageTile run() override
   { 
@@ -29,7 +29,6 @@ private:
   int height_;
   float aspectRatio_;
   unsigned int samples_;
-  unsigned int depth_;
   ImageTile tile_;
   const Camera& camera_;
   const Scene& scene_;

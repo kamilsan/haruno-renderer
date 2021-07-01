@@ -16,8 +16,8 @@
 #include <functional>
 
 Renderer::Renderer(unsigned int width, unsigned int height, unsigned int numTiles, 
-  unsigned int threads, unsigned int samples, unsigned int depth): 
-  width_(width), height_(height), numTiles_(numTiles), threads_(threads), samples_(samples), depth_(depth), rng_() {}
+  unsigned int threads, unsigned int samples): 
+  width_(width), height_(height), numTiles_(numTiles), threads_(threads), samples_(samples), rng_() {}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 {
@@ -53,7 +53,7 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 
       ImageTile tile{tileMinX, tileMaxX, tileMinY, tileMaxY};
       auto result = 
-        pool.addTask(std::make_unique<RenderTileTask>(width_, height_, samples_, depth_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
+        pool.addTask(std::make_unique<RenderTileTask>(width_, height_, samples_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
       results.emplace_back(std::move(result));
     }
   }

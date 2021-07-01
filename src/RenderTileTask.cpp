@@ -11,10 +11,10 @@
 #include "Math.hpp"
 #include "ThreadPool.hpp"
 
-RenderTileTask::RenderTileTask(int width, int height, unsigned int samples, unsigned int depth, 
-  ImageTile tile, const Camera& camera, const Scene& scene, RNG rng): 
-  width_(width), height_(height), samples_(samples), depth_(depth), 
-  tile_(std::move(tile)), camera_(camera), scene_(scene), rng_(std::move(rng))
+RenderTileTask::RenderTileTask(int width, int height, unsigned int samples, ImageTile tile, 
+  const Camera& camera, const Scene& scene, RNG rng): 
+  width_(width), height_(height), samples_(samples), tile_(std::move(tile)), 
+  camera_(camera), scene_(scene), rng_(std::move(rng))
 {
   aspectRatio_ = static_cast<float>(width) / height;
 }
@@ -52,7 +52,7 @@ Color RenderTileTask::rayTrace(const Ray& camera_ray) const
   Color result{};
   std::shared_ptr<Object> object = nullptr;
 
-  for(unsigned int i = 0; i <= depth_; ++i)
+  for(unsigned int i = 0; ; ++i)
   {
     float t = -1;
     object = scene_.intersects(ray, t);
@@ -87,18 +87,29 @@ Color RenderTileTask::rayTrace(const Ray& camera_ray) const
 
       Vector tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
-      const auto wo_shading = transformFromTangentSpace(wo, normal, tangent, bitangent);
+      const auto woShading = transformFromTangentSpace(wo, normal, tangent, bitangent);
       
       Vector sample{};
       float pdf = 1.0f;
-      const float f = material.getBRDF().sample(wo_shading, rng_, sample, pdf);
+      const float f = material.getBRDF().sample(woShading, rng_, sample, pdf);
       const float coswi = std::fabs(sample.y); // wi . (0, 1, 0)
 
       result += coef * color;
       coef *= albedo * f * coswi / pdf;
 
       Vector wi = transformToTangentSpace(sample, normal, tangent, bitangent);
-      ray = Ray{position + wi * 0.0001f, wi}; 
+      ray = Ray{position + wi * 0.0001f, wi};
+
+      if(i > 3)
+      {
+        const float maxComponent = std::max(coef.r, std::max(coef.g, coef.b));
+        const float survivalProbability = std::max(0.1f, 1.0f - maxComponent);
+        if(rng_.get() < survivalProbability)
+        {
+          break;
+        }
+        coef /= (1.0f - survivalProbability);
+      }
     }
     else
     {
