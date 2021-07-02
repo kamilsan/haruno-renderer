@@ -1,17 +1,16 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include "Object.hpp"
-#include "Vector.hpp"
-#include "Ray.hpp"
 #include "Material.hpp"
 #include "Math.hpp"
+#include "Object.hpp"
+#include "Ray.hpp"
+#include "Vector.hpp"
 
-class Sphere : public Object
-{
-public:
-  Sphere(const Vector& center, float radius, std::shared_ptr<Material> material): 
-    Object(material), center_(center), radius_(radius) {}
+class Sphere : public Object {
+ public:
+  Sphere(const Vector& center, float radius, std::shared_ptr<Material> material)
+      : Object(material), center_(center), radius_(radius) {}
 
   const Vector& getCenter() const { return center_; }
   float getRadius() const { return radius_; }
@@ -19,20 +18,18 @@ public:
   inline float intersects(const Ray& ray) const override;
   inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
 
-private:
+ private:
   Vector center_;
   float radius_;
 };
 
 // NOTE: Ray direction is assumed to be normalized
-float Sphere::intersects(const Ray& ray) const
-{
+float Sphere::intersects(const Ray& ray) const {
   Vector centerToOrigin = ray.getOrigin() - center_;
   const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
   const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
   float delta = b * b - 4.0f * c;
-  if(delta < 0.0f)
-    return -1.0f;
+  if (delta < 0.0f) return -1.0f;
 
   delta = std::sqrt(delta);
 
@@ -44,8 +41,7 @@ float Sphere::intersects(const Ray& ray) const
   return (t1 < t2 ? t1 : t2);
 }
 
-SurfaceInfo Sphere::getSurfaceInfo(const Vector& position) const
-{
+SurfaceInfo Sphere::getSurfaceInfo(const Vector& position) const {
   const auto fromCenter = position - center_;
   const auto normal = fromCenter / radius_;
 

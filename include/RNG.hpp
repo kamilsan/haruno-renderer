@@ -6,9 +6,8 @@
 
 #include "Vector.hpp"
 
-class RNG
-{
-public:
+class RNG {
+ public:
   RNG();
   explicit RNG(unsigned long seed);
 
@@ -17,15 +16,11 @@ public:
   inline float get();
   Vector sampleCircle();
 
-private:
+ private:
   std::mt19937 engine_;
   std::uniform_real_distribution<float> distribution_;
 };
 
-
-float RNG::get()
-{
-  return distribution_(engine_);
-}
+float RNG::get() { return distribution_(engine_); }
 
 #endif

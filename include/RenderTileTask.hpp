@@ -1,27 +1,25 @@
 #ifndef RENDER_TILE_TASK
 #define RENDER_TILE_TASK
 
-#include "ThreadPool.hpp"
 #include "ImageTile.hpp"
 #include "RNG.hpp"
+#include "ThreadPool.hpp"
 
 class Ray;
 class Camera;
 class Scene;
 
-class RenderTileTask : public Task<ImageTile>
-{
-public:
-  RenderTileTask(int width, int height, unsigned int samples, ImageTile tile, 
-    const Camera& camera, const Scene& scene, RNG rng);
+class RenderTileTask : public Task<ImageTile> {
+ public:
+  RenderTileTask(int width, int height, unsigned int samples, ImageTile tile, const Camera& camera,
+                 const Scene& scene, RNG rng);
 
-  ImageTile run() override
-  { 
+  ImageTile run() override {
     renderTile();
-    return tile_; 
+    return tile_;
   }
 
-private:
+ private:
   void renderTile();
   Color rayTrace(const Ray& camera_ray) const;
 

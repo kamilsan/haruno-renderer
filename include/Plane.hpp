@@ -1,22 +1,22 @@
 #ifndef PLANE_HPP
 #define PLANE_HPP
 
-#include "Object.hpp"
-#include "Vector.hpp"
-#include "Ray.hpp"
-#include "Material.hpp"
-
 #include <memory>
 
-class Plane : public Object
-{
-public:
-  Plane(const Vector& point, const Vector& normal, const Vector& tangent, const Vector& bitangent, std::shared_ptr<Material> material): 
-    Object(material), point_(point) 
-  {
+#include "Material.hpp"
+#include "Object.hpp"
+#include "Ray.hpp"
+#include "Vector.hpp"
+
+class Plane : public Object {
+ public:
+  Plane(const Vector& point, const Vector& normal, const Vector& tangent, const Vector& bitangent,
+        std::shared_ptr<Material> material)
+      : Object(material), point_(point) {
     normal_ = normal.normalized();
     tangent_ = (tangent - tangent.dot(normal_) * normal_).normalized();
-    bitangent_ = (bitangent - bitangent.dot(normal_) * normal_ - bitangent.dot(tangent_) * tangent_).normalized();
+    bitangent_ = (bitangent - bitangent.dot(normal_) * normal_ - bitangent.dot(tangent_) * tangent_)
+                     .normalized();
   }
 
   const Vector& getPoint() const { return point_; }
@@ -25,24 +25,21 @@ public:
   inline float intersects(const Ray& ray) const override;
   inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
 
-private:
+ private:
   Vector point_;
   Vector normal_;
   Vector tangent_;
   Vector bitangent_;
 };
 
-float Plane::intersects(const Ray& ray) const
-{
+float Plane::intersects(const Ray& ray) const {
   const float don = ray.getDirection().dot(normal_);
-  if(don > -0.00001f && don < 0.00001f) 
-    return -1;
+  if (don > -0.00001f && don < 0.00001f) return -1;
 
   return -(ray.getOrigin() - point_).dot(normal_) / don;
 }
 
-SurfaceInfo Plane::getSurfaceInfo(const Vector& position) const
-{
+SurfaceInfo Plane::getSurfaceInfo(const Vector& position) const {
   const auto fromPlanePoint = position - point_;
 
   const float u = fromPlanePoint.dot(tangent_);

@@ -3,11 +3,10 @@
 
 #include "Color.hpp"
 
-class BaseTexture
-{
-public:
-  virtual ~BaseTexture() {};
-  
+class BaseTexture {
+ public:
+  virtual ~BaseTexture(){};
+
   virtual Color get(float u, float v) const = 0;
 };
 

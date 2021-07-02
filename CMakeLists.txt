@@ -27,12 +27,14 @@ set(PROJECT_CODE
   include/Rectangle.hpp
   include/Material.hpp
   include/DiffuseMaterial.hpp
+  include/MirrorMaterial.hpp
   include/Environment.hpp
   include/Light.hpp
   include/DirectionalLight.hpp
   include/PointLight.hpp
   include/BRDF.hpp
   include/LambertBRDF.hpp
+  include/SpecularBRDF.hpp
   include/ThreadPool.hpp
   include/BaseTexture.hpp
   include/SolidTexture.hpp
@@ -51,22 +53,40 @@ set(PROJECT_CODE
   include/Math.hpp src/Math.cpp
 )
 
-add_subdirectory(googletest)
-include_directories(googletest include)
-
-add_executable(PathTracer
-  ${PROJECT_CODE}
-  src/main.cpp
-)
-
-target_link_libraries(PathTracer ${CMAKE_THREAD_LIBS_INIT})
-
-add_executable(test
-  ${PROJECT_CODE}
+set(TEST_SOURCES
   tests/ImageTest.cpp
   tests/VectorTest.cpp
   tests/RayTest.cpp
   tests/MathTest.cpp
+)
+
+set(ALL_SOURCES
+  ${PROJECT_CODE}
+  ${TEST_SOURCES}
+  src/main.cpp
+  tests/main.cpp
+)
+
+add_custom_target(
+    clang-format
+    COMMAND clang-format -i ${ALL_SOURCES}
+)
+
+add_subdirectory(googletest)
+include_directories(googletest include)
+
+add_library(pathtracer
+  ${PROJECT_CODE}
+)
+
+add_executable(PathTracer
+  src/main.cpp
+)
+
+target_link_libraries(PathTracer pathtracer ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(test
+  ${TEST_SOURCES}
   tests/main.cpp)
 
-target_link_libraries(test gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(test pathtracer gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})

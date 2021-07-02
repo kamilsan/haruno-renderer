@@ -1,32 +1,32 @@
-#include "Renderer.hpp"
-#include "PinholeCamera.hpp"
-#include "SimpleCamera.hpp"
-#include "Sphere.hpp"
-#include "Plane.hpp"
-#include "Rectangle.hpp"
-#include "Scene.hpp"
-#include "DiffuseMaterial.hpp"
-#include "MirrorMaterial.hpp"
-#include "SimpleEnvironment.hpp"
-#include "DirectionalLight.hpp"
-#include "PointLight.hpp"
-#include "SolidTexture.hpp"
-#include "ImageTexture.hpp"
-#include "CheckerboardTexture.hpp"
-
 #include <chrono>
 #include <memory>
 
-int main()
-{
+#include "CheckerboardTexture.hpp"
+#include "DiffuseMaterial.hpp"
+#include "DirectionalLight.hpp"
+#include "ImageTexture.hpp"
+#include "MirrorMaterial.hpp"
+#include "PinholeCamera.hpp"
+#include "Plane.hpp"
+#include "PointLight.hpp"
+#include "Rectangle.hpp"
+#include "Renderer.hpp"
+#include "Scene.hpp"
+#include "SimpleCamera.hpp"
+#include "SimpleEnvironment.hpp"
+#include "SolidTexture.hpp"
+#include "Sphere.hpp"
+
+int main() {
   Renderer renderer{1920, 1080, 200, 8, 256};
-  
-  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector{0, 0, -1}, Vector{0, 0, 1}, Vector{0, 1, 0});
-  
+
+  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector{0, 0, -1},
+                                               Vector{0, 0, 1}, Vector{0, 1, 0});
+
   const Color zenith{0.176f, 0.557f, 0.988f};
   const Color horizon{0.71f, 0.259f, 0.149f};
   const Color ground{0.467f, 0.384f, 0.325f};
-  auto environment = std::make_unique<SimpleEnvironment>(zenith, horizon, ground); 
+  auto environment = std::make_unique<SimpleEnvironment>(zenith, horizon, ground);
 
   Scene scene{std::move(environment)};
 
@@ -39,15 +39,20 @@ int main()
   auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.6f);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
 
-
   scene.addLight(std::make_shared<PointLight>(Vector{0, 1.6f, 1.0f}, Color{1, 1, 1}, 1.75f));
 
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1), Vector(0, 1, 0), 3, 3, materialUvTest));
-  scene.addObject(std::make_shared<Rectangle>(Vector(2, -1, 2), Vector(-1, 0, 0), Vector(0, 0, -1), Vector(0, 1, 0), 3, 3, materialUvTest));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialFloor));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, 2, -1), Vector(0, -1, 0), Vector(1, 0, 0), Vector(0, 0, 1), 4, 3, materialWhite));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, 2), Vector(0, 0, -1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialWhite));
-  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 0, 1), Vector(1, 0, 0), Vector(0, 1, 0), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1),
+                                              Vector(0, 1, 0), 3, 3, materialUvTest));
+  scene.addObject(std::make_shared<Rectangle>(Vector(2, -1, 2), Vector(-1, 0, 0), Vector(0, 0, -1),
+                                              Vector(0, 1, 0), 3, 3, materialUvTest));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 1, 0), Vector(1, 0, 0),
+                                              Vector(0, 0, 1), 4, 3, materialFloor));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, 2, -1), Vector(0, -1, 0), Vector(1, 0, 0),
+                                              Vector(0, 0, 1), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, 2), Vector(0, 0, -1), Vector(1, 0, 0),
+                                              Vector(0, 1, 0), 4, 3, materialWhite));
+  scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(0, 0, 1), Vector(1, 0, 0),
+                                              Vector(0, 1, 0), 4, 3, materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
 
@@ -63,8 +68,8 @@ int main()
   int hours = min / 60;
   min -= hours * 60;
   std::cout << "\aFinished rendering in ";
-  if(hours > 0) std::cout << hours << "h ";
-  if(min > 0) std::cout << min << "m ";
+  if (hours > 0) std::cout << hours << "h ";
+  if (min > 0) std::cout << min << "m ";
   std::cout << sec << "s\n";
 
   render.save("render.ppm");

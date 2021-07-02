@@ -1,18 +1,16 @@
 #ifndef IMAGE_TEXTURE_HPP
 #define IMAGE_TEXTURE_HPP
 
+#include <cmath>
+
 #include "BaseTexture.hpp"
 #include "Image.hpp"
 
-#include <cmath>
+class ImageTexture : public BaseTexture {
+ public:
+  ImageTexture(const std::string& imagePath) : image_(imagePath.c_str()) {}
 
-class ImageTexture : public BaseTexture
-{
-public:
-  ImageTexture(const std::string& imagePath): image_(imagePath.c_str()) {}
-
-  Color get(float u, float v) const
-  {
+  Color get(float u, float v) const {
     const auto uRepeat = u - std::floor(u);
     const auto vRepeat = 1.0f - (v - std::floor(v));
 
@@ -22,7 +20,7 @@ public:
     return image_.getPixel(s, t);
   }
 
-private:
+ private:
   Image image_;
 };
 

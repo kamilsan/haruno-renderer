@@ -6,9 +6,8 @@
 
 class Vector;
 
-class Light
-{
-public:
+class Light {
+ public:
   virtual Color evaluate(const Vector& position) const = 0;
   virtual Ray getShadowRay(const Vector& position, float& maxT) const = 0;
 };

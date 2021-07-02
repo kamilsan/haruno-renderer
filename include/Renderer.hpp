@@ -11,13 +11,14 @@ class Ray;
 class Camera;
 class Scene;
 
-class Renderer
-{
-public:
-  Renderer(unsigned int width, unsigned int height, unsigned int numTiles, unsigned int threads, unsigned int samples);
+class Renderer {
+ public:
+  Renderer(unsigned int width, unsigned int height, unsigned int numTiles, unsigned int threads,
+           unsigned int samples);
 
   Image render(std::unique_ptr<Camera> camera, const Scene& scene) const;
-private:
+
+ private:
   unsigned int width_;
   unsigned int height_;
   unsigned int numTiles_;

@@ -3,10 +3,9 @@
 
 #include "Vector.hpp"
 
-class Ray
-{
-public:
-  Ray(const Vector& origin, const Vector& direction): origin_(origin), direction_(direction) {}
+class Ray {
+ public:
+  Ray(const Vector& origin, const Vector& direction) : origin_(origin), direction_(direction) {}
 
   Vector at(float t) const { return origin_ + t * direction_; }
   Vector operator()(float t) const { return origin_ + t * direction_; }
@@ -14,7 +13,7 @@ public:
   Vector getOrigin() const { return origin_; }
   Vector getDirection() const { return direction_; }
 
-private:
+ private:
   Vector origin_;
   Vector direction_;
 };

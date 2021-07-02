@@ -2,20 +2,17 @@
 
 #include "Image.hpp"
 
-TEST(ImageTest, Constructor)
-{
+TEST(ImageTest, Constructor) {
   const Image img{20, 30};
 
   EXPECT_EQ(img.getWidth(), 20);
   EXPECT_EQ(img.getHeight(), 30);
 
-  const int len = 3*img.getWidth()*img.getHeight();
+  const int len = 3 * img.getWidth() * img.getHeight();
   bool isImageBlack = true;
 
-  for(int i = 0; i < len; ++i)
-  {
-    if(img[i] != 0.0f)
-    {
+  for (int i = 0; i < len; ++i) {
+    if (img[i] != 0.0f) {
       isImageBlack = false;
     }
   }
@@ -23,8 +20,7 @@ TEST(ImageTest, Constructor)
   EXPECT_TRUE(isImageBlack);
 }
 
-TEST(ImageTest, CopyConstructor)
-{
+TEST(ImageTest, CopyConstructor) {
   Image img{20, 30};
   const int mutatedIndex = 20;
   img[mutatedIndex] = 0.5f;
@@ -36,8 +32,7 @@ TEST(ImageTest, CopyConstructor)
   EXPECT_EQ(copy[mutatedIndex], img[mutatedIndex]);
 }
 
-TEST(ImageTest, AssigmentOperator)
-{
+TEST(ImageTest, AssigmentOperator) {
   Image img{20, 30};
   const int mutatedIndex = 20;
   img[mutatedIndex] = 0.5f;
@@ -50,8 +45,7 @@ TEST(ImageTest, AssigmentOperator)
   EXPECT_EQ(other[mutatedIndex], img[mutatedIndex]);
 }
 
-TEST(ImageTest, GetPixel)
-{
+TEST(ImageTest, GetPixel) {
   Image img{2, 3};
   const Color newColor = Color{1.0, 0.5f, 0.25f};
 
@@ -62,8 +56,7 @@ TEST(ImageTest, GetPixel)
   EXPECT_EQ(img.getPixel(0, 1), newColor);
 }
 
-TEST(ImageTest, SetPixel)
-{
+TEST(ImageTest, SetPixel) {
   Image img{2, 3};
   const Color newColor = Color{1.0, 0.5f, 0.25f};
 
@@ -74,8 +67,7 @@ TEST(ImageTest, SetPixel)
   EXPECT_EQ(img[8], newColor.b);
 }
 
-TEST(ImageTest, GetAndSetPixel)
-{
+TEST(ImageTest, GetAndSetPixel) {
   Image img{20, 30};
   const Color newColor = Color{1.0, 0.5f, 0.25f};
 

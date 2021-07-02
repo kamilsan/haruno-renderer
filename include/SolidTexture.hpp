@@ -3,14 +3,13 @@
 
 #include "BaseTexture.hpp"
 
-class SolidTexture : public BaseTexture
-{
-public:
-  SolidTexture(const Color& color): color_(color) {}
+class SolidTexture : public BaseTexture {
+ public:
+  SolidTexture(const Color& color) : color_(color) {}
 
   Color get(float, float) const override { return color_; }
 
-private:
+ private:
   Color color_;
 };
 

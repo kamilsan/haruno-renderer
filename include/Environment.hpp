@@ -4,9 +4,8 @@
 class Color;
 class Vector;
 
-class Environment
-{
-public:
+class Environment {
+ public:
   virtual Color getColor(const Vector& direction) const = 0;
 };
 

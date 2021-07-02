@@ -1,8 +1,8 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "Environment.hpp"
 
@@ -10,11 +10,10 @@ class Object;
 class Ray;
 class Light;
 
-class Scene
-{
-public:
-  Scene(std::unique_ptr<Environment> environment): 
-    objects_(), lights_(), environment_(std::move(environment)) {}
+class Scene {
+ public:
+  Scene(std::unique_ptr<Environment> environment)
+      : objects_(), lights_(), environment_(std::move(environment)) {}
 
   std::shared_ptr<Object> intersects(const Ray& ray, float& t) const;
   bool occludes(const Ray& ray, float maxT) const;
@@ -25,7 +24,7 @@ public:
   void addObject(std::shared_ptr<Object> object);
   void addLight(std::shared_ptr<Light> light);
 
-private:
+ private:
   std::vector<std::shared_ptr<Object>> objects_;
   std::vector<std::shared_ptr<Light>> lights_;
   std::unique_ptr<Environment> environment_;

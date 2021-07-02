@@ -3,11 +3,9 @@
 #include <cstring>
 #include <fstream>
 
-ImageTile::ImageTile(unsigned int minX, unsigned int maxX, unsigned int minY, unsigned int maxY):
-  minX_(minX), maxX_(maxX), minY_(minY), maxY_(maxY)
-{
-  if(maxX < minX || maxY < minY)
-  {
+ImageTile::ImageTile(unsigned int minX, unsigned int maxX, unsigned int minY, unsigned int maxY)
+    : minX_(minX), maxX_(maxX), minY_(minY), maxY_(maxY) {
+  if (maxX < minX || maxY < minY) {
     throw std::runtime_error("Improper ImageTile bounds!");
   }
 
@@ -18,8 +16,7 @@ ImageTile::ImageTile(unsigned int minX, unsigned int maxX, unsigned int minY, un
   memset(pixels_.get(), 0, len_ * sizeof(float));
 }
 
-ImageTile::ImageTile(const ImageTile& other)
-{
+ImageTile::ImageTile(const ImageTile& other) {
   minX_ = other.minX_;
   maxX_ = other.maxX_;
   minY_ = other.minY_;
@@ -32,8 +29,7 @@ ImageTile::ImageTile(const ImageTile& other)
   memcpy(pixels_.get(), other.pixels_.get(), len_ * sizeof(float));
 }
 
-ImageTile::ImageTile(ImageTile&& other)
-{
+ImageTile::ImageTile(ImageTile&& other) {
   minX_ = other.minX_;
   maxX_ = other.maxX_;
   minY_ = other.minY_;
@@ -44,10 +40,8 @@ ImageTile::ImageTile(ImageTile&& other)
   pixels_ = std::move(other.pixels_);
 }
 
-ImageTile& ImageTile::operator=(const ImageTile& other)
-{
-  if(&other != this)
-  {
+ImageTile& ImageTile::operator=(const ImageTile& other) {
+  if (&other != this) {
     minX_ = other.minX_;
     maxX_ = other.maxX_;
     minY_ = other.minY_;
@@ -63,10 +57,8 @@ ImageTile& ImageTile::operator=(const ImageTile& other)
   return *this;
 }
 
-ImageTile& ImageTile::operator=(ImageTile&& other)
-{
-  if(&other != this)
-  {
+ImageTile& ImageTile::operator=(ImageTile&& other) {
+  if (&other != this) {
     minX_ = other.minX_;
     maxX_ = other.maxX_;
     minY_ = other.minY_;
@@ -80,10 +72,8 @@ ImageTile& ImageTile::operator=(ImageTile&& other)
   return *this;
 }
 
-void ImageTile::clear(const Color& color)
-{
-  for(unsigned int i = 0; i < len_;)
-  {
+void ImageTile::clear(const Color& color) {
+  for (unsigned int i = 0; i < len_;) {
     pixels_[i++] = color.r;
     pixels_[i++] = color.g;
     pixels_[i++] = color.b;

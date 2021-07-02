@@ -6,9 +6,8 @@
 
 #include "Color.hpp"
 
-class ImageTile
-{
-public:
+class ImageTile {
+ public:
   ImageTile(unsigned int minX, unsigned int maxX, unsigned int minY, unsigned int maxY);
 
   ImageTile(const ImageTile& other);
@@ -33,7 +32,7 @@ public:
   float operator[](unsigned int index) const { return pixels_[index]; }
   float& operator[](unsigned int index) { return pixels_[index]; }
 
-private:
+ private:
   unsigned int minX_;
   unsigned int maxX_;
   unsigned int minY_;
@@ -44,20 +43,18 @@ private:
   std::unique_ptr<float[]> pixels_;
 };
 
-Color ImageTile::getPixel(unsigned int x, unsigned int y) const
-{
+Color ImageTile::getPixel(unsigned int x, unsigned int y) const {
   const int index = 3 * (y * width_ + x);
-  
+
   Color c;
   c.r = pixels_[index];
   c.g = pixels_[index + 1];
   c.b = pixels_[index + 2];
-  
+
   return c;
 }
 
-void ImageTile::setPixel(unsigned int x, unsigned int y, const Color& color)
-{
+void ImageTile::setPixel(unsigned int x, unsigned int y, const Color& color) {
   const int index = 3 * (y * width_ + x);
 
   pixels_[index] = color.r;
