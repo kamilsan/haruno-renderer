@@ -40,7 +40,7 @@ int main() {
   Scene scene{std::move(environment)};
 
   auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});
-  auto floor = std::make_shared<CheckerboardTexture>(7.5f, 7.5f);
+  auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
   auto uvTest = std::make_shared<ImageTexture>("textures/uv.ppm");
 
   auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 0.6f);
@@ -48,7 +48,7 @@ int main() {
   auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.6f);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
 
-  scene.addLight(std::make_shared<PointLight>(Vector{0, 1.6f, 1.0f}, Color{1, 1, 1}, 1.75f));
+  scene.addLight(std::make_shared<PointLight>(Vector{0, 1.6f, 1.0f}, Color{1, 1, 1}, 3.0f));
 
   scene.addObject(std::make_shared<Rectangle>(Vector(-2, -1, -1), Vector(1, 0, 0), Vector(0, 0, 1),
                                               Vector(0, 1, 0), 3, 3, materialUvTest));

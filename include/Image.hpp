@@ -9,13 +9,13 @@
 
 class Image {
  public:
-  Image(const char* filename);
+  Image(const std::string& filename);
   Image(unsigned int width, unsigned int height);
 
   Image(const Image& other);
   Image(Image&& other);
 
-  bool save(const char* filename) const;
+  bool save(const std::string& filename) const;
 
   void clear(const Color& color);
 

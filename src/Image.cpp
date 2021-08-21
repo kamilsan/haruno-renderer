@@ -6,11 +6,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-Image::Image(const char* filename) {
+Image::Image(const std::string& filename) {
   int components = 0;
   int width_s = 0;
   int height_s = 0;
-  unsigned char* data = stbi_load(filename, &width_s, &height_s, &components, 0);
+  unsigned char* data = stbi_load(filename.c_str(), &width_s, &height_s, &components, 0);
 
   if (!data) {
     throw std::runtime_error("Could not load provided image file!\n");
@@ -53,7 +53,7 @@ Image::Image(Image&& other) {
   pixels_ = std::move(other.pixels_);
 }
 
-bool Image::save(const char* filename) const {
+bool Image::save(const std::string& filename) const {
   std::ofstream file;
   file.open(filename, std::ios::binary);
   if (!file.is_open()) return false;

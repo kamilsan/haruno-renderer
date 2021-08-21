@@ -64,6 +64,12 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
       }
     }
 
+    if (parameters_.saveIntermediate) {
+      if (i % parameters_.saveFrequency == 0) {
+        result.save("render_" + std::to_string(i) + ".ppm");
+      }
+    }
+
     std::cout << "Rendering... " << 100.f * i / (results.size() - 1.0f) << "%\n";
   }
 
