@@ -18,7 +18,16 @@
 #include "Sphere.hpp"
 
 int main() {
-  Renderer renderer{1920, 1080, 200, 8, 256};
+  RenderParameters parameters;
+  parameters.width = 1920;
+  parameters.height = 1080;
+  parameters.numTiles = 200;
+  parameters.threads = 8;
+  parameters.mcSamples = 256;
+
+  Renderer renderer{parameters};
+
+  std::cout << parameters << "\n";
 
   auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector{0, 0, -1},
                                                Vector{0, 0, 1}, Vector{0, 1, 0});

@@ -16,26 +16,19 @@
 #include "ThreadPool.hpp"
 #include "Vector.hpp"
 
-Renderer::Renderer(unsigned int width, unsigned int height, unsigned int numTiles,
-                   unsigned int threads, unsigned int samples)
-    : width_(width),
-      height_(height),
-      numTiles_(numTiles),
-      threads_(threads),
-      samples_(samples),
-      rng_() {}
+Renderer::Renderer(const RenderParameters& parameters) : parameters_(parameters), rng_() {}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const {
-  Image result{width_, height_};
+  Image result{parameters_.width, parameters_.height};
 
-  const unsigned int numTilesX = std::sqrt(numTiles_);
-  const unsigned int numTilesY = std::ceil(static_cast<float>(numTiles_) / numTilesX);
-  const unsigned int tileSizeX = std::ceil(static_cast<float>(width_) / numTilesX);
-  const unsigned int tileSizeY = std::ceil(static_cast<float>(height_) / numTilesY);
+  const unsigned int numTilesX = std::sqrt(parameters_.numTiles);
+  const unsigned int numTilesY = std::ceil(static_cast<float>(parameters_.numTiles) / numTilesX);
+  const unsigned int tileSizeX = std::ceil(static_cast<float>(parameters_.width) / numTilesX);
+  const unsigned int tileSizeY = std::ceil(static_cast<float>(parameters_.height) / numTilesY);
 
-  ThreadPool<ImageTile> pool{threads_};
+  ThreadPool<ImageTile> pool{parameters_.threads};
   std::vector<std::future<ImageTile>> results{};
-  results.reserve(numTiles_);
+  results.reserve(parameters_.numTiles);
 
   for (unsigned int tileY = 0; tileY < numTilesY; ++tileY) {
     for (unsigned int tileX = 0; tileX < numTilesX; ++tileX) {
@@ -45,16 +38,16 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
       unsigned int tileMaxX = (tileX + 1) * tileSizeX;
       unsigned int tileMaxY = (tileY + 1) * tileSizeY;
 
-      if (tileMaxX > width_ - 1) {
-        tileMaxX = width_ - 1;
+      if (tileMaxX > parameters_.width - 1) {
+        tileMaxX = parameters_.width - 1;
       }
-      if (tileMaxY > height_ - 1) {
-        tileMaxY = height_ - 1;
+      if (tileMaxY > parameters_.height - 1) {
+        tileMaxY = parameters_.height - 1;
       }
 
       ImageTile tile{tileMinX, tileMaxX, tileMinY, tileMaxY};
       auto result = pool.addTask(std::make_unique<RenderTileTask>(
-          width_, height_, samples_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
+          parameters_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
       results.emplace_back(std::move(result));
     }
   }

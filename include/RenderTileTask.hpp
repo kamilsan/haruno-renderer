@@ -3,6 +3,7 @@
 
 #include "ImageTile.hpp"
 #include "RNG.hpp"
+#include "RenderParameters.hpp"
 #include "ThreadPool.hpp"
 
 class Ray;
@@ -11,7 +12,7 @@ class Scene;
 
 class RenderTileTask : public Task<ImageTile> {
  public:
-  RenderTileTask(int width, int height, unsigned int samples, ImageTile tile, const Camera& camera,
+  RenderTileTask(const RenderParameters& parameters, ImageTile tile, const Camera& camera,
                  const Scene& scene, RNG rng);
 
   ImageTile run() override {
@@ -23,10 +24,8 @@ class RenderTileTask : public Task<ImageTile> {
   void renderTile();
   Color rayTrace(const Ray& camera_ray) const;
 
-  int width_;
-  int height_;
+  RenderParameters parameters_;
   float aspectRatio_;
-  unsigned int samples_;
   ImageTile tile_;
   const Camera& camera_;
   const Scene& scene_;
