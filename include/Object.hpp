@@ -8,6 +8,7 @@
 
 class Ray;
 class Material;
+class RNG;
 
 struct SurfaceInfo {
   SurfaceInfo() = default;
@@ -22,6 +23,8 @@ class Object {
   Object(std::shared_ptr<Material> material) : material_(material) {}
 
   virtual float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
+  virtual Vector3f sample(RNG& rng) const = 0;
+  virtual float area() const = 0;
 
   const Material& getMaterial() const { return *material_; }
 

@@ -1,6 +1,7 @@
 #include <chrono>
 #include <memory>
 
+#include "AreaLight.hpp"
 #include "CheckerboardTexture.hpp"
 #include "DiffuseMaterial.hpp"
 #include "DirectionalLight.hpp"
@@ -9,7 +10,6 @@
 #include "ObjLoader.hpp"
 #include "PathTracer.hpp"
 #include "PinholeCamera.hpp"
-#include "Plane.hpp"
 #include "PointLight.hpp"
 #include "Rectangle.hpp"
 #include "Renderer.hpp"
@@ -41,7 +41,7 @@ int main() {
   const Color zenith{0.176f, 0.557f, 0.988f};
   const Color horizon{0.71f, 0.259f, 0.149f};
   const Color ground{0.467f, 0.384f, 0.325f};
-  auto environment = std::make_unique<SimpleEnvironment>(zenith, horizon, ground);
+  auto environment = std::make_unique<SimpleEnvironment>(Color{}, Color{}, Color{});
 
   Scene scene{std::move(environment)};
 
@@ -76,6 +76,9 @@ int main() {
                                               materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
+  scene.addLight(std::make_shared<AreaLight>(
+    std::make_unique<Rectangle>(Vector3f(-0.6f, 1.99f, 0.9f), Vector3f(0, -1, 0), Vector3f(1, 0, 0),
+                              Vector3f(0, 0, 1), 1.2f, 0.3f, materialUvTest), Color(20, 20, 20)));
 
   Transformation meshTransformation;
   meshTransformation.setTranslation(Vector3f(0.0f, 0.4f, 0.75f));

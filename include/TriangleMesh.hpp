@@ -18,6 +18,9 @@ class TriangleMesh : public Object {
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
+  inline Vector3f sample(RNG& rng) const override { return Vector3f{}; }
+  inline float area() const override { return -1; }
+
  private:
   TrianglesData trianglesData_;
   std::vector<Triangle> triangles_;

@@ -17,6 +17,8 @@ class Sphere : public Object {
   float getRadius() const { return radius_; }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3f sample(RNG& rng) const override;
+  inline float area() const override;
 
  private:
   Vector3f center_;
@@ -60,5 +62,15 @@ float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
 
   return t;
 }
+
+Vector3f Sphere::sample(RNG& rng) const {
+  const float cosTheta = 2.0f * rng.get() - 1.0f;
+  const float sinTheta = std::sqrt(1.0f - cosTheta * cosTheta);
+  const float phi = TAU * rng.get();
+
+  return center_ + radius_ * Vector3f(sinTheta * cosf(phi), cosTheta, sinTheta * std::sin(phi));
+}
+
+float Sphere::area() const { return 4.0f * PI * radius_ * radius_; }
 
 #endif

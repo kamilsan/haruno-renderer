@@ -5,6 +5,7 @@
 
 #include "Material.hpp"
 #include "Object.hpp"
+#include "RNG.hpp"
 #include "Ray.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
@@ -27,6 +28,8 @@ class Rectangle : public Object {
   const Vector3f& getBitangent() const { return bitangent_; }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3f sample(RNG& rng) const override;
+  inline float area() const override;
 
  private:
   Vector3f point_;
@@ -64,5 +67,14 @@ float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
 
   return t;
 }
+
+Vector3f Rectangle::sample(RNG& rng) const {
+  const float u = rng.get() * sizeTangent_;
+  const float v = rng.get() * sizeBitangent_;
+
+  return point_ + tangent_ * u + bitangent_ * v;
+}
+
+float Rectangle::area() const { return sizeTangent_ * sizeBitangent_; }
 
 #endif

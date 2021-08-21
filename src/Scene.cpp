@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 
+#include "Light.hpp"
 #include "Object.hpp"
 
 std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t,
@@ -14,6 +15,23 @@ std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t,
       minT = candidate;
       result = obj;
       surfaceInfo = tempSurfaceInfo;
+    }
+  }
+
+  t = minT;
+  return result;
+}
+
+std::optional<Color> Scene::intersectsLight(const Ray& ray, float& t) const {
+  std::optional<Color> result{};
+
+  float minT = -1;
+  SurfaceInfo surfaceInfo;
+  for (const auto& light : lights_) {
+    const auto candidate = light->intersects(ray, surfaceInfo);
+    if (candidate > 0 && (minT < 0 || candidate < minT)) {
+      minT = candidate;
+      result = light->evaluate(ray(candidate));
     }
   }
 
