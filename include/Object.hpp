@@ -7,6 +7,7 @@ class Ray;
 class Material;
 
 struct SurfaceInfo {
+  SurfaceInfo() = default;
   SurfaceInfo(const Vector& normal, float u, float v) : normal(normal), uv(std::make_pair(u, v)) {}
 
   Vector normal;
@@ -17,8 +18,7 @@ class Object {
  public:
   Object(std::shared_ptr<Material> material) : material_(material) {}
 
-  virtual float intersects(const Ray& ray) const = 0;
-  virtual SurfaceInfo getSurfaceInfo(const Vector& position) const = 0;
+  virtual float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
 
   const Material& getMaterial() const { return *material_; }
 

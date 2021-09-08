@@ -7,6 +7,7 @@
 #include "Environment.hpp"
 
 class Object;
+class SurfaceInfo;
 class Ray;
 class Light;
 
@@ -15,7 +16,7 @@ class Scene {
   Scene(std::unique_ptr<Environment> environment)
       : objects_(), lights_(), environment_(std::move(environment)) {}
 
-  std::shared_ptr<Object> intersects(const Ray& ray, float& t) const;
+  std::shared_ptr<Object> intersects(const Ray& ray, float& t, SurfaceInfo& surfaceInfo) const;
   bool occludes(const Ray& ray, float maxT) const;
 
   const Environment& getEnvironment() const { return *environment_; };

@@ -15,8 +15,7 @@ class Sphere : public Object {
   const Vector& getCenter() const { return center_; }
   float getRadius() const { return radius_; }
 
-  inline float intersects(const Ray& ray) const override;
-  inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
+  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
   Vector center_;
@@ -24,12 +23,15 @@ class Sphere : public Object {
 };
 
 // NOTE: Ray direction is assumed to be normalized
-float Sphere::intersects(const Ray& ray) const {
+float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   Vector centerToOrigin = ray.getOrigin() - center_;
   const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
   const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
   float delta = b * b - 4.0f * c;
-  if (delta < 0.0f) return -1.0f;
+
+  if (delta < 0.0f) {
+    return -1.0f;
+  }
 
   delta = std::sqrt(delta);
 
@@ -37,12 +39,13 @@ float Sphere::intersects(const Ray& ray) const {
 
   const float t1 = q;
   const float t2 = c / q;
+  const float t = std::min(t1, t2);
 
-  return (t1 < t2 ? t1 : t2);
-}
+  if (t < 0.0f) {
+    return -1.0f;
+  }
 
-SurfaceInfo Sphere::getSurfaceInfo(const Vector& position) const {
-  const auto fromCenter = position - center_;
+  const auto fromCenter = ray(t) - center_;
   const auto normal = fromCenter / radius_;
 
   const float theta = std::acos(std::max(-1.0f, std::min(1.0f, fromCenter.y / radius_)));
@@ -51,7 +54,10 @@ SurfaceInfo Sphere::getSurfaceInfo(const Vector& position) const {
   const float u = 0.5f * phi * ONE_OVER_PI + 0.5f;
   const float v = theta * ONE_OVER_PI;
 
-  return SurfaceInfo{normal, u, v};
+  surfaceInfo.normal = normal;
+  surfaceInfo.uv = std::make_pair(u, v);
+
+  return t;
 }
 
 #endif

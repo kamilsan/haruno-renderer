@@ -22,8 +22,7 @@ class Plane : public Object {
   const Vector& getPoint() const { return point_; }
   const Vector& getNormal() const { return normal_; }
 
-  inline float intersects(const Ray& ray) const override;
-  inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
+  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
   Vector point_;
@@ -32,20 +31,25 @@ class Plane : public Object {
   Vector bitangent_;
 };
 
-float Plane::intersects(const Ray& ray) const {
+float Plane::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float don = ray.getDirection().dot(normal_);
-  if (don > -0.00001f && don < 0.00001f) return -1;
+  if (don > -EPSILON && don < EPSILON) {
+    return -1;
+  }
 
-  return -(ray.getOrigin() - point_).dot(normal_) / don;
-}
+  const auto t = -(ray.getOrigin() - point_).dot(normal_) / don;
+  if (t < 0.0f) {
+    return -1;
+  }
 
-SurfaceInfo Plane::getSurfaceInfo(const Vector& position) const {
-  const auto fromPlanePoint = position - point_;
-
+  const auto fromPlanePoint = ray(t) - point_;
   const float u = fromPlanePoint.dot(tangent_);
   const float v = fromPlanePoint.dot(bitangent_);
 
-  return SurfaceInfo{normal_, u, v};
+  surfaceInfo.normal = normal_;
+  surfaceInfo.uv = std::make_pair(u, v);
+
+  return t;
 }
 
 #endif

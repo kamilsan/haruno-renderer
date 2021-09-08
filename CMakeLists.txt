@@ -25,6 +25,7 @@ set(PROJECT_CODE
   include/Sphere.hpp
   include/Plane.hpp
   include/Rectangle.hpp
+  include/Triangle.hpp
   include/Material.hpp
   include/DiffuseMaterial.hpp
   include/MirrorMaterial.hpp

@@ -49,16 +49,16 @@ Color RenderTileTask::rayTrace(const Ray& camera_ray) const {
   Ray ray = camera_ray;
   Color coef{1.0};
   Color result{};
+  SurfaceInfo surfaceInfo{};
   std::shared_ptr<Object> object = nullptr;
 
   for (unsigned int i = 0;; ++i) {
     float t = -1;
-    object = scene_.intersects(ray, t);
+    object = scene_.intersects(ray, t, surfaceInfo);
 
     if (object) {
       Color color{};
       const auto position = ray(t);
-      const auto surfaceInfo = object->getSurfaceInfo(position);
       const auto& normal = surfaceInfo.normal;
       const auto& uv = surfaceInfo.uv;
       const auto& material = object->getMaterial();

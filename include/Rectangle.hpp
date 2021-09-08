@@ -25,8 +25,7 @@ class Rectangle : public Object {
   const Vector& getTangent() const { return tangent_; }
   const Vector& getBitangent() const { return bitangent_; }
 
-  inline float intersects(const Ray& ray) const override;
-  inline SurfaceInfo getSurfaceInfo(const Vector& position) const override;
+  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
   Vector point_;
@@ -37,29 +36,32 @@ class Rectangle : public Object {
   float sizeBitangent_;
 };
 
-float Rectangle::intersects(const Ray& ray) const {
+float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float don = ray.getDirection().dot(normal_);
-  if (don > -0.00001f && don < 0.00001f) return -1;
+  if (don > -EPSILON && don < EPSILON) {
+    return -1;
+  }
 
   const float t = -(ray.getOrigin() - point_).dot(normal_) / don;
   const Vector toPosition = ray(t) - point_;
 
   const float distTangent = toPosition.dot(tangent_);
-  if (distTangent < 0.0f || distTangent > sizeTangent_) return -1;
+  if (distTangent < 0.0f || distTangent > sizeTangent_) {
+    return -1;
+  }
 
   const float distBitangent = toPosition.dot(bitangent_);
-  if (distBitangent < 0.0f || distBitangent > sizeBitangent_) return -1;
+  if (distBitangent < 0.0f || distBitangent > sizeBitangent_) {
+    return -1;
+  }
+
+  const float u = distTangent / sizeTangent_;
+  const float v = distBitangent / sizeBitangent_;
+
+  surfaceInfo.normal = normal_;
+  surfaceInfo.uv = std::make_pair(u, v);
 
   return t;
-}
-
-SurfaceInfo Rectangle::getSurfaceInfo(const Vector& position) const {
-  const auto fromPlanePoint = position - point_;
-
-  const float u = fromPlanePoint.dot(tangent_) / sizeTangent_;
-  const float v = fromPlanePoint.dot(bitangent_) / sizeBitangent_;
-
-  return SurfaceInfo{normal_, u, v};
 }
 
 #endif

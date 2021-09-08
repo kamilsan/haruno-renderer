@@ -2,14 +2,18 @@
 
 #include "Object.hpp"
 
-std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t) const {
+std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t,
+                                          SurfaceInfo& surfaceInfo) const {
   float minT = -1;
   std::shared_ptr<Object> result = nullptr;
+  SurfaceInfo tempSurfaceInfo;
+
   for (const auto& obj : objects_) {
-    const auto candidate = obj->intersects(ray);
+    const auto candidate = obj->intersects(ray, tempSurfaceInfo);
     if (candidate > 0 && (minT < 0 || candidate < minT)) {
       minT = candidate;
       result = obj;
+      surfaceInfo = tempSurfaceInfo;
     }
   }
 
@@ -18,8 +22,9 @@ std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t) const {
 }
 
 bool Scene::occludes(const Ray& ray, float maxT) const {
+  SurfaceInfo surfaceInfo{};
   for (const auto& obj : objects_) {
-    const auto candidate = obj->intersects(ray);
+    const auto candidate = obj->intersects(ray, surfaceInfo);
     if (candidate > 0 && (candidate < maxT || maxT < 0)) return true;
   }
 
