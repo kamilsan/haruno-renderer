@@ -16,6 +16,7 @@
 #include "SimpleEnvironment.hpp"
 #include "SolidTexture.hpp"
 #include "Sphere.hpp"
+#include "Stopwatch.hpp"
 
 int main() {
   RenderParameters parameters;
@@ -65,21 +66,11 @@ int main() {
   scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
 
-  const auto then = std::chrono::steady_clock::now();
-
+  Stopwatch watch = Stopwatch::startNew();
   const Image render = renderer.render(std::move(camera), scene);
+  watch.stop();
 
-  const auto now = std::chrono::steady_clock::now();
-  const std::chrono::duration<double> elapsed = now - then;
-  float sec = elapsed.count();
-  int min = sec / 60;
-  sec -= min * 60;
-  int hours = min / 60;
-  min -= hours * 60;
-  std::cout << "\aFinished rendering in ";
-  if (hours > 0) std::cout << hours << "h ";
-  if (min > 0) std::cout << min << "m ";
-  std::cout << sec << "s\n";
+  std::cout << "Finished rendering in " << watch.getElapsedTime();
 
   render.save("render.ppm");
 

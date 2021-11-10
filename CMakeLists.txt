@@ -41,6 +41,7 @@ set(PROJECT_CODE
   include/SolidTexture.hpp
   include/ImageTexture.hpp
   include/CheckerboardTexture.hpp
+  include/Stopwatch.hpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp
   include/Vector.hpp src/Vector.cpp
