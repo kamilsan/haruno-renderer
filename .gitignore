@@ -10,6 +10,6 @@ test
 bin
 build
 lib
-render.ppm
+render.png
 TODO
 textures/

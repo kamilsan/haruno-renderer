@@ -42,7 +42,7 @@ int main() {
 
   auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});
   auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
-  auto uvTest = std::make_shared<ImageTexture>("textures/uv.ppm");
+  auto uvTest = std::make_shared<ImageTexture>("textures/uv.png");
 
   auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 0.6f);
   auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 0.6f);
@@ -72,7 +72,7 @@ int main() {
 
   std::cout << "Finished rendering in " << watch.getElapsedTime();
 
-  render.save("render.ppm");
+  render.save("render.png");
 
   return 0;
 }

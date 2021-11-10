@@ -75,7 +75,7 @@ add_custom_target(
 )
 
 add_subdirectory(googletest)
-include_directories(googletest include)
+include_directories(googletest include 3rd_party)
 
 add_library(pathtracer
   ${PROJECT_CODE}

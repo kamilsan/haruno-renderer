@@ -6,6 +6,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 Image::Image(const std::string& filename) {
   int components = 0;
   int width_s = 0;
@@ -54,21 +57,15 @@ Image::Image(Image&& other) {
 }
 
 bool Image::save(const std::string& filename) const {
-  std::ofstream file;
-  file.open(filename, std::ios::binary);
-  if (!file.is_open()) return false;
-
   auto data = std::make_unique<unsigned char[]>(len_);
   for (unsigned int i = 0; i < len_; ++i) {
     const float encoded = sRGBEncode(pixels_[i]);
     data[i] = std::min(255.0f, std::max(0.0f, 255.0f * encoded));
   }
 
-  file << "P6\n" << width_ << " " << height_ << "\n255\n";
-  file.write(reinterpret_cast<char*>(data.get()), len_);
-
-  file.close();
-  return true;
+  const auto stride = 3 * width_;
+  const auto result = stbi_write_png(filename.c_str(), width_, height_, 3, data.get(), stride);
+  return result != 0;
 }
 
 Image& Image::operator=(const Image& other) {
