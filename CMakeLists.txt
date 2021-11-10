@@ -26,6 +26,7 @@ set(PROJECT_CODE
   include/Plane.hpp
   include/Rectangle.hpp
   include/Triangle.hpp
+  include/TriangleMesh.hpp
   include/Material.hpp
   include/DiffuseMaterial.hpp
   include/MirrorMaterial.hpp
@@ -57,6 +58,8 @@ set(PROJECT_CODE
   include/PinholeCamera.hpp src/PinholeCamera.cpp
   include/SimpleCamera.hpp src/SimpleCamera.cpp
   include/Math.hpp src/Math.cpp
+  include/ObjLoader.hpp src/ObjLoader.cpp
+  include/BoundingBox.hpp src/BoundingBox.cpp
 )
 
 set(TEST_SOURCES

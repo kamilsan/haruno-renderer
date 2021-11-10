@@ -23,12 +23,45 @@ class Triangle : public Object {
   Vector normal_;
 };
 
-//  Möller, Trumbore - "Fast Minimum Storage Ray-Triangle Intersection"
+// Möller, Trumbore - "Fast Minimum Storage Ray-Triangle Intersection"
+// float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+//   constexpr float EPS = 0.0000001f;
+//   const auto pvec = ray.getDirection().cross(e2_);
+//   const auto det = e1_.dot(pvec);
+
+//   if (det > -EPS && det < EPS) {
+//     return -1;
+//   }
+
+//   const auto invDet = 1.0f / det;
+
+//   const auto tvec = ray.getOrigin() - a_;
+//   auto u = tvec.dot(pvec) * invDet;
+
+//   if (u < 0.0f || u > 1.0f) {
+//     return -1;
+//   }
+
+//   const auto qvec = tvec.cross(e1_);
+//   auto v = ray.getDirection().dot(qvec) * invDet;
+
+//   if (v < 0.0f || u + v > 1.0f) {
+//     return -1;
+//   }
+
+//   auto t = e2_.dot(qvec) * invDet;
+//   surfaceInfo.normal = normal_;
+//   surfaceInfo.uv = std::make_pair(u, v);
+
+//   return t;
+// }
+
 float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  constexpr float EPS = 0.00000001f;
   const auto pvec = ray.getDirection().cross(e2_);
   const auto det = e1_.dot(pvec);
 
-  if (det < EPSILON) {
+  if (det < EPS) {
     return -1;
   }
 

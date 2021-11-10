@@ -1,6 +1,8 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
+#include <memory>
+
 #include "Vector.hpp"
 
 class Ray;

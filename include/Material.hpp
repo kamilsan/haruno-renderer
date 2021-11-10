@@ -3,8 +3,9 @@
 
 #include <memory>
 
+#include "BRDF.hpp"
+
 class Color;
-class BRDF;
 
 class Material {
  public:
