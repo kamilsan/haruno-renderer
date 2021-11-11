@@ -37,7 +37,7 @@ float Plane::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
     return -1;
   }
 
-  const auto t = -(ray.getOrigin() - point_).dot(normal_) / don;
+  const auto t = (point_ - ray.getOrigin()).dot(normal_) / don;
   if (t < 0.0f) {
     return -1;
   }

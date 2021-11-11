@@ -27,7 +27,7 @@ int main() {
   parameters.height = 480;
   parameters.numTiles = 200;
   parameters.threads = 8;
-  parameters.mcSamples = 4;
+  parameters.mcSamples = 1;
   parameters.saveIntermediate = true;
 
   auto integrator = std::make_shared<PathTracer>();
@@ -36,7 +36,7 @@ int main() {
   std::cout << parameters << "\n";
 
   // auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector{0, 0.1, -1.0},
-  //                                              Vector{0, 0, 1}, Vector{0, 1, 0});
+  //  Vector{0, 0, 1}, Vector{0, 1, 0});
 
   auto camera = std::make_unique<PinholeCamera>(90.0f, Vector{0, 0.1, 1.5}, Vector{0, 0, -1},
                                                 Vector{0, 1, 0});
@@ -80,7 +80,7 @@ int main() {
   // scene.addObject(std::make_shared<Sphere>(Vector(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
   // scene.addObject(std::make_shared<Sphere>(Vector(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
 
-  // TODO: optimize, tranformations, bounding box, support normals and uvs
+  // TODO: optimize, tranformations, support normals and uvs
 
   scene.addObject(ObjLoader::load("./meshes/dragon.obj", materialWhite));
 
