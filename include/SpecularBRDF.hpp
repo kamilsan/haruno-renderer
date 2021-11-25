@@ -11,6 +11,7 @@ class SpecularBRDF : public BRDF {
  public:
   SpecularBRDF() = default;
 
+  inline Type getType() const override { return Type::PerfectSpecular; }
   inline float sample(const Vector& wo, RNG& rng, Vector& wi, float& pdf) const override;
   inline Color evaluate(const Vector& wi, const Vector& wo) const override;
 };

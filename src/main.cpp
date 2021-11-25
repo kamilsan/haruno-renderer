@@ -6,6 +6,7 @@
 #include "DirectionalLight.hpp"
 #include "ImageTexture.hpp"
 #include "MirrorMaterial.hpp"
+#include "PathTracer.hpp"
 #include "PinholeCamera.hpp"
 #include "Plane.hpp"
 #include "PointLight.hpp"
@@ -26,7 +27,8 @@ int main() {
   parameters.threads = 8;
   parameters.mcSamples = 256;
 
-  Renderer renderer{parameters};
+  auto integrator = std::make_shared<PathTracer>();
+  Renderer renderer{parameters, integrator};
 
   std::cout << parameters << "\n";
 

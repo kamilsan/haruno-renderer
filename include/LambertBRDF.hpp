@@ -13,6 +13,7 @@ class LambertBRDF : public BRDF {
 
   float getDiffuseFactor() const { return diffuseFactor_; }
 
+  inline Type getType() const override { return Type::Regular; }
   inline float sample(const Vector& wo, RNG& rng, Vector& wi, float& pdf) const override;
   inline Color evaluate(const Vector& wi, const Vector& wo) const override;
 

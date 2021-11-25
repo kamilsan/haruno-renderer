@@ -15,7 +15,7 @@ class Image {
   Image(const Image& other);
   Image(Image&& other);
 
-  bool save(const std::string& filename) const;
+  bool save(const std::string& filename, const bool gammaCompress = true) const;
 
   void clear(const Color& color);
 

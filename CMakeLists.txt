@@ -42,6 +42,10 @@ set(PROJECT_CODE
   include/ImageTexture.hpp
   include/CheckerboardTexture.hpp
   include/Stopwatch.hpp
+  include/Integrator.hpp
+  include/PathTracer.hpp src/PathTracer.cpp
+  include/DirectLighting.hpp src/DirectLighting.cpp
+  include/DebugIntegrator.hpp src/DebugIntegrator.cpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp
   include/Vector.hpp src/Vector.cpp

@@ -56,10 +56,10 @@ Image::Image(Image&& other) {
   pixels_ = std::move(other.pixels_);
 }
 
-bool Image::save(const std::string& filename) const {
+bool Image::save(const std::string& filename, const bool gammaCompress) const {
   auto data = std::make_unique<unsigned char[]>(len_);
   for (unsigned int i = 0; i < len_; ++i) {
-    const float encoded = sRGBEncode(pixels_[i]);
+    const float encoded = gammaCompress ? sRGBEncode(pixels_[i]) : pixels_[i];
     data[i] = std::min(255.0f, std::max(0.0f, 255.0f * encoded));
   }
 

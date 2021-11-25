@@ -6,6 +6,7 @@
 #include "BRDF.hpp"
 #include "Camera.hpp"
 #include "Environment.hpp"
+#include "Integrator.hpp"
 #include "Light.hpp"
 #include "Material.hpp"
 #include "Math.hpp"
@@ -16,7 +17,8 @@
 #include "ThreadPool.hpp"
 #include "Vector.hpp"
 
-Renderer::Renderer(const RenderParameters& parameters) : parameters_(parameters), rng_() {}
+Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator)
+    : parameters_(parameters), integrator_(integrator), rng_() {}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const {
   Image result{parameters_.width, parameters_.height};
@@ -47,7 +49,7 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 
       ImageTile tile{tileMinX, tileMaxX, tileMinY, tileMaxY};
       auto result = pool.addTask(std::make_unique<RenderTileTask>(
-          parameters_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
+          parameters_, integrator_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
       results.emplace_back(std::move(result));
     }
   }

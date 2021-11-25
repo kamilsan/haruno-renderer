@@ -11,15 +11,17 @@
 class Ray;
 class Camera;
 class Scene;
+class Integrator;
 
 class Renderer {
  public:
-  Renderer(const RenderParameters& parameters);
+  Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator);
 
   Image render(std::unique_ptr<Camera> camera, const Scene& scene) const;
 
  private:
   RenderParameters parameters_;
+  std::shared_ptr<Integrator> integrator_;
   mutable RNG rng_;
 };
 
