@@ -15,12 +15,12 @@ RNG RNG::createChild(unsigned int id) {
   return RNG(newSeed);
 }
 
-Vector RNG::sampleCircle() {
+Vector3f RNG::sampleCircle() {
   const float r = std::sqrt(distribution_(engine_));
   const float theta = TAU * distribution_(engine_);
 
   const float x = r * std::cos(theta);
   const float y = r * std::sin(theta);
 
-  return Vector{x, y, 0};
+  return Vector3f{x, y, 0};
 }

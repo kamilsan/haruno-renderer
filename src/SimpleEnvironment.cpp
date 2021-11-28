@@ -1,9 +1,9 @@
 #include "SimpleEnvironment.hpp"
 
 #include "Math.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
-Color SimpleEnvironment::getColor(const Vector& direction) const {
+Color SimpleEnvironment::getColor(const Vector3f& direction) const {
   const float theta = std::asin(direction.y);
 
   if (theta > 0) {

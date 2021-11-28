@@ -5,30 +5,47 @@
 #include "Math.hpp"
 #include "Object.hpp"
 #include "Ray.hpp"
-#include "Vector.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
+
+struct TrianglesData {
+  TrianglesData(const std::vector<Vector3f>& vertices, const std::vector<Vector3f>& normals,
+                const std::vector<Vector2f>& uvs, const std::vector<unsigned int>& indices)
+      : vertices(vertices), normals(normals), uvs(uvs), indices(indices) {}
+
+  std::vector<Vector3f> vertices;
+  std::vector<Vector3f> normals;
+  std::vector<Vector2f> uvs;
+  std::vector<unsigned int> indices;
+};
 
 class Triangle : public Object {
  public:
-  Triangle(const Vector& a, const Vector& b, const Vector& c, std::shared_ptr<Material> material)
-      : Object(material), a_(a), e1_(b - a), e2_(c - a) {
-    normal_ = e1_.cross(e2_);
+  Triangle(const TrianglesData& trianglesData, unsigned int index,
+           std::shared_ptr<Material> material)
+      : Object(material), trianglesData_(trianglesData), index_(index) {
+    a_ = trianglesData_.vertices[trianglesData_.indices[index_]];
+    e1_ = trianglesData_.vertices[trianglesData_.indices[index_ + 1]] - a_;
+    e2_ = trianglesData_.vertices[trianglesData_.indices[index_ + 2]] - a_;
   }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
-  Vector a_;
-  Vector e1_;
-  Vector e2_;
-  Vector normal_;
+  const TrianglesData& trianglesData_;
+  unsigned int index_;
+  Vector3f a_;
+  Vector3f e1_;
+  Vector3f e2_;
 };
 
-//  Möller, Trumbore - "Fast Minimum Storage Ray-Triangle Intersection"
+// Möller, Trumbore - "Fast Minimum Storage Ray-Triangle Intersection"
 float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  constexpr float EPS = 0.00000001f;
   const auto pvec = ray.getDirection().cross(e2_);
   const auto det = e1_.dot(pvec);
 
-  if (det < EPSILON) {
+  if (det < EPS) {
     return -1;
   }
 
@@ -53,8 +70,17 @@ float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   u *= invDet;
   v *= invDet;
 
-  surfaceInfo.normal = normal_;
-  surfaceInfo.uv = std::make_pair(u, v);
+  const auto normal1 = trianglesData_.normals[trianglesData_.indices[index_]];
+  const auto normal2 = trianglesData_.normals[trianglesData_.indices[index_ + 1]];
+  const auto normal3 = trianglesData_.normals[trianglesData_.indices[index_ + 2]];
+
+  const auto uv1 = trianglesData_.uvs[trianglesData_.indices[index_]];
+  const auto uv2 = trianglesData_.uvs[trianglesData_.indices[index_ + 1]];
+  const auto uv3 = trianglesData_.uvs[trianglesData_.indices[index_ + 2]];
+
+  const auto w = 1.0f - u - v;
+  surfaceInfo.normal = (w * normal1 + u * normal2 + v * normal3).normalized();
+  surfaceInfo.uv = w * uv1 + u * uv2 + v * uv3;
 
   return t;
 }

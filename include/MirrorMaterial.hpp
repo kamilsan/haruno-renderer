@@ -12,7 +12,7 @@ class MirrorMaterial : public Material {
   MirrorMaterial(std::shared_ptr<BaseTexture> albedo)
       : Material(std::make_unique<SpecularBRDF>()), albedo_(albedo) {}
 
-  Color getAlbedo(float u, float v) const override { return albedo_->get(u, v); }
+  Color getAlbedo(const Vector2f& uv) const override { return albedo_->get(uv); }
 
  private:
   std::shared_ptr<BaseTexture> albedo_;

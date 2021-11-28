@@ -10,9 +10,9 @@ class ImageTexture : public BaseTexture {
  public:
   ImageTexture(const std::string& imagePath) : image_(imagePath.c_str()) {}
 
-  Color get(float u, float v) const {
-    const auto uRepeat = u - std::floor(u);
-    const auto vRepeat = 1.0f - (v - std::floor(v));
+  Color get(const Vector2f& uv) const {
+    const auto uRepeat = uv.x - std::floor(uv.x);
+    const auto vRepeat = 1.0f - (uv.y - std::floor(uv.y));
 
     const unsigned int s = uRepeat * image_.getWidth();
     const unsigned int t = vRepeat * image_.getHeight();

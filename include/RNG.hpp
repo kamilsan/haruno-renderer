@@ -4,7 +4,7 @@
 #include <chrono>
 #include <random>
 
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 class RNG {
  public:
@@ -14,7 +14,7 @@ class RNG {
   RNG createChild(unsigned int id);
 
   inline float get();
-  Vector sampleCircle();
+  Vector3f sampleCircle();
 
  private:
   std::mt19937 engine_;

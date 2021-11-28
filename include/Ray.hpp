@@ -1,21 +1,21 @@
 #ifndef RAY_HPP
 #define RAY_HPP
 
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 class Ray {
  public:
-  Ray(const Vector& origin, const Vector& direction) : origin_(origin), direction_(direction) {}
+  Ray(const Vector3f& origin, const Vector3f& direction) : origin_(origin), direction_(direction) {}
 
-  Vector at(float t) const { return origin_ + t * direction_; }
-  Vector operator()(float t) const { return origin_ + t * direction_; }
+  Vector3f at(float t) const { return origin_ + t * direction_; }
+  Vector3f operator()(float t) const { return origin_ + t * direction_; }
 
-  Vector getOrigin() const { return origin_; }
-  Vector getDirection() const { return direction_; }
+  Vector3f getOrigin() const { return origin_; }
+  Vector3f getDirection() const { return direction_; }
 
  private:
-  Vector origin_;
-  Vector direction_;
+  Vector3f origin_;
+  Vector3f direction_;
 };
 
 #endif

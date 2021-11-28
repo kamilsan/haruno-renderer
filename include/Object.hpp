@@ -1,17 +1,20 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
-#include "Vector.hpp"
+#include <memory>
+
+#include "Vector2.hpp"
+#include "Vector3.hpp"
 
 class Ray;
 class Material;
 
 struct SurfaceInfo {
   SurfaceInfo() = default;
-  SurfaceInfo(const Vector& normal, float u, float v) : normal(normal), uv(std::make_pair(u, v)) {}
+  SurfaceInfo(const Vector3f& normal, const Vector2f& uv) : normal(normal), uv(uv) {}
 
-  Vector normal;
-  std::pair<float, float> uv;
+  Vector3f normal;
+  Vector2f uv;
 };
 
 class Object {

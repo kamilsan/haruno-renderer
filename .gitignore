@@ -10,6 +10,7 @@ test
 bin
 build
 lib
-render.png
 TODO
 textures/
+meshes/
+render*.png

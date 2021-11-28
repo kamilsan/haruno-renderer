@@ -5,26 +5,27 @@
 #include "Math.hpp"
 #include "Object.hpp"
 #include "Ray.hpp"
-#include "Vector.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
 
 class Sphere : public Object {
  public:
-  Sphere(const Vector& center, float radius, std::shared_ptr<Material> material)
+  Sphere(const Vector3f& center, float radius, std::shared_ptr<Material> material)
       : Object(material), center_(center), radius_(radius) {}
 
-  const Vector& getCenter() const { return center_; }
+  const Vector3f& getCenter() const { return center_; }
   float getRadius() const { return radius_; }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
-  Vector center_;
+  Vector3f center_;
   float radius_;
 };
 
 // NOTE: Ray direction is assumed to be normalized
 float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-  Vector centerToOrigin = ray.getOrigin() - center_;
+  Vector3f centerToOrigin = ray.getOrigin() - center_;
   const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
   const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
   float delta = b * b - 4.0f * c;
@@ -55,7 +56,7 @@ float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float v = theta * ONE_OVER_PI;
 
   surfaceInfo.normal = normal;
-  surfaceInfo.uv = std::make_pair(u, v);
+  surfaceInfo.uv = Vector2f(u, v);
 
   return t;
 }

@@ -10,7 +10,7 @@
 #include "RNG.hpp"
 #include "Ray.hpp"
 #include "Scene.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) {
   Ray ray = cameraRay;
@@ -29,7 +29,7 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const auto& normal = surfaceInfo.normal;
       const auto& uv = surfaceInfo.uv;
       const auto& material = object->getMaterial();
-      const auto albedo = material.getAlbedo(uv.first, uv.second);
+      const auto albedo = material.getAlbedo(uv);
       const auto wo = (ray.getOrigin() - position).normalized();
 
       for (const auto& light : scene.getLights()) {
@@ -47,11 +47,11 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
         }
       }
 
-      Vector tangent, bitangent;
+      Vector3f tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
       const auto woShading = transformFromTangentSpace(wo, normal, tangent, bitangent);
 
-      Vector sample{};
+      Vector3f sample{};
       float pdf = 1.0f;
       const float f = material.getBRDF().sample(woShading, rng, sample, pdf);
       const float coswi = std::max(sample.y, 0.0f);  // wi . (0, 1, 0)
@@ -59,7 +59,7 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       result += coef * color;
       coef *= albedo * f * coswi / pdf;
 
-      Vector wi = transformToTangentSpace(sample, normal, tangent, bitangent);
+      Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent);
       ray = Ray{position + wi * 0.0001f, wi};
 
       if (i > 3) {

@@ -26,6 +26,7 @@ set(PROJECT_CODE
   include/Plane.hpp
   include/Rectangle.hpp
   include/Triangle.hpp
+  include/TriangleMesh.hpp
   include/Material.hpp
   include/DiffuseMaterial.hpp
   include/MirrorMaterial.hpp
@@ -43,12 +44,16 @@ set(PROJECT_CODE
   include/CheckerboardTexture.hpp
   include/Stopwatch.hpp
   include/Integrator.hpp
+  include/Vector2.hpp
+  include/Vector3.hpp
+  include/Vector4.hpp
+  include/Matrix4.hpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp
+  include/Transformation.hpp src/Transformation.cpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp
-  include/Vector.hpp src/Vector.cpp
   include/RNG.hpp src/RNG.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/RenderTileTask.hpp src/RenderTileTask.cpp
@@ -57,11 +62,15 @@ set(PROJECT_CODE
   include/PinholeCamera.hpp src/PinholeCamera.cpp
   include/SimpleCamera.hpp src/SimpleCamera.cpp
   include/Math.hpp src/Math.cpp
+  include/ObjLoader.hpp src/ObjLoader.cpp
+  include/BoundingBox.hpp src/BoundingBox.cpp
 )
 
 set(TEST_SOURCES
   tests/ImageTest.cpp
-  tests/VectorTest.cpp
+  tests/Vector3Test.cpp
+  tests/Vector4Test.cpp
+  tests/Matrix4Test.cpp
   tests/RayTest.cpp
   tests/MathTest.cpp
 )
