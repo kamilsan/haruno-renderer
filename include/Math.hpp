@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-class Vector;
+#include "Vector3.hpp"
 
 #define PI 3.14159265358979323846
 #define TAU 6.28318530717958647692
@@ -14,11 +14,11 @@ class Vector;
 inline float toRadians(float angle) { return PI * angle / 180.0f; }
 
 // Method by Tom Duff et al.
-void createOrthogonalFrame(const Vector& normal, Vector& tangent, Vector& bitangent);
+void createOrthogonalFrame(const Vector3f& normal, Vector3f& tangent, Vector3f& bitangent);
 
-Vector transformToTangentSpace(const Vector& v, const Vector& normal, const Vector& tangent,
-                               const Vector& bitangent);
-Vector transformFromTangentSpace(const Vector& v, const Vector& normal, const Vector& tangent,
-                                 const Vector& bitangent);
+Vector3f transformToTangentSpace(const Vector3f& v, const Vector3f& normal, const Vector3f& tangent,
+                                 const Vector3f& bitangent);
+Vector3f transformFromTangentSpace(const Vector3f& v, const Vector3f& normal,
+                                   const Vector3f& tangent, const Vector3f& bitangent);
 
 #endif

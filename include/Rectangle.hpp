@@ -6,12 +6,13 @@
 #include "Material.hpp"
 #include "Object.hpp"
 #include "Ray.hpp"
-#include "Vector.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
 
 class Rectangle : public Object {
  public:
-  Rectangle(const Vector& point, const Vector& normal, const Vector& tangent,
-            const Vector& bitangent, float sizeTangent, float sizeBitangent,
+  Rectangle(const Vector3f& point, const Vector3f& normal, const Vector3f& tangent,
+            const Vector3f& bitangent, float sizeTangent, float sizeBitangent,
             std::shared_ptr<Material> material)
       : Object(material), point_(point), sizeTangent_(sizeTangent), sizeBitangent_(sizeBitangent) {
     // Gram-Schidt process
@@ -21,17 +22,17 @@ class Rectangle : public Object {
                      .normalized();
   }
 
-  const Vector& getPoint() const { return point_; }
-  const Vector& getTangent() const { return tangent_; }
-  const Vector& getBitangent() const { return bitangent_; }
+  const Vector3f& getPoint() const { return point_; }
+  const Vector3f& getTangent() const { return tangent_; }
+  const Vector3f& getBitangent() const { return bitangent_; }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
-  Vector point_;
-  Vector normal_;
-  Vector tangent_;
-  Vector bitangent_;
+  Vector3f point_;
+  Vector3f normal_;
+  Vector3f tangent_;
+  Vector3f bitangent_;
   float sizeTangent_;
   float sizeBitangent_;
 };
@@ -43,7 +44,7 @@ float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   }
 
   const float t = -(ray.getOrigin() - point_).dot(normal_) / don;
-  const Vector toPosition = ray(t) - point_;
+  const Vector3f toPosition = ray(t) - point_;
 
   const float distTangent = toPosition.dot(tangent_);
   if (distTangent < 0.0f || distTangent > sizeTangent_) {
@@ -59,7 +60,7 @@ float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float v = distBitangent / sizeBitangent_;
 
   surfaceInfo.normal = normal_;
-  surfaceInfo.uv = std::make_pair(u, v);
+  surfaceInfo.uv = Vector2f(u, v);
 
   return t;
 }

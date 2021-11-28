@@ -3,30 +3,30 @@
 
 #include "Color.hpp"
 #include "Light.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 class DirectionalLight : public Light {
  public:
-  DirectionalLight(const Vector& direction, const Color& color, float intensity)
+  DirectionalLight(const Vector3f& direction, const Color& color, float intensity)
       : direction_(direction.normalized()), color_(color), intensity_(intensity) {}
 
-  Color evaluate(const Vector& position) const override;
-  Ray getShadowRay(const Vector& position, float& maxT) const override;
+  Color evaluate(const Vector3f& position) const override;
+  Ray getShadowRay(const Vector3f& position, float& maxT) const override;
 
-  const Vector& getDirection() const { return direction_; }
+  const Vector3f& getDirection() const { return direction_; }
   const Color& getColor() const { return color_; }
   float getIntensity() const { return intensity_; }
 
  private:
-  Vector direction_;
+  Vector3f direction_;
   Color color_;
   float intensity_;
 };
 
-Color DirectionalLight::evaluate(const Vector&) const { return intensity_ * color_; }
+Color DirectionalLight::evaluate(const Vector3f&) const { return intensity_ * color_; }
 
-Ray DirectionalLight::getShadowRay(const Vector& position, float& maxT) const {
-  const Vector origin = position - direction_ * 0.001f;
+Ray DirectionalLight::getShadowRay(const Vector3f& position, float& maxT) const {
+  const Vector3f origin = position - direction_ * 0.001f;
   maxT = -1.0f;
 
   return Ray{origin, -direction_};

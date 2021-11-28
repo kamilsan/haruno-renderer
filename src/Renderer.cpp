@@ -15,7 +15,6 @@
 #include "RenderTileTask.hpp"
 #include "Scene.hpp"
 #include "ThreadPool.hpp"
-#include "Vector.hpp"
 
 Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator)
     : parameters_(parameters), integrator_(integrator), rng_() {}

@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Transformation.hpp"
 #include "TriangleMesh.hpp"
 
 class ObjLoader {
@@ -10,6 +11,7 @@ class ObjLoader {
   ObjLoader() = delete;
 
   static std::shared_ptr<TriangleMesh> load(const std::string& filename,
+                                            const Transformation& transformation,
                                             std::shared_ptr<Material> material);
 
  private:

@@ -3,7 +3,7 @@
 #include "Camera.hpp"
 #include "Integrator.hpp"
 #include "ThreadPool.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 RenderTileTask::RenderTileTask(const RenderParameters& parameters,
                                std::shared_ptr<Integrator> integrator, ImageTile tile,

@@ -6,49 +6,59 @@
 
 #include "BoundingBox.hpp"
 #include "Object.hpp"
+#include "Transformation.hpp"
 #include "Triangle.hpp"
+#include "Vector2.hpp"
 
 class TriangleMesh : public Object {
  public:
-  inline TriangleMesh(const std::vector<Vector>& vertices, const std::vector<unsigned int>& indices,
-                      std::shared_ptr<Material> material);
+  inline TriangleMesh(const std::vector<Vector3f>& vertices, const std::vector<Vector3f>& normals,
+                      const std::vector<Vector2f>& uvs, const std::vector<unsigned int>& indices,
+                      const Transformation& transformation, std::shared_ptr<Material> material);
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
  private:
+  TrianglesData trianglesData_;
   std::vector<Triangle> triangles_;
   BoundingBox boundingBox_;
+  Transformation transformation_;
 };
 
-inline TriangleMesh::TriangleMesh(const std::vector<Vector>& vertices,
+inline TriangleMesh::TriangleMesh(const std::vector<Vector3f>& vertices,
+                                  const std::vector<Vector3f>& normals,
+                                  const std::vector<Vector2f>& uvs,
                                   const std::vector<unsigned int>& indices,
+                                  const Transformation& transformation,
                                   std::shared_ptr<Material> material)
-    : Object(material), boundingBox_(vertices) {
+    : Object(material),
+      trianglesData_(vertices, normals, uvs, indices),
+      boundingBox_(vertices),
+      transformation_(transformation) {
   for (size_t i = 0; i < indices.size(); i += 3) {
-    const auto& v1 = vertices[indices[i]];
-    const auto& v2 = vertices[indices[i + 1]];
-    const auto& v3 = vertices[indices[i + 2]];
-
-    triangles_.emplace_back(Triangle(v1, v2, v3, material));
+    triangles_.emplace_back(Triangle(trianglesData_, i, material));
   }
-
-  std::cout << "Min corner: " << boundingBox_.getMinCorner() << "\n";
-  std::cout << "Max corner: " << boundingBox_.getMaxCorner() << "\n";
 }
 
 inline float TriangleMesh::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   float minT = -1;
   SurfaceInfo tempSurfaceInfo;
 
-  if (boundingBox_.intersects(ray)) {
+  const Ray rayTransformed = transformation_.toObjectCoordinates(ray);
+
+  if (boundingBox_.intersects(rayTransformed)) {
     for (const auto& triangle : triangles_) {
-      const auto t = triangle.intersects(ray, tempSurfaceInfo);
+      const auto t = triangle.intersects(rayTransformed, tempSurfaceInfo);
       if (t > 0 && (t < minT || minT < 0.0f)) {
         minT = t;
         surfaceInfo = tempSurfaceInfo;
       }
     }
   }
+
+  const auto normalHomogenous = Vector4f(surfaceInfo.normal, 0.0f);
+  surfaceInfo.normal =
+      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
 
   return minT;
 }

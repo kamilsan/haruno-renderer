@@ -44,12 +44,16 @@ set(PROJECT_CODE
   include/CheckerboardTexture.hpp
   include/Stopwatch.hpp
   include/Integrator.hpp
+  include/Vector2.hpp
+  include/Vector3.hpp
+  include/Vector4.hpp
+  include/Matrix4.hpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp
+  include/Transformation.hpp src/Transformation.cpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp
-  include/Vector.hpp src/Vector.cpp
   include/RNG.hpp src/RNG.cpp
   include/Renderer.hpp src/Renderer.cpp
   include/RenderTileTask.hpp src/RenderTileTask.cpp
@@ -64,7 +68,9 @@ set(PROJECT_CODE
 
 set(TEST_SOURCES
   tests/ImageTest.cpp
-  tests/VectorTest.cpp
+  tests/Vector3Test.cpp
+  tests/Vector4Test.cpp
+  tests/Matrix4Test.cpp
   tests/RayTest.cpp
   tests/MathTest.cpp
 )

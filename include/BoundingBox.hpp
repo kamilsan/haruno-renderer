@@ -3,29 +3,28 @@
 
 #include <vector>
 
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 class Ray;
 
 class BoundingBox {
  public:
-  BoundingBox(const Vector& point) : minCorner_(point), maxCorner_(point) {}
+  BoundingBox(const Vector3f& point) : minCorner_(point), maxCorner_(point) {}
 
-  BoundingBox(const Vector& minCorner, const Vector& maxCorner)
+  BoundingBox(const Vector3f& minCorner, const Vector3f& maxCorner)
       : minCorner_(minCorner), maxCorner_(maxCorner) {}
 
-  BoundingBox(const std::vector<Vector>& points);
+  BoundingBox(const std::vector<Vector3f>& points);
 
-  void expand(const Vector& point);
+  void expand(const Vector3f& point);
   bool intersects(const Ray& ray) const;
 
-  const Vector& getMinCorner() const { return minCorner_; }
-
-  const Vector& getMaxCorner() const { return maxCorner_; }
+  const Vector3f& getMinCorner() const { return minCorner_; }
+  const Vector3f& getMaxCorner() const { return maxCorner_; }
 
  private:
-  Vector minCorner_;
-  Vector maxCorner_;
+  Vector3f minCorner_;
+  Vector3f maxCorner_;
 };
 
 #endif  // BOUNDING_BOX_HPP

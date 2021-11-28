@@ -9,9 +9,9 @@ class CheckerboardTexture : public BaseTexture {
  public:
   CheckerboardTexture(float sizeU, float sizeV) : sizeU_(sizeU), sizeV_(sizeV) {}
 
-  Color get(float u, float v) const override {
-    const auto uScaled = sizeU_ * u;
-    const auto vScaled = sizeV_ * v;
+  Color get(const Vector2f& uv) const override {
+    const auto uScaled = sizeU_ * uv.x;
+    const auto vScaled = sizeV_ * uv.y;
     const auto uMod = uScaled - std::floor(uScaled);
     const auto vMod = vScaled - std::floor(vScaled);
 

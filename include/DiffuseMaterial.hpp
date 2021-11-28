@@ -12,7 +12,7 @@ class DiffuseMaterial : public Material {
   DiffuseMaterial(std::shared_ptr<BaseTexture> albedo, float diffuseFactor)
       : Material(std::make_unique<LambertBRDF>(diffuseFactor)), albedo_(albedo) {}
 
-  Color getAlbedo(float u, float v) const override { return albedo_->get(u, v); }
+  Color getAlbedo(const Vector2f& uv) const override { return albedo_->get(uv); }
 
  private:
   std::shared_ptr<BaseTexture> albedo_;

@@ -10,7 +10,7 @@
 #include "RNG.hpp"
 #include "Ray.hpp"
 #include "Scene.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&) {
   SurfaceInfo surfaceInfo{};
@@ -24,12 +24,12 @@ Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&)
     const auto& normal = surfaceInfo.normal;
     const auto& uv = surfaceInfo.uv;
     const auto& material = object->getMaterial();
-    const auto albedo = material.getAlbedo(uv.first, uv.second);
+    const auto albedo = material.getAlbedo(uv);
 
     if (outputType_ == OutputType::Albedo) {
       return albedo;
     } else if (outputType_ == OutputType::Normal) {
-      const Vector color = (normal + Vector(1.0f, 1.0f, 1.0f)) * 0.5f;
+      const Vector3f color = (normal + Vector3f(1.0f, 1.0f, 1.0f)) * 0.5f;
       return Color{color.x, color.y, color.z};
     } else if (outputType_ == OutputType::Depth) {
       return Color{1.0f, 1.0f, 1.0f} * position.z;

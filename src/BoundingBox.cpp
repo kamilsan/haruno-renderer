@@ -3,7 +3,7 @@
 #include "Ray.hpp"
 #include "Sphere.hpp"
 
-BoundingBox::BoundingBox(const std::vector<Vector>& points) {
+BoundingBox::BoundingBox(const std::vector<Vector3f>& points) {
   if (points.size() > 0) {
     minCorner_ = points[0];
     maxCorner_ = points[0];
@@ -14,7 +14,7 @@ BoundingBox::BoundingBox(const std::vector<Vector>& points) {
   }
 }
 
-void BoundingBox::expand(const Vector& point) {
+void BoundingBox::expand(const Vector3f& point) {
   if (point.x < minCorner_.x) {
     minCorner_.x = point.x;
   } else if (point.x > maxCorner_.x) {
@@ -38,58 +38,24 @@ bool BoundingBox::intersects(const Ray& ray) const {
   float intersectionIntervalMin = 0.0f;
   float intersectionIntervalMax = std::numeric_limits<float>::max();
 
-  // x
-  const float invDirectionX = 1.0f / ray.getDirection().x;
-  float tMinX = (minCorner_.x - ray.getOrigin().x) * invDirectionX;
-  float tMaxX = (maxCorner_.x - ray.getOrigin().x) * invDirectionX;
-  if (tMinX > tMaxX) {
-    std::swap(tMinX, tMaxX);
-  }
+  for (size_t i = 0; i < 3; ++i) {
+    const float invDirection = 1.0f / ray.getDirection()[i];
+    float tMin = (minCorner_[i] - ray.getOrigin()[i]) * invDirection;
+    float tMax = (maxCorner_[i] - ray.getOrigin()[i]) * invDirection;
+    if (tMin > tMax) {
+      std::swap(tMin, tMax);
+    }
 
-  if (tMinX > intersectionIntervalMin) {
-    intersectionIntervalMin = tMinX;
-  }
-  if (tMaxX < intersectionIntervalMax) {
-    intersectionIntervalMax = tMaxX;
-  }
-  if (intersectionIntervalMin > intersectionIntervalMax) {
-    return false;
-  }
+    if (tMin > intersectionIntervalMin) {
+      intersectionIntervalMin = tMin;
+    }
+    if (tMax < intersectionIntervalMax) {
+      intersectionIntervalMax = tMax;
+    }
 
-  // y
-  const float invDirectionY = 1.0f / ray.getDirection().y;
-  float tMinY = (minCorner_.y - ray.getOrigin().y) * invDirectionY;
-  float tMaxY = (maxCorner_.y - ray.getOrigin().y) * invDirectionY;
-  if (tMinY > tMaxY) {
-    std::swap(tMinY, tMaxY);
-  }
-
-  if (tMinY > intersectionIntervalMin) {
-    intersectionIntervalMin = tMinY;
-  }
-  if (tMaxY < intersectionIntervalMax) {
-    intersectionIntervalMax = tMaxY;
-  }
-  if (intersectionIntervalMin > intersectionIntervalMax) {
-    return false;
-  }
-
-  // z
-  const float invDirectionZ = 1.0f / ray.getDirection().z;
-  float tMinZ = (minCorner_.z - ray.getOrigin().z) * invDirectionZ;
-  float tMaxZ = (maxCorner_.z - ray.getOrigin().z) * invDirectionZ;
-  if (tMinZ > tMaxZ) {
-    std::swap(tMinZ, tMaxZ);
-  }
-
-  if (tMinZ > intersectionIntervalMin) {
-    intersectionIntervalMin = tMinZ;
-  }
-  if (tMaxZ < intersectionIntervalMax) {
-    intersectionIntervalMax = tMaxZ;
-  }
-  if (intersectionIntervalMin > intersectionIntervalMax) {
-    return false;
+    if (intersectionIntervalMin > intersectionIntervalMax) {
+      return false;
+    }
   }
 
   return true;
