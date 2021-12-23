@@ -18,20 +18,10 @@ std::shared_ptr<Object> Scene::intersects(const Ray& ray, float& t,
     }
   }
 
-  t = minT;
-  return result;
-}
-
-std::optional<Color> Scene::intersectsLight(const Ray& ray, float& t) const {
-  std::optional<Color> result{};
-
-  float minT = -1;
-  SurfaceInfo surfaceInfo;
-  for (const auto& light : lights_) {
-    const auto candidate = light->intersects(ray, surfaceInfo);
-    if (candidate > 0 && (minT < 0 || candidate < minT)) {
-      minT = candidate;
-      result = light->evaluate(ray(candidate));
+  if (result != nullptr && result->getLight().lock() != nullptr) {
+    // Area light are one sided
+    if (surfaceInfo.normal.dot(-ray.getDirection()) > 0) {
+      surfaceInfo.emittance = result->getLight().lock()->evaluate(ray(minT));
     }
   }
 
@@ -51,4 +41,10 @@ bool Scene::occludes(const Ray& ray, float maxT) const {
 
 void Scene::addObject(std::shared_ptr<Object> object) { objects_.emplace_back(std::move(object)); }
 
-void Scene::addLight(std::shared_ptr<Light> light) { lights_.emplace_back(std::move(light)); }
+void Scene::addLight(std::shared_ptr<Light> light) {
+  if (!light->isDelta()) {
+    light->getObject()->setLight(light);
+    objects_.emplace_back(light->getObject());
+  }
+  lights_.emplace_back(light);
+}

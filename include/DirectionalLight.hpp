@@ -13,12 +13,13 @@ class DirectionalLight : public Light {
   Color evaluate(const Vector3f& position) const override;
   Ray getShadowRay(const Vector3f& position, float& maxT) const override;
 
-  Color sampleLe(Vector3f&, RNG&) const override { return {}; }
-  float intersects(const Ray&, SurfaceInfo& surfaceInfo) const override { return 0.0f; }
+  Color sampleLe(Vector3f&, SurfaceInfo&, RNG&, float&) const override { return {}; }
+  float intersects(const Ray&, SurfaceInfo&) const override { return -1.0f; }
 
   const Vector3f& getDirection() const { return direction_; }
   const Color& getColor() const { return color_; }
   float getIntensity() const { return intensity_; }
+
  private:
   Vector3f direction_;
   Color color_;

@@ -19,7 +19,6 @@ class Scene {
       : objects_(), lights_(), environment_(std::move(environment)) {}
 
   std::shared_ptr<Object> intersects(const Ray& ray, float& t, SurfaceInfo& surfaceInfo) const;
-  std::optional<Color> intersectsLight(const Ray& ray, float& t) const;
   bool occludes(const Ray& ray, float maxT) const;
 
   const Environment& getEnvironment() const { return *environment_; };
