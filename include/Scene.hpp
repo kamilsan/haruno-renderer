@@ -2,8 +2,10 @@
 #define SCENE_HPP
 
 #include <memory>
+#include <optional>
 #include <vector>
 
+#include "Color.hpp"
 #include "Environment.hpp"
 
 class Object;

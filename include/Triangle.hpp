@@ -27,13 +27,17 @@ class Triangle : public Object {
     a_ = trianglesData_.vertices[trianglesData_.indices[index_]];
     e1_ = trianglesData_.vertices[trianglesData_.indices[index_ + 1]] - a_;
     e2_ = trianglesData_.vertices[trianglesData_.indices[index_ + 2]] - a_;
+    pdf_ = 2.0f / e1_.cross(e2_).length();
   }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
+  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+
  private:
   const TrianglesData& trianglesData_;
   unsigned int index_;
+  float pdf_;
   Vector3f a_;
   Vector3f e1_;
   Vector3f e2_;
@@ -83,6 +87,28 @@ float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   surfaceInfo.uv = w * uv1 + u * uv2 + v * uv3;
 
   return t;
+}
+
+Vector3f Triangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
+  const auto s = std::sqrt(rng.get());
+  const auto u = 1.0f - s;
+  const auto v = rng.get() * s;
+
+  const auto normal1 = trianglesData_.normals[trianglesData_.indices[index_]];
+  const auto normal2 = trianglesData_.normals[trianglesData_.indices[index_ + 1]];
+  const auto normal3 = trianglesData_.normals[trianglesData_.indices[index_ + 2]];
+
+  const auto uv1 = trianglesData_.uvs[trianglesData_.indices[index_]];
+  const auto uv2 = trianglesData_.uvs[trianglesData_.indices[index_ + 1]];
+  const auto uv3 = trianglesData_.uvs[trianglesData_.indices[index_ + 2]];
+
+  const auto w = 1.0f - u - v;
+  surfaceInfo.normal = (w * normal1 + u * normal2 + v * normal3).normalized();
+  surfaceInfo.uv = w * uv1 + u * uv2 + v * uv3;
+
+  pdf = pdf_;
+
+  return a_ + u * e1_ + v * e2_;
 }
 
 #endif

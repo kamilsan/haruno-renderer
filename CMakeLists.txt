@@ -23,7 +23,6 @@ set(PROJECT_CODE
   include/Camera.hpp
   include/Object.hpp
   include/Sphere.hpp
-  include/Plane.hpp
   include/Rectangle.hpp
   include/Triangle.hpp
   include/TriangleMesh.hpp
@@ -48,6 +47,7 @@ set(PROJECT_CODE
   include/Vector3.hpp
   include/Vector4.hpp
   include/Matrix4.hpp
+  include/AreaLight.hpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp

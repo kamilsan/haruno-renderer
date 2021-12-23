@@ -12,6 +12,9 @@ class PointLight : public Light {
 
   Color evaluate(const Vector3f& position) const override;
   Ray getShadowRay(const Vector3f& position, float& maxT) const override;
+  bool isDelta() const override { return true; }
+  Color sampleLe(Vector3f&, SurfaceInfo&, RNG&, float&) const override { return {}; }
+  float intersects(const Ray&, SurfaceInfo&) const override { return -1.0f; }
 
   const Vector3f& getPosition() const { return position_; }
   const Color& getColor() const { return color_; }

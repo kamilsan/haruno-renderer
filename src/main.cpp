@@ -1,15 +1,16 @@
 #include <chrono>
 #include <memory>
 
+#include "AreaLight.hpp"
 #include "CheckerboardTexture.hpp"
 #include "DiffuseMaterial.hpp"
+#include "DirectLighting.hpp"
 #include "DirectionalLight.hpp"
 #include "ImageTexture.hpp"
 #include "MirrorMaterial.hpp"
 #include "ObjLoader.hpp"
 #include "PathTracer.hpp"
 #include "PinholeCamera.hpp"
-#include "Plane.hpp"
 #include "PointLight.hpp"
 #include "Rectangle.hpp"
 #include "Renderer.hpp"
@@ -23,11 +24,11 @@
 
 int main() {
   RenderParameters parameters;
-  parameters.width = 800;
-  parameters.height = 600;
+  parameters.width = 1920;
+  parameters.height = 1080;
   parameters.numTiles = 200;
   parameters.threads = 8;
-  parameters.mcSamples = 16;
+  parameters.mcSamples = 1024;
   parameters.saveIntermediate = true;
 
   auto integrator = std::make_shared<PathTracer>();
@@ -41,7 +42,7 @@ int main() {
   const Color zenith{0.176f, 0.557f, 0.988f};
   const Color horizon{0.71f, 0.259f, 0.149f};
   const Color ground{0.467f, 0.384f, 0.325f};
-  auto environment = std::make_unique<SimpleEnvironment>(zenith, horizon, ground);
+  auto environment = std::make_unique<SimpleEnvironment>(Color{}, Color{}, Color{});
 
   Scene scene{std::move(environment)};
 
@@ -49,12 +50,10 @@ int main() {
   auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
   auto uvTest = std::make_shared<ImageTexture>("textures/uv.png");
 
-  auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 0.6f);
-  auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 0.6f);
-  auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.6f);
+  auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 1.0f);
+  auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 1.0f);
+  auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 1.0f);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
-
-  scene.addLight(std::make_shared<PointLight>(Vector3f{0, 1.6f, 1.0f}, Color{1, 1, 1}, 3.0f));
 
   scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(1, 0, 0),
                                               Vector3f(0, 0, 1), Vector3f(0, 1, 0), 3, 3,
@@ -75,12 +74,17 @@ int main() {
                                               Vector3f(1, 0, 0), Vector3f(0, 1, 0), 4, 3,
                                               materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
-  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialMirror));
+  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialWhite));
+
+  scene.addLight(std::make_shared<AreaLight>(
+      std::make_shared<Rectangle>(Vector3f(-0.6f, 1.99f, 0.9f), Vector3f(0, -1, 0),
+                                  Vector3f(1, 0, 0), Vector3f(0, 0, 1), 1.2f, 0.3f, materialWhite),
+      Color(10, 10, 10)));
 
   Transformation meshTransformation;
-  meshTransformation.setTranslation(Vector3f(0.0f, 0.4f, 0.75f));
-  meshTransformation.setScale(Vector3f(0.5f, 0.5f, 0.5f));
-  scene.addObject(ObjLoader::load("./meshes/monkey_smooth.obj", meshTransformation, materialWhite));
+  meshTransformation.setTranslation(Vector3f(0.0f, 0.5f, 0.75f));
+  auto monkey = ObjLoader::load("./meshes/monkey.obj", meshTransformation, materialWhite);
+  scene.addObject(monkey);
 
   Stopwatch watch = Stopwatch::startNew();
   const Image render = renderer.render(std::move(camera), scene);

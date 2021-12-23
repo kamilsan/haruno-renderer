@@ -1,6 +1,8 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
 
+#include <iostream>
+
 struct Color {
   Color(float r, float g, float b) : r(r), g(g), b(b) {}
   Color(float v) : r(v), g(v), b(v) {}
@@ -62,6 +64,10 @@ struct Color {
     b *= f;
 
     return *this;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const Color& c) {
+    return os << "(" << c.r << ", " << c.g << ", " << c.b << ")";
   }
 
   friend Color operator*(float weight, const Color& color) { return color * weight; }

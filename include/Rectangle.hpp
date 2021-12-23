@@ -5,6 +5,7 @@
 
 #include "Material.hpp"
 #include "Object.hpp"
+#include "RNG.hpp"
 #include "Ray.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
@@ -20,6 +21,8 @@ class Rectangle : public Object {
     tangent_ = (tangent - tangent.dot(normal_) * normal_).normalized();
     bitangent_ = (bitangent - bitangent.dot(normal_) * normal_ - bitangent.dot(tangent_) * tangent_)
                      .normalized();
+
+    pdf_ = 1.0f / (sizeTangent * sizeBitangent);
   }
 
   const Vector3f& getPoint() const { return point_; }
@@ -27,6 +30,7 @@ class Rectangle : public Object {
   const Vector3f& getBitangent() const { return bitangent_; }
 
   inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
 
  private:
   Vector3f point_;
@@ -35,6 +39,7 @@ class Rectangle : public Object {
   Vector3f bitangent_;
   float sizeTangent_;
   float sizeBitangent_;
+  float pdf_;
 };
 
 float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
@@ -63,6 +68,21 @@ float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   surfaceInfo.uv = Vector2f(u, v);
 
   return t;
+}
+
+Vector3f Rectangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
+  const float u = rng.get();
+  const float v = rng.get();
+
+  const float s = u * sizeTangent_;
+  const float t = v * sizeBitangent_;
+
+  surfaceInfo.normal = normal_;
+  surfaceInfo.uv = Vector2f(u, v);
+
+  pdf = pdf_;
+
+  return point_ + tangent_ * s + bitangent_ * t;
 }
 
 #endif
