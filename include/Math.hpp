@@ -13,6 +13,8 @@
 
 inline float toRadians(float angle) { return PI * angle / 180.0f; }
 
+bool solveQuadratic(float a, float b, float c, float& t1, float& t2);
+
 // Method by Tom Duff et al.
 void createOrthogonalFrame(const Vector3f& normal, Vector3f& tangent, Vector3f& bitangent);
 

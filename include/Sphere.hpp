@@ -32,18 +32,12 @@ float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float a = ray.getDirection().lengthSq();
   const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
   const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
-  float delta = b * b - 4.0f * a * c;
 
-  if (delta < 0.0f) {
+  float t1, t2;
+  if (!solveQuadratic(a, b, c, t1, t2)) {
     return -1.0f;
   }
 
-  delta = std::sqrt(delta);
-
-  const float q = -0.5f * (b + std::copysign(1.0f, b) * delta);
-
-  const float t1 = q / a;
-  const float t2 = c / q;
   const float t = std::min(t1, t2);
 
   if (t < 0.0f) {

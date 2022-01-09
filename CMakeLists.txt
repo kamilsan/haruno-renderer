@@ -48,6 +48,9 @@ set(PROJECT_CODE
   include/Vector4.hpp
   include/Matrix4.hpp
   include/AreaLight.hpp
+  include/Cylinder.hpp
+  include/Cone.hpp
+  include/Paraboloid.hpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp

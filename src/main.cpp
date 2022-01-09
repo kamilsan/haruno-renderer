@@ -4,7 +4,6 @@
 
 #include "AreaLight.hpp"
 #include "CheckerboardTexture.hpp"
-#include "Cylinder.hpp"
 #include "DebugIntegrator.hpp"
 #include "DiffuseMaterial.hpp"
 #include "DirectLighting.hpp"
@@ -39,10 +38,8 @@ int main() {
 
   std::cout << parameters << "\n";
 
-  // auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector3f{0, 0.1, -1.0},
-  //                                              Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
-  auto camera = std::make_unique<PinholeCamera>(90.0f, Vector3f{0, 0.4, -1.0}, Vector3f{0, 0, 1},
-                                                Vector3f{0, 1, 0});
+  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector3f{0, 0.1, -1.0},
+                                               Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
 
   const Color zenith{0.176f, 0.557f, 0.988f};
   const Color horizon{0.71f, 0.259f, 0.149f};
@@ -78,8 +75,8 @@ int main() {
   scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(0, 0, 1),
                                               Vector3f(1, 0, 0), Vector3f(0, 1, 0), 4, 3,
                                               materialWhite));
-  // scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
-  // scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialWhite));
+  scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
+  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialWhite));
 
   scene.addLight(std::make_shared<AreaLight>(
       std::make_shared<Rectangle>(Vector3f(-0.6f, 1.99f, 0.9f), Vector3f(0, -1, 0),

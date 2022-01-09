@@ -5,15 +5,16 @@
 #include "Math.hpp"
 #include "Object.hpp"
 #include "Ray.hpp"
+#include "Transformation.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "Transformation.hpp"
 
 class Cylinder : public Object {
  public:
-  Cylinder(const Transformation& transformation, float radius, float height, std::shared_ptr<Material> material)
+  Cylinder(const Transformation& transformation, float radius, float height,
+           std::shared_ptr<Material> material)
       : Object(material), transformation_(transformation), radius_(radius), height_(height) {
-    pdf_ = 1.0f / (2.0f * PI * radius * height_);
+    pdf_ = 1.0f / (2.0f * PI * radius * height);
   }
 
   float getRadius() const { return radius_; }
@@ -38,22 +39,12 @@ float Cylinder::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const float a = direction.x * direction.x + direction.z * direction.z;
   const float b = 2.0f * (origin.x * direction.x + origin.z * direction.z);
   const float c = origin.x * origin.x + origin.z * origin.z - radius_ * radius_;
-  float delta = b * b - 4.0f * a * c;
 
-  if (delta < 0.0f) {
+  float t1, t2;
+  if (!solveQuadratic(a, b, c, t1, t2)) {
     return -1.0f;
   }
 
-  delta = std::sqrt(delta);
-
-  const float q = -0.5f * (b + std::copysign(1.0f, b) * delta);
-
-  float t1 = q / a;
-  float t2 = c / q;
-
-  if(t2 < t1) {
-    std::swap(t1, t2);
-  }
   const float t = t1 > 0.0f ? t1 : t2;
 
   if (t < 0.0f) {
@@ -62,10 +53,10 @@ float Cylinder::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
 
   auto position = rayTransformed(t);
 
-  if(2.0f * std::abs(position.y) > height_) {
+  if (2.0f * std::abs(position.y) > height_) {
     position = rayTransformed(t2);
 
-    if(2.0f * std::abs(position.y) > height_) {
+    if (2.0f * std::abs(position.y) > height_) {
       return -1.0f;
     }
   }
@@ -81,7 +72,7 @@ float Cylinder::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
       ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
   surfaceInfo.uv = Vector2f(u, v);
 
-  if(surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
+  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
     surfaceInfo.normal = -surfaceInfo.normal;
   }
 
@@ -103,7 +94,8 @@ Vector3f Cylinder::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const 
 
   const auto position = radius_ * normal + Vector3f(0.0f, y, 0.0f);
 
-  surfaceInfo.normal = ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
+  surfaceInfo.normal =
+      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
   surfaceInfo.uv = Vector2f(u, v);
 
   pdf = pdf_;
