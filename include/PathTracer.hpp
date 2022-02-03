@@ -5,7 +5,7 @@
 
 class PathTracer : public Integrator {
  public:
-  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) override;
+  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const override;
 
  private:
 };

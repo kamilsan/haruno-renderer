@@ -9,7 +9,7 @@ class DebugIntegrator : public Integrator {
 
   DebugIntegrator(const OutputType& outputType) : outputType_(outputType) {}
 
-  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) override;
+  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const override;
 
  private:
   OutputType outputType_;

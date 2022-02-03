@@ -38,7 +38,7 @@ float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
     return -1.0f;
   }
 
-  const float t = std::min(t1, t2);
+  const float t = t1 > 0.0f ? t1 : t2;
 
   if (t < 0.0f) {
     return -1.0f;
@@ -55,6 +55,10 @@ float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
 
   surfaceInfo.normal = normal;
   surfaceInfo.uv = Vector2f(u, v);
+
+  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
+    surfaceInfo.normal = -surfaceInfo.normal;
+  }
 
   return t;
 }

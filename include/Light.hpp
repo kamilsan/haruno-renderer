@@ -20,7 +20,6 @@ class Light {
   virtual bool isDelta() const = 0;
   virtual Color sampleLe(Vector3f& position, SurfaceInfo& surfaceInfo, RNG& rng,
                          float& pdf) const = 0;
-  virtual float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
 };
 
 #endif

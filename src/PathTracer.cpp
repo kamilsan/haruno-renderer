@@ -12,7 +12,7 @@
 #include "Scene.hpp"
 #include "Vector3.hpp"
 
-Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) {
+Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const {
   Ray ray = cameraRay;
   Color coef{1.0};
   Color result{};
@@ -21,7 +21,6 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
   bool raySpecular = false;
 
   for (unsigned int i = 0;; ++i) {
-    Color color{};
     float t = -1;
     object = scene.intersects(ray, t, surfaceInfo);
 
@@ -38,45 +37,9 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const auto albedo = material.getAlbedo(uv);
       const auto wo = (ray.getOrigin() - position).normalized();
 
-      for (const auto& light : scene.getLights()) {
-        if (light->isDelta()) {
-          const auto Li = light->evaluate(position);
-          float maxT = -1;
-          const auto shadowRay = light->getShadowRay(position, maxT);
-          const auto wi = shadowRay.getDirection();
-
-          const auto occlusion = scene.occludes(shadowRay, maxT);
-
-          if (!occlusion) {
-            const auto f = brdf.evaluate(wi, wo);
-            const auto coswi = std::max(wi.dot(normal), 0.0f);
-            color += f * coswi * Li * albedo;
-          }
-        } else {
-          Vector3f lightSample;
-          SurfaceInfo lightSurfaceInfo;
-          float pdf = 1.0f;
-          const auto Le = light->sampleLe(lightSample, lightSurfaceInfo, rng, pdf);
-          auto toLight = lightSample - position;
-          const auto lengthSq = toLight.lengthSq();
-          const auto maxT = std::sqrt(lengthSq);
-          toLight /= maxT;
-
-          const Ray shadowRay{position + toLight * 0.001f, toLight};
-          const auto occluded = scene.occludes(shadowRay, maxT * 0.99f);
-
-          if (!occluded) {
-            const auto lightNormal = lightSurfaceInfo.normal;
-            const auto cosLight = std::max(0.0f, -toLight.dot(lightNormal));
-            const auto cosSurface = std::max(0.0f, toLight.dot(normal));
-            const auto attenuation = 1.0f / lengthSq;
-            const auto f = brdf.evaluate(toLight, wo);
-            color += albedo * f * Le * cosLight * cosSurface * attenuation / pdf;
-          }
-        }
-      }
-
-      result += coef * color;
+      const auto directLighting =
+          computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
+      result += coef * directLighting;
 
       Vector3f tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
@@ -95,11 +58,11 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
 
       if (i > 3) {
         const float maxComponent = std::max(coef.r, std::max(coef.g, coef.b));
-        const float survivalProbability = std::max(0.1f, 1.0f - maxComponent);
-        if (rng.get() < survivalProbability) {
+        const float terminationProbability = std::max(0.1f, 1.0f - maxComponent);
+        if (rng.get() < terminationProbability) {
           break;
         }
-        coef /= (1.0f - survivalProbability);
+        coef /= (1.0f - terminationProbability);
       }
     } else {
       result += coef * scene.getEnvironment().getColor(ray.getDirection());

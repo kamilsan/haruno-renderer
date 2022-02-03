@@ -25,9 +25,8 @@ void RenderTileTask::renderTile() {
 
       Color color{};
       for (unsigned int i = 0; i < parameters_.mcSamples; ++i) {
-        const float ndcX =
-            aspectRatio_ * (2.0f * ((x + rng_.get()) / (parameters_.width - 1.0f)) - 1.0f);
-        const float ndcY = -2.0f * ((y + rng_.get()) / (parameters_.height - 1.0f)) + 1.0f;
+        const float ndcX = aspectRatio_ * (2.0f * ((x + rng_.get()) / parameters_.width) - 1.0f);
+        const float ndcY = -2.0f * ((y + rng_.get()) / parameters_.height) + 1.0f;
 
         const Ray primaryRay = camera_.getCameraRay(ndcX, ndcY, rng_);
         color += integrator_->integrate(primaryRay, scene_, rng_);

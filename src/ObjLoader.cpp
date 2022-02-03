@@ -59,7 +59,14 @@ std::shared_ptr<TriangleMesh> ObjLoader::load(const std::string& filename,
           const auto secondSlashPos = vertexIndices.find_first_of('/', firstSlashPos + 1);
 
           const auto positionIndex = std::stoul(vertexIndices.substr(0, firstSlashPos));
-          const auto uvIndex = std::stoul(vertexIndices.substr(firstSlashPos + 1, secondSlashPos));
+
+          unsigned long uvIndex = 1ul;
+          const auto uvIndexStrLen = secondSlashPos - firstSlashPos - 1;
+          const auto uvIndexStr = vertexIndices.substr(firstSlashPos + 1, uvIndexStrLen);
+          if (!uvIndexStr.empty()) {
+            uvIndex = std::stoul(uvIndexStr);
+          }
+
           const auto normalIndex = std::stoul(vertexIndices.substr(secondSlashPos + 1));
 
           // Indices in OBJ file format start from 1, not 0

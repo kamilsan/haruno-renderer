@@ -23,9 +23,6 @@ class AreaLight : public Light {
     position = object_->sample(rng, surfaceInfo, pdf);
     return emittance_;
   }
-  float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-    return object_->intersects(ray, surfaceInfo);
-  }
 
  private:
   std::shared_ptr<Object> object_;

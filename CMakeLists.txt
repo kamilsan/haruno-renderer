@@ -42,7 +42,6 @@ set(PROJECT_CODE
   include/ImageTexture.hpp
   include/CheckerboardTexture.hpp
   include/Stopwatch.hpp
-  include/Integrator.hpp
   include/Vector2.hpp
   include/Vector3.hpp
   include/Vector4.hpp
@@ -51,6 +50,7 @@ set(PROJECT_CODE
   include/Cylinder.hpp
   include/Cone.hpp
   include/Paraboloid.hpp
+  include/Integrator.hpp src/Integrator.cpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp

@@ -12,7 +12,7 @@
 #include "Scene.hpp"
 #include "Vector3.hpp"
 
-Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&) {
+Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&) const {
   SurfaceInfo surfaceInfo{};
 
   float t = -1;

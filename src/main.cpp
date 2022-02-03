@@ -31,14 +31,14 @@ int main() {
   parameters.numTiles = 200;
   parameters.threads = 8;
   parameters.mcSamples = 64;
-  parameters.saveIntermediate = true;
+  parameters.saveIntermediate = false;
 
   auto integrator = std::make_shared<PathTracer>();
   Renderer renderer{parameters, integrator};
 
   std::cout << parameters << "\n";
 
-  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 2.0f, Vector3f{0, 0.1, -1.0},
+  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 1.5f, Vector3f{0, 0.1, -1},
                                                Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
 
   const Color zenith{0.176f, 0.557f, 0.988f};
@@ -49,20 +49,28 @@ int main() {
   Scene scene{std::move(environment)};
 
   auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});
-  auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
-  auto uvTest = std::make_shared<ImageTexture>("textures/uv.png");
+  auto colorRed = std::make_shared<SolidTexture>(Color{1.0f, 0.0f, 0.0f});
+  auto colorGreen = std::make_shared<SolidTexture>(Color{0.0f, 1.0f, 0.0f});
+  auto colorBlue = std::make_shared<SolidTexture>(Color{0.0f, 0.0f, 1.0f});
 
-  auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 0.8f);
-  auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 0.8f);
+  auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
+  auto uvTest = std::make_shared<ImageTexture>("textures/uv2.png");
+
+  auto materialWhite = std::make_shared<DiffuseMaterial>(colorWhite, 0.8);
+  auto materialRed = std::make_shared<DiffuseMaterial>(colorRed, 0.8);
+  auto materialGreen = std::make_shared<DiffuseMaterial>(colorGreen, 0.8);
+  auto materialBlue = std::make_shared<DiffuseMaterial>(colorBlue, 0.8);
+
+  auto materialUvTest = std::make_shared<DiffuseMaterial>(uvTest, 1.0f);
   auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.8f);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
 
   scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(1, 0, 0),
                                               Vector3f(0, 0, 1), Vector3f(0, 1, 0), 3, 3,
-                                              materialUvTest));
+                                              materialRed));
   scene.addObject(std::make_shared<Rectangle>(Vector3f(2, -1, 2), Vector3f(-1, 0, 0),
                                               Vector3f(0, 0, -1), Vector3f(0, 1, 0), 3, 3,
-                                              materialUvTest));
+                                              materialGreen));
   scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(0, 1, 0),
                                               Vector3f(1, 0, 0), Vector3f(0, 0, 1), 4, 3,
                                               materialFloor));
@@ -76,17 +84,17 @@ int main() {
                                               Vector3f(1, 0, 0), Vector3f(0, 1, 0), 4, 3,
                                               materialWhite));
   scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
-  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.3f), 0.5f, materialWhite));
+  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.4f), 0.5f, materialMirror));
 
   scene.addLight(std::make_shared<AreaLight>(
       std::make_shared<Rectangle>(Vector3f(-0.6f, 1.99f, 0.9f), Vector3f(0, -1, 0),
                                   Vector3f(1, 0, 0), Vector3f(0, 0, 1), 1.2f, 0.3f, materialWhite),
       Color(20, 20, 20)));
 
-  // Transformation meshTransformation;
-  // meshTransformation.setTranslation(Vector3f(0.0f, 0.5f, 0.75f));
-  // auto monkey = ObjLoader::load("./meshes/monkey.obj", meshTransformation, materialWhite);
-  // scene.addObject(monkey);
+  Transformation meshTransformation;
+  meshTransformation.setTranslation(Vector3f(0.0f, 0.5f, 0.5f));
+  auto monkey = ObjLoader::load("./meshes/monkey.obj", meshTransformation, materialWhite);
+  scene.addObject(monkey);
 
   Stopwatch watch = Stopwatch::startNew();
   const Image render = renderer.render(std::move(camera), scene);

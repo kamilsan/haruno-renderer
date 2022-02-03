@@ -9,7 +9,7 @@ class DirectLighting : public Integrator {
  public:
   DirectLighting(size_t maxDepth) : maxDepth_(maxDepth) {}
 
-  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) override;
+  Color integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const override;
 
  private:
   size_t maxDepth_;
