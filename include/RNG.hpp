@@ -15,6 +15,8 @@ class RNG {
 
   inline float get();
   Vector3f sampleCircle();
+  Vector3f sampleHemisphereUniform();
+  Vector3f sampleHemisphereCosineWeighted();
 
  private:
   std::mt19937 engine_;

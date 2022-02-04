@@ -54,6 +54,7 @@ set(PROJECT_CODE
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp
+  include/AmbientOcclusion.hpp src/AmbientOcclusion.cpp
   include/Transformation.hpp src/Transformation.cpp
   include/Image.hpp src/Image.cpp
   include/ImageTile.hpp src/ImageTile.cpp

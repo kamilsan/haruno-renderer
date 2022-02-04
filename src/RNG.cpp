@@ -24,3 +24,21 @@ Vector3f RNG::sampleCircle() {
 
   return Vector3f{x, y, 0};
 }
+
+Vector3f RNG::sampleHemisphereUniform() {
+  const float cosTheta = distribution_(engine_);
+  const float sinTheta = std::sqrt(1.0f - cosTheta * cosTheta);
+
+  float phi = TAU * distribution_(engine_);
+
+  return Vector3f(sinTheta * std::cos(phi), cosTheta, sinTheta * std::sin(phi));
+}
+
+Vector3f RNG::sampleHemisphereCosineWeighted() {
+  const float sinTheta = std::sqrt(distribution_(engine_));
+  const float cosTheta = std::sqrt(1.0f - sinTheta * sinTheta);
+
+  float phi = TAU * distribution_(engine_);
+
+  return Vector3f(sinTheta * std::cos(phi), cosTheta, sinTheta * std::sin(phi));
+}
