@@ -4,8 +4,8 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
-PathTracer
-libpathtracer.a
+libharuno.a
+haruno
 test
 bin
 build

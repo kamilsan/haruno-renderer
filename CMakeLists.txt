@@ -1,19 +1,16 @@
-cmake_minimum_required(VERSION 2.4)
-project(PathTracer)
-
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
+cmake_minimum_required(VERSION 3.10)
+project(Haruno)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(Threads)
 
@@ -94,18 +91,20 @@ add_custom_target(
 add_subdirectory(googletest)
 include_directories(googletest include 3rd_party)
 
-add_library(pathtracer
+add_library(haruno-lib
   ${PROJECT_CODE}
 )
 
-add_executable(PathTracer
+set_target_properties(haruno-lib PROPERTIES OUTPUT_NAME haruno)
+
+add_executable(haruno
   src/main.cpp
 )
 
-target_link_libraries(PathTracer pathtracer ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(haruno haruno-lib ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(test
   ${TEST_SOURCES}
   tests/main.cpp)
 
-target_link_libraries(test pathtracer gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(test haruno-lib gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
