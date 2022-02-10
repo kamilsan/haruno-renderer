@@ -1,6 +1,6 @@
 # Haruno Renderer
 
-Harono is a physically-based unidirectional path tracer, capable of rendering realistic images by performing light transport simulation and handling global illumination.
+Haruno is a physically-based unidirectional path tracer, capable of rendering realistic images by performing light transport simulation and handling global illumination.
 
 ![lucy](images/lucy.png)
 
@@ -24,7 +24,7 @@ Haruno uses minimal amount of dependencies, one of which is a [googletest](https
 $ git submodule update --init
 ```
 
-For loading and storing images, Sean Barrnett's header-only [stb-image](https://github.com/nothings/stb) library is used and it is included with project's source code.
+For loading and storing images, Sean Barrett's header-only [stb-image](https://github.com/nothings/stb) library is used and it is included with project's source code.
 
 ### Build
 
