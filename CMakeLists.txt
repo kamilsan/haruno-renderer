@@ -63,6 +63,7 @@ set(PROJECT_CODE
   include/RenderTileTask.hpp src/RenderTileTask.cpp
   include/Scene.hpp src/Scene.cpp
   include/SimpleEnvironment.hpp src/SimpleEnvironment.cpp
+  include/SingleScatteringSky.hpp src/SingleScatteringSky.cpp
   include/PinholeCamera.hpp src/PinholeCamera.cpp
   include/SimpleCamera.hpp src/SimpleCamera.cpp
   include/Math.hpp src/Math.cpp
