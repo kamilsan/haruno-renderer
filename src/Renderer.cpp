@@ -16,12 +16,16 @@
 #include "Scene.hpp"
 #include "ThreadPool.hpp"
 
-Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator)
-    : parameters_(parameters), integrator_(integrator), rng_() {
+Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator,
+                   std::unique_ptr<ToneMapper> toneMapper)
+    : parameters_(parameters), integrator_(integrator), toneMapper_(std::move(toneMapper)), rng_() {
   if (parameters.seed.has_value()) {
     rng_ = RNG(parameters.seed.value());
   }
 }
+
+Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator)
+    : Renderer(parameters, integrator, nullptr) {}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const {
   Image result{parameters_.width, parameters_.height};
@@ -71,11 +75,21 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 
     if (parameters_.saveIntermediate) {
       if (i % parameters_.saveFrequency == 0) {
-        result.save("render_" + std::to_string(i) + ".png");
+        // TODO: use some callback to delegate image saving to someone else
+        if (toneMapper_) {
+          const auto resultMapped = toneMapper_->apply(result);
+          resultMapped.save("render_" + std::to_string(i) + ".png");
+        } else {
+          result.save("render_" + std::to_string(i) + ".png");
+        }
       }
     }
 
     std::cout << "Rendering... " << 100.f * i / (results.size() - 1.0f) << "%\n";
+  }
+
+  if (toneMapper_) {
+    return toneMapper_->apply(result);
   }
 
   return result;
