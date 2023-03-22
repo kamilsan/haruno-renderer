@@ -17,7 +17,11 @@
 #include "ThreadPool.hpp"
 
 Renderer::Renderer(const RenderParameters& parameters, std::shared_ptr<Integrator> integrator)
-    : parameters_(parameters), integrator_(integrator), rng_() {}
+    : parameters_(parameters), integrator_(integrator), rng_() {
+  if (parameters.seed.has_value()) {
+    rng_ = RNG(parameters.seed.value());
+  }
+}
 
 Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const {
   Image result{parameters_.width, parameters_.height};
