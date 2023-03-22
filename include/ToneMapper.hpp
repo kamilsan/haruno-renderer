@@ -1,5 +1,5 @@
-#ifndef TONE_MAPPER_H
-#define TONE_MAPPER_H
+#ifndef TONE_MAPPER_HPP
+#define TONE_MAPPER_HPP
 
 class Image;
 
@@ -9,4 +9,4 @@ class ToneMapper {
   virtual Image apply(const Image&) const = 0;
 };
 
-#endif  // TONE_MAPPER_H
+#endif  // TONE_MAPPER_HPP

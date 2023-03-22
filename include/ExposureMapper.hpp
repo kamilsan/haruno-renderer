@@ -13,4 +13,4 @@ class ExposureMapper : public ToneMapper {
   float gain_;
 };
 
-#endif  // EXPOSURE_MAPPER
+#endif  // EXPOSURE_MAPPER_HPP
