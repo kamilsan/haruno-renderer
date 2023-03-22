@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <thread>
+#include <optional>
 
 struct RenderParameters {
   unsigned int width = 1920;
@@ -11,6 +12,7 @@ struct RenderParameters {
   unsigned int threads = std::thread::hardware_concurrency();
   unsigned int mcSamples = 256;
   unsigned int saveFrequency = 10;
+  std::optional<unsigned int> seed = {};
   bool saveIntermediate = false;
 
   friend std::ostream& operator<<(std::ostream& os, const RenderParameters& params) {
@@ -19,6 +21,7 @@ struct RenderParameters {
     os << "Number of tiles: " << params.numTiles << "\n";
     os << "CPU Threads used: " << params.threads << "\n";
     os << "Save intermediate results: " << std::boolalpha << params.saveIntermediate << "\n";
+    os << "Seed: " << (params.seed.has_value() ? std::to_string(params.seed.value()) : "(not provided)") << "\n";
     os << "Intermediate results save frequency: " << params.saveFrequency << "\n";
     
     return os;

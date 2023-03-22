@@ -29,6 +29,7 @@ int main() {
   parameters.numTiles = 200;
   parameters.threads = 8;
   parameters.mcSamples = 64;
+  parameters.seed = 42;
   parameters.saveIntermediate = false;
 
   auto integrator = std::make_shared<PathTracer>();
