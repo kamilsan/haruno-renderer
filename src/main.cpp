@@ -1,5 +1,3 @@
-#include <chrono>
-#include <fstream>
 #include <memory>
 
 #include "AreaLight.hpp"
@@ -102,7 +100,7 @@ int main() {
 
   std::cout << "Finished rendering in " << watch.getElapsedTime();
 
-  render.save("render.png");
+  render.save("render.hdr");
 
   return 0;
 }
