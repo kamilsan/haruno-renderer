@@ -1,6 +1,7 @@
 #include "Image.hpp"
 
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -16,7 +17,7 @@ Image::Image(const std::string& filename) {
   unsigned char* data = stbi_load(filename.c_str(), &width_s, &height_s, &components, 0);
 
   if (!data) {
-    throw std::runtime_error("Could not load provided image file!\n");
+    throw std::runtime_error("Could not load provided image file: " + filename + "\n");
   }
 
   if (components != 3) {
@@ -57,17 +58,26 @@ Image::Image(Image&& other) {
 }
 
 bool Image::save(const std::string& filename, const bool gammaCompress) const {
-  auto data = std::make_unique<unsigned char[]>(len_);
-  for (unsigned int i = 0; i < len_; ++i) {
-    const float encoded = gammaCompress ? sRGBEncode(pixels_[i]) : pixels_[i];
-    data[i] = std::min(255.0f, std::max(0.0f, 255.0f * encoded));
+  const auto output_extension = std::filesystem::path(filename).extension().string();
+
+  int result = 0;
+  if (output_extension == ".hdr") {
+    result = stbi_write_hdr(filename.c_str(), width_, height_, 3, pixels_.get());
+  } else if (output_extension == ".png") {
+    auto pixels_u8 = std::make_unique<unsigned char[]>(len_);
+    for (unsigned int i = 0; i < len_; ++i) {
+      const float encoded = gammaCompress ? sRGBEncode(pixels_[i]) : pixels_[i];
+      pixels_u8[i] = std::min(255.0f, std::max(0.0f, 255.0f * encoded));
+    }
+
+    const auto stride = 3 * width_;
+    result = stbi_write_png(filename.c_str(), width_, height_, 3, pixels_u8.get(), stride);
+  } else {
+    throw std::runtime_error("Unsupported output image format: " + output_extension);
   }
 
-  const auto stride = 3 * width_;
-  const auto result = stbi_write_png(filename.c_str(), width_, height_, 3, data.get(), stride);
   return result != 0;
 }
-
 Image& Image::operator=(const Image& other) {
   if (&other != this) {
     width_ = other.width_;
