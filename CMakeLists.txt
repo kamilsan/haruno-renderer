@@ -47,6 +47,9 @@ set(PROJECT_CODE
   include/Cylinder.hpp
   include/Cone.hpp
   include/Paraboloid.hpp
+  include/ToneMapper.hpp
+  include/ExposureMapper.hpp src/ExposureMapper.cpp
+  include/ReinhardMapper.hpp src/ReinhardMapper.cpp
   include/Integrator.hpp src/Integrator.cpp
   include/PathTracer.hpp src/PathTracer.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
