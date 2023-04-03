@@ -32,18 +32,21 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
 
   const unsigned int numTilesX = std::sqrt(parameters_.numTiles);
   const unsigned int numTilesY = std::ceil(static_cast<float>(parameters_.numTiles) / numTilesX);
+  const auto finalTilesCount = numTilesX * numTilesY;
+
   const unsigned int tileSizeX = std::ceil(static_cast<float>(parameters_.width) / numTilesX);
   const unsigned int tileSizeY = std::ceil(static_cast<float>(parameters_.height) / numTilesY);
 
-  ThreadPool<ImageTile> pool{parameters_.threads};
-  std::vector<std::future<ImageTile>> results{};
-  results.reserve(parameters_.numTiles);
+  std::vector<std::pair<unsigned int, ImageTile>> tiles;
+  tiles.reserve(finalTilesCount);
 
   for (unsigned int tileY = 0; tileY < numTilesY; ++tileY) {
     for (unsigned int tileX = 0; tileX < numTilesX; ++tileX) {
       const unsigned int tileId = tileY * numTilesY + tileX;
+
       const unsigned int tileMinX = tileX * tileSizeX;
       const unsigned int tileMinY = tileY * tileSizeY;
+
       unsigned int tileMaxX = (tileX + 1) * tileSizeX;
       unsigned int tileMaxY = (tileY + 1) * tileSizeY;
 
@@ -55,10 +58,36 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
       }
 
       ImageTile tile{tileMinX, tileMaxX, tileMinY, tileMaxY};
+      tiles.emplace_back(std::make_pair(tileId, tile));
+    }
+  }
+
+  const auto tileDistToCenter = [&](const ImageTile& tile) {
+    const auto imageCenterX = parameters_.width * 0.5f;
+    const auto imageCenterY = parameters_.height * 0.5f;
+
+    const auto tileCenterX = (tile.getMinX() + tile.getMaxX()) * 0.5f;
+    const auto tileCenterY = (tile.getMinY() + tile.getMaxY()) * 0.5f;
+
+    const auto dx = tileCenterX - imageCenterX;
+    const auto dy = tileCenterY - imageCenterY;
+
+    return dx * dx + dy * dy;
+  };
+
+  std::sort(tiles.begin(), tiles.end(), [&](const auto& tile1, const auto& tile2) {
+    return tileDistToCenter(tile1.second) < tileDistToCenter(tile2.second);
+  });
+
+  ThreadPool<ImageTile> pool{parameters_.threads};
+  std::vector<std::future<ImageTile>> results{};
+  results.reserve(finalTilesCount);
+
+  for (const auto& tileWithId : tiles) {
+      const auto& [tileId, tile] = tileWithId;
       auto result = pool.addTask(std::make_unique<RenderTileTask>(
           parameters_, integrator_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
       results.emplace_back(std::move(result));
-    }
   }
 
   for (size_t i = 0; i < results.size(); ++i) {
