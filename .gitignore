@@ -11,6 +11,5 @@ bin
 build
 lib
 TODO
-textures/
-meshes/
 render*.png
+render*.hdr

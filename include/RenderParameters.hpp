@@ -20,8 +20,8 @@ struct RenderParameters {
     os << "Samples per pixel: " << params.mcSamples << "\n";
     os << "Number of tiles: " << params.numTiles << "\n";
     os << "CPU Threads used: " << params.threads << "\n";
-    os << "Save intermediate results: " << std::boolalpha << params.saveIntermediate << "\n";
     os << "Seed: " << (params.seed.has_value() ? std::to_string(params.seed.value()) : "(not provided)") << "\n";
+    os << "Save intermediate results: " << std::boolalpha << params.saveIntermediate << "\n";
     os << "Intermediate results save frequency: " << params.saveFrequency << "\n";
     
     return os;
