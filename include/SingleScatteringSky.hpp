@@ -9,7 +9,7 @@
 class SingleScatteringSky : public Environment {
  public:
   struct SkyParameters {
-    size_t scatteringSamples = 16;
+    size_t scatteringSamples = 128;
     size_t opticalDensitySamples = 16;
     float earthRadius = 6360'000.0f;
     float atmosphereRadius = 6420'000.0f;
@@ -56,7 +56,6 @@ class SingleScatteringSky : public Environment {
   float computeMiePhaseFunction(float g, float cosAngle) const;
 
   Color computeOpticalDepth(const Ray& ray, float maxT) const;
-  Color computeTransmitance(const Ray& ray, float maxT) const;
 };
 
 #endif

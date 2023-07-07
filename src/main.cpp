@@ -31,7 +31,7 @@ int main() {
   parameters.height = 1080;
   parameters.numTiles = 400;
   parameters.threads = 8;
-  parameters.mcSamples = 64;
+  parameters.mcSamples = 1;
   parameters.saveIntermediate = true;
   parameters.seed = 42;
 
@@ -45,7 +45,7 @@ int main() {
 
   auto environment = std::make_unique<SingleScatteringSky>(sunDirection, observerAltitude);
 
-  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.03f, 1.07f, Vector3f{0, 0.8f, -0.7},
+  auto camera = std::make_unique<PinholeCamera>(90.0f, Vector3f{0, 0.8f, -0.7},
                                                Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
 
   Scene scene{std::move(environment)};
@@ -57,10 +57,10 @@ int main() {
   auto materialRed = std::make_shared<DiffuseMaterial>(colorRed, 0.8);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
 
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-50000, 0, -50000), Vector3f(0, 1, 0),
-                                              Vector3f(1, 0, 0), Vector3f(0, 0, 1), 100000, 100000,
-                                              materialWhite));
-  scene.addObject(std::make_shared<Sphere>(Vector3f(1.0f, 0.5f, 0.9f), 0.5f, materialMirror));
+  // scene.addObject(std::make_shared<Rectangle>(Vector3f(-50000, 0, -50000), Vector3f(0, 1, 0),
+  //                                             Vector3f(1, 0, 0), Vector3f(0, 0, 1), 100000, 100000,
+  //                                             materialWhite));
+  // scene.addObject(std::make_shared<Sphere>(Vector3f(1.0f, 0.5f, 0.9f), 0.5f, materialMirror));
 
   // Transformation meshTransformation;
   // meshTransformation.setScale(Vector3f(1.3f));
@@ -69,13 +69,13 @@ int main() {
   // auto mesh = ObjLoader::load("./meshes/lucy-low.obj", meshTransformation, materialWhite);
   // scene.addObject(mesh);
 
-  scene.addLight(std::make_shared<DirectionalLight>(Vector3f(0, -1, 0), Color(1.0f), 2.0f));
+  // scene.addLight(std::make_shared<DirectionalLight>(Vector3f(0, -1, 0), Color(1.0f), 2.0f));
 
-  scene.addLight(std::make_shared<AreaLight>(
-      std::make_shared<Rectangle>(Vector3f(-0.3f, 0.0f, 1.0f), Vector3f(-1, 0, -1).normalized(),
-                                  Vector3f(1, 0, -1).normalized(), Vector3f(1, 1, 0).normalized(),
-                                  0.8f, 0.5f, materialWhite),
-      Color(1, 15, 1)));
+  // scene.addLight(std::make_shared<AreaLight>(
+  //     std::make_shared<Rectangle>(Vector3f(-0.3f, 0.0f, 1.0f), Vector3f(-1, 0, -1).normalized(),
+  //                                 Vector3f(1, 0, -1).normalized(), Vector3f(1, 1, 0).normalized(),
+  //                                 0.8f, 0.5f, materialWhite),
+  //     Color(1, 15, 1)));
 
   Stopwatch watch = Stopwatch::startNew();
   const Image render = renderer.render(std::move(camera), scene);
