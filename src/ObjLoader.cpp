@@ -71,14 +71,13 @@ std::shared_ptr<TriangleMesh> ObjLoader::load(const std::string& filename,
 
           // Indices in OBJ file format start from 1, not 0
           vertices.emplace_back(verticesUnique[positionIndex - 1]);
-          
-          if(uvIndex <= uvsUnique.size()) {
+
+          if (uvIndex <= uvsUnique.size()) {
             uvs.emplace_back(uvsUnique[uvIndex - 1]);
-          }
-          else {
+          } else {
             uvs.emplace_back(Vector2f(0.0f, 0.0f));
           }
-          
+
           normals.emplace_back(normalsUnique[normalIndex - 1]);
 
           const auto newIndex = vertexDataIndices.size();

@@ -14,7 +14,7 @@
 
 Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const {
   Ray ray = cameraRay;
-  Color coef{1.0};
+  Color coeff{1.0};
   Color result{};
   SurfaceInfo surfaceInfo{};
   std::shared_ptr<Object> object = nullptr;
@@ -25,7 +25,7 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
     object = scene.intersects(ray, t, surfaceInfo);
 
     if (surfaceInfo.emittance) {
-      return coef * surfaceInfo.emittance.value();
+      return coeff * surfaceInfo.emittance.value();
     }
 
     if (object) {
@@ -35,11 +35,11 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
       const auto& material = object->getMaterial();
       const auto& brdf = material.getBRDF();
       const auto albedo = material.getAlbedo(uv);
-      const auto wo = (ray.getOrigin() - position).normalized();
+      const auto wo = -ray.getDirection();
 
       const auto directLighting =
           computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
-      result += coef * directLighting;
+      result += coeff * directLighting;
 
       if (brdf.getType() == BRDF::Type::PerfectSpecular) {
         Vector3f tangent, bitangent;
@@ -51,15 +51,15 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
         const float f = brdf.sample(woShading, rng, sample, pdf);
         const float coswi = std::max(sample.y, 0.0f);  // wi . (0, 1, 0)
 
-        coef *= albedo * f * coswi / pdf;
+        coeff *= albedo * f * coswi / pdf;
 
-        Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent);
+        Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
         ray = Ray{position + wi * 0.001f, wi};
       } else {
         break;
       }
     } else {
-      result += coef * scene.getEnvironment().getColor(ray.getDirection());
+      result += coeff * scene.getEnvironment().getColor(ray.getDirection());
       break;
     }
   }

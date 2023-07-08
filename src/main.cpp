@@ -41,7 +41,7 @@ int main() {
                                                Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
 
   auto environment = std::make_unique<SimpleEnvironment>(Color{}, Color{}, Color{});
-  
+
   Scene scene{std::move(environment)};
 
   auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});

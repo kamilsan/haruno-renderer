@@ -14,7 +14,7 @@
 
 Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) const {
   Ray ray = cameraRay;
-  Color coef{1.0};
+  Color coeff{1.0};
   Color result{};
   SurfaceInfo surfaceInfo{};
   std::shared_ptr<Object> object = nullptr;
@@ -25,7 +25,7 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
     object = scene.intersects(ray, t, surfaceInfo);
 
     if ((i == 0 || raySpecular) && surfaceInfo.emittance) {
-      return coef * surfaceInfo.emittance.value();
+      return coeff * surfaceInfo.emittance.value();
     }
 
     if (object) {
@@ -35,11 +35,11 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const auto& material = object->getMaterial();
       const auto& brdf = material.getBRDF();
       const auto albedo = material.getAlbedo(uv);
-      const auto wo = (ray.getOrigin() - position).normalized();
+      const auto wo = -ray.getDirection();
 
       const auto directLighting =
           computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
-      result += coef * directLighting;
+      result += coeff * directLighting;
 
       Vector3f tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
@@ -50,22 +50,22 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const float f = brdf.sample(woShading, rng, sample, pdf);
       const float coswi = std::max(sample.y, 0.0f);  // wi . (0, 1, 0)
 
-      coef *= albedo * f * coswi / pdf;
+      coeff *= albedo * f * coswi / pdf;
       raySpecular = brdf.getType() == BRDF::Type::PerfectSpecular;
 
-      Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent);
+      Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
       ray = Ray{position + wi * 0.001f, wi};
 
       if (i > 3) {
-        const float maxComponent = std::max(coef.r, std::max(coef.g, coef.b));
+        const float maxComponent = std::max(coeff.r, std::max(coeff.g, coeff.b));
         const float terminationProbability = std::max(0.1f, 1.0f - maxComponent);
         if (rng.get() < terminationProbability) {
           break;
         }
-        coef /= (1.0f - terminationProbability);
+        coeff /= (1.0f - terminationProbability);
       }
     } else {
-      result += coef * scene.getEnvironment().getColor(ray.getDirection());
+      result += coeff * scene.getEnvironment().getColor(ray.getDirection());
       break;
     }
   }

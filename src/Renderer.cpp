@@ -84,10 +84,10 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
   results.reserve(finalTilesCount);
 
   for (const auto& tileWithId : tiles) {
-      const auto& [tileId, tile] = tileWithId;
-      auto result = pool.addTask(std::make_unique<RenderTileTask>(
-          parameters_, integrator_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
-      results.emplace_back(std::move(result));
+    const auto& [tileId, tile] = tileWithId;
+    auto result = pool.addTask(std::make_unique<RenderTileTask>(
+        parameters_, integrator_, std::move(tile), *camera, scene, rng_.createChild(tileId)));
+    results.emplace_back(std::move(result));
   }
 
   for (size_t i = 0; i < results.size(); ++i) {
