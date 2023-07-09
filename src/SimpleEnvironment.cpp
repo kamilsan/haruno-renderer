@@ -3,7 +3,7 @@
 #include "Math.hpp"
 #include "Vector3.hpp"
 
-Color SimpleEnvironment::getColor(const Vector3f& direction) const {
+Color SimpleEnvironment::getColor(const Vector3f& direction, float) const {
   const float theta = std::asin(direction.y);
 
   if (theta > 0) {

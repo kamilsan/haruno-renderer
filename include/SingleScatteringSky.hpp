@@ -34,7 +34,8 @@ class SingleScatteringSky : public Environment {
 
   static SkyParameters getDefaultParameters();
 
-  Color getColor(const Vector3f& direction) const override;
+  Color getColor(const Vector3f& direction, float maxT = -1) const override;
+  Color getTransmittance(const Ray& ray, float maxT) const override;
 
   const SkyParameters& getParameters() const { return parameters_; }
   const Vector3f& getSunDirection() const { return sunDirection_; }

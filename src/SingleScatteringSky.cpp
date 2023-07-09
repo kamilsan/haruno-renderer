@@ -4,7 +4,7 @@
 #include "Ray.hpp"
 #include "Sphere.hpp"
 
-Color SingleScatteringSky::getColor(const Vector3f& direction) const {
+Color SingleScatteringSky::getColor(const Vector3f& direction, float maxT) const {
   Color finalColor{0};
 
   const Vector3f earthCenter(0.0f, 0.0f, 0.0f);
@@ -17,16 +17,20 @@ Color SingleScatteringSky::getColor(const Vector3f& direction) const {
   SurfaceInfo surfaceInfo;
   const auto tEarth = earthSphere.intersects(viewRay, surfaceInfo);
 
-  if (tEarth > 0) {
-    return Color{0};
-  }
-
   const auto cosAngle = direction.dot(sunDirection_);
   const auto rayleighPhaseFunction = computeRayleighPhaseFunction(cosAngle);
   const auto miePhaseFunction = computeMiePhaseFunction(parameters_.mieScatteringG, cosAngle);
 
   const auto tAtmosphereEscape = atmosphereSphere.intersects(viewRay, surfaceInfo);
-  const auto deltaT = tAtmosphereEscape / parameters_.scatteringSamples;
+  const auto emptySceneMaxT = tEarth > 0 ? tEarth : tAtmosphereEscape;
+
+  auto limitT = emptySceneMaxT;
+
+  if (maxT > 0) {
+    limitT = std::min(limitT, maxT);
+  }
+
+  const auto deltaT = limitT / parameters_.scatteringSamples;
 
   Color accumulatedViewSampleOpticalDepth{0.0};
   auto previousSamplePosition = observerPosition;
@@ -42,13 +46,17 @@ Color SingleScatteringSky::getColor(const Vector3f& direction) const {
 
     // Light is not occluded by the Earth
     if (tEarthFromSample < 0) {
-      const Ray previousToCurrentSampleRay(previousSamplePosition, direction); 
-      const auto partialViewSampleOpticalDepth = computeOpticalDepth(previousToCurrentSampleRay, currentT - previousT);
+      const Ray previousToCurrentSampleRay(previousSamplePosition, direction);
+      const auto partialViewSampleOpticalDepth =
+          computeOpticalDepth(previousToCurrentSampleRay, currentT - previousT);
       accumulatedViewSampleOpticalDepth += partialViewSampleOpticalDepth;
 
       const auto sampleLightOpticalDepth = computeOpticalDepth(toSunRay, tSampleToSun);
-      const auto totalPathOpticalDepth = accumulatedViewSampleOpticalDepth + sampleLightOpticalDepth;
-      const Color totalTransmittance{std::exp(-totalPathOpticalDepth.r), std::exp(-totalPathOpticalDepth.g), std::exp(-totalPathOpticalDepth.b)}; 
+      const auto totalPathOpticalDepth =
+          accumulatedViewSampleOpticalDepth + sampleLightOpticalDepth;
+      const Color totalTransmittance{std::exp(-totalPathOpticalDepth.r),
+                                     std::exp(-totalPathOpticalDepth.g),
+                                     std::exp(-totalPathOpticalDepth.b)};
 
       const auto density = getDensityAtPosition(samplePosition);
       const auto scatteringCoefficient = parameters_.beta * density;
@@ -57,7 +65,8 @@ Color SingleScatteringSky::getColor(const Vector3f& direction) const {
       const auto mieScatteringCoefficient = parameters_.betaAerosols * aerosolsDensity;
 
       const auto LsUnabsorbed = (scatteringCoefficient * rayleighPhaseFunction +
-                      mieScatteringCoefficient * miePhaseFunction) * parameters_.sunColor;
+                                 mieScatteringCoefficient * miePhaseFunction) *
+                                parameters_.sunColor;
       finalColor += totalTransmittance * LsUnabsorbed * deltaT;
     }
 
@@ -66,6 +75,14 @@ Color SingleScatteringSky::getColor(const Vector3f& direction) const {
   }
 
   return finalColor;
+}
+
+Color SingleScatteringSky::getTransmittance(const Ray& ray, float maxT) const {
+  const auto earthCoordPosition = ray.getOrigin() + Vector3f(0.0f, parameters_.earthRadius, 0.0f);
+  const Ray earthCoordRay{earthCoordPosition, ray.getDirection()};
+
+  const auto opticalDepth = computeOpticalDepth(earthCoordRay, maxT);
+  return Color{std::exp(-opticalDepth.r), std::exp(-opticalDepth.g), std::exp(-opticalDepth.b)};
 }
 
 float SingleScatteringSky::getDensityAtPosition(const Vector3f& position) const {

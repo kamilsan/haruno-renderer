@@ -10,7 +10,8 @@ class SimpleEnvironment : public Environment {
   SimpleEnvironment(const Color& zenithColor, const Color& horizonColor, const Color& groundColor)
       : zenithColor_(zenithColor), horizonColor_(horizonColor), groundColor_(groundColor) {}
 
-  Color getColor(const Vector3f& direction) const override;
+  Color getColor(const Vector3f& direction, float maxT = -1.0f) const override;
+  Color getTransmittance(const Ray&, float) const override { return Color{1.0f}; }
 
  private:
   Color zenithColor_;

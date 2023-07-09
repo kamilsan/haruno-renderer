@@ -39,7 +39,13 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
 
       const auto directLighting =
           computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
-      result += coeff * directLighting;
+
+      if (i == 0) {
+        result += coeff * directLighting * scene.getEnvironment().getTransmittance(ray, t);
+        result += scene.getEnvironment().getColor(ray.getDirection(), t);
+      } else {
+        result += coeff * directLighting;
+      }
 
       if (brdf.getType() == BRDF::Type::PerfectSpecular) {
         Vector3f tangent, bitangent;
