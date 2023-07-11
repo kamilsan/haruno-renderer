@@ -18,8 +18,8 @@ class Scene {
   Scene(std::unique_ptr<Environment> environment)
       : objects_(), lights_(), environment_(std::move(environment)) {}
 
-  std::shared_ptr<Object> intersects(const Ray& ray, float& t, SurfaceInfo& surfaceInfo) const;
-  bool occludes(const Ray& ray, float maxT) const;
+  std::shared_ptr<Object> intersects(const Ray& ray, Float& t, SurfaceInfo& surfaceInfo) const;
+  bool occludes(const Ray& ray, Float maxT) const;
 
   const Environment& getEnvironment() const { return *environment_; };
   std::vector<std::shared_ptr<Light>> getLights() const { return lights_; }

@@ -31,11 +31,11 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
   Image result{parameters_.width, parameters_.height};
 
   const unsigned int numTilesX = std::sqrt(parameters_.numTiles);
-  const unsigned int numTilesY = std::ceil(static_cast<float>(parameters_.numTiles) / numTilesX);
+  const unsigned int numTilesY = std::ceil(static_cast<Float>(parameters_.numTiles) / numTilesX);
   const auto finalTilesCount = numTilesX * numTilesY;
 
-  const unsigned int tileSizeX = std::ceil(static_cast<float>(parameters_.width) / numTilesX);
-  const unsigned int tileSizeY = std::ceil(static_cast<float>(parameters_.height) / numTilesY);
+  const unsigned int tileSizeX = std::ceil(static_cast<Float>(parameters_.width) / numTilesX);
+  const unsigned int tileSizeY = std::ceil(static_cast<Float>(parameters_.height) / numTilesY);
 
   std::vector<std::pair<unsigned int, ImageTile>> tiles;
   tiles.reserve(finalTilesCount);
@@ -63,11 +63,11 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
   }
 
   const auto tileDistToCenter = [&](const ImageTile& tile) {
-    const auto imageCenterX = parameters_.width * 0.5f;
-    const auto imageCenterY = parameters_.height * 0.5f;
+    const auto imageCenterX = parameters_.width * 0.5;
+    const auto imageCenterY = parameters_.height * 0.5;
 
-    const auto tileCenterX = (tile.getMinX() + tile.getMaxX()) * 0.5f;
-    const auto tileCenterY = (tile.getMinY() + tile.getMaxY()) * 0.5f;
+    const auto tileCenterX = (tile.getMinX() + tile.getMaxX()) * 0.5;
+    const auto tileCenterY = (tile.getMinY() + tile.getMaxY()) * 0.5;
 
     const auto dx = tileCenterX - imageCenterX;
     const auto dy = tileCenterY - imageCenterY;
@@ -114,7 +114,7 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
       }
     }
 
-    std::cout << "Rendering... " << 100.f * i / (results.size() - 1.0f) << "%\n";
+    std::cout << "Rendering... " << 100.0 * i / (results.size() - 1.0) << "%\n";
   }
 
   if (toneMapper_) {

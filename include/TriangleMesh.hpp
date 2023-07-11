@@ -12,12 +12,12 @@
 
 class TriangleMesh : public Object {
  public:
-  inline TriangleMesh(const std::vector<Vector3f>& vertices, const std::vector<Vector3f>& normals,
-                      const std::vector<Vector2f>& uvs, const std::vector<unsigned int>& indices,
+  inline TriangleMesh(const std::vector<Vector3t>& vertices, const std::vector<Vector3t>& normals,
+                      const std::vector<Vector2t>& uvs, const std::vector<unsigned int>& indices,
                       const Transformation& transformation, std::shared_ptr<Material> material);
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
   TrianglesData trianglesData_;
@@ -26,9 +26,9 @@ class TriangleMesh : public Object {
   Transformation transformation_;
 };
 
-inline TriangleMesh::TriangleMesh(const std::vector<Vector3f>& vertices,
-                                  const std::vector<Vector3f>& normals,
-                                  const std::vector<Vector2f>& uvs,
+inline TriangleMesh::TriangleMesh(const std::vector<Vector3t>& vertices,
+                                  const std::vector<Vector3t>& normals,
+                                  const std::vector<Vector2t>& uvs,
                                   const std::vector<unsigned int>& indices,
                                   const Transformation& transformation,
                                   std::shared_ptr<Material> material)
@@ -42,8 +42,8 @@ inline TriangleMesh::TriangleMesh(const std::vector<Vector3f>& vertices,
   }
 }
 
-inline float TriangleMesh::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-  float minT = -1;
+inline Float TriangleMesh::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  Float minT = -1;
   SurfaceInfo tempSurfaceInfo;
 
   // After this transformation ray direction may not be normalized
@@ -53,30 +53,30 @@ inline float TriangleMesh::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) 
   if (boundingBox_.intersects(rayTransformed)) {
     for (const auto& triangle : triangles_) {
       const auto t = triangle.intersects(rayTransformed, tempSurfaceInfo);
-      if (t > 0 && (t < minT || minT < 0.0f)) {
+      if (t > 0 && (t < minT || minT < 0.0)) {
         minT = t;
         surfaceInfo = tempSurfaceInfo;
       }
     }
   }
 
-  const auto normalHomogenous = Vector4f(surfaceInfo.normal, 0.0f);
+  const auto normalHomogenous = Vector4t(surfaceInfo.normal, 0.0);
   surfaceInfo.normal =
-      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
+      ((Vector3t)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
 
   return minT;
 }
 
-Vector3f TriangleMesh::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
+Vector3t TriangleMesh::sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const {
   const size_t idx = rng.get() * triangles_.size();
   const auto& triangle = triangles_[idx];
 
-  float trianglePdf;
+  Float trianglePdf;
   const auto triangleSample = triangle.sample(rng, surfaceInfo, trianglePdf);
 
-  pdf = (1.0f / triangles_.size()) * trianglePdf;
+  pdf = (1.0 / triangles_.size()) * trianglePdf;
 
-  return transformation_.toWorldCoordinates(Vector4f(triangleSample, 1.0f));
+  return transformation_.toWorldCoordinates(Vector4t(triangleSample, 1.0));
 }
 
 #endif  // TRIANGLE_MESH_HPP

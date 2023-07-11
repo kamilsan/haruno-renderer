@@ -11,7 +11,7 @@ class Vector4 {
   Vector4() : x(0), y(0), z(0), w(0) {}
   explicit Vector4(T v) : x(v), y(v), z(v), w(v) {}
   Vector4(const T xx, const T yy, const T zz, const T ww) : x(xx), y(yy), z(zz), w(ww) {}
-  Vector4(const Vector3<T>& vector3, const float ww)
+  Vector4(const Vector3<T>& vector3, const T ww)
       : x(vector3.x), y(vector3.y), z(vector3.z), w(ww) {}
 
   T lengthSq() const { return x * x + y * y + z * z + w * w; }
@@ -169,8 +169,5 @@ Vector4<T> Vector4<T>::clamped(T min, T max) const {
 
   return Vector4{newX, newY, newZ, newW};
 }
-
-typedef Vector4<float> Vector4f;
-typedef Vector4<double> Vector4d;
 
 #endif  // VECTOR4_HPP

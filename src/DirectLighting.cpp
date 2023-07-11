@@ -21,7 +21,7 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
 
   for (size_t i = 0; i < maxDepth_; ++i) {
     Color color{};
-    float t = -1;
+    Float t = -1;
     object = scene.intersects(ray, t, surfaceInfo);
 
     if (surfaceInfo.emittance) {
@@ -42,19 +42,19 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
       result += coeff * directLighting;
 
       if (brdf.getType() == BRDF::Type::PerfectSpecular) {
-        Vector3f tangent, bitangent;
+        Vector3t tangent, bitangent;
         createOrthogonalFrame(normal, tangent, bitangent);
         const auto woShading = transformFromTangentSpace(wo, normal, tangent, bitangent);
 
-        Vector3f sample{};
-        float pdf = 1.0f;
-        const float f = brdf.sample(woShading, rng, sample, pdf);
-        const float coswi = std::max(sample.y, 0.0f);  // wi . (0, 1, 0)
+        Vector3t sample{};
+        Float pdf = 1.0;
+        const Float f = brdf.sample(woShading, rng, sample, pdf);
+        const Float coswi = std::max(sample.y, static_cast<Float>(0.0));  // wi . (0, 1, 0)
 
         coeff *= albedo * f * coswi / pdf;
 
-        Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
-        ray = Ray{position + wi * 0.001f, wi};
+        Vector3t wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
+        ray = Ray{position + wi * 0.001, wi};
       } else {
         break;
       }

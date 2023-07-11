@@ -15,12 +15,12 @@ class Light;
 
 struct SurfaceInfo {
   SurfaceInfo() = default;
-  SurfaceInfo(const Vector3f& normal, const Vector2f& uv) : normal(normal), uv(uv), emittance() {}
-  SurfaceInfo(const Vector3f& normal, const Vector2f& uv, const Color& emittance)
+  SurfaceInfo(const Vector3t& normal, const Vector2t& uv) : normal(normal), uv(uv), emittance() {}
+  SurfaceInfo(const Vector3t& normal, const Vector2t& uv, const Color& emittance)
       : normal(normal), uv(uv), emittance(emittance) {}
 
-  Vector3f normal;
-  Vector2f uv;
+  Vector3t normal;
+  Vector2t uv;
   std::optional<Color> emittance;
 };
 
@@ -28,8 +28,8 @@ class Object {
  public:
   Object(std::shared_ptr<Material> material) : material_(material), light_() {}
 
-  virtual float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
-  virtual Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const = 0;
+  virtual Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
+  virtual Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const = 0;
 
   void setLight(std::weak_ptr<Light> light) { light_ = light; }
 

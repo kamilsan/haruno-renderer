@@ -32,7 +32,7 @@ TEST(ImageTest, CopyConstructor) {
   EXPECT_EQ(copy[mutatedIndex], img[mutatedIndex]);
 }
 
-TEST(ImageTest, AssigmentOperator) {
+TEST(ImageTest, AssignmentOperator) {
   Image img{20, 30};
   const int mutatedIndex = 20;
   img[mutatedIndex] = 0.5f;
@@ -47,7 +47,7 @@ TEST(ImageTest, AssigmentOperator) {
 
 TEST(ImageTest, GetPixel) {
   Image img{2, 3};
-  const Color newColor = Color{1.0, 0.5f, 0.25f};
+  const Color newColor = Color{1.0, 0.5, 0.25};
 
   img[6] = newColor.r;
   img[7] = newColor.g;
@@ -58,7 +58,7 @@ TEST(ImageTest, GetPixel) {
 
 TEST(ImageTest, SetPixel) {
   Image img{2, 3};
-  const Color newColor = Color{1.0, 0.5f, 0.25f};
+  const Color newColor = Color{1.0, 0.5, 0.25};
 
   img.setPixel(0, 1, newColor);
 
@@ -69,7 +69,7 @@ TEST(ImageTest, SetPixel) {
 
 TEST(ImageTest, GetAndSetPixel) {
   Image img{20, 30};
-  const Color newColor = Color{1.0, 0.5f, 0.25f};
+  const Color newColor = Color{1.0, 0.5, 0.25};
 
   img.setPixel(12, 17, newColor);
 

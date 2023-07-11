@@ -150,7 +150,4 @@ Vector3<T> Vector3<T>::clamped(T min, T max) const {
   return Vector3{newX, newY, newZ};
 }
 
-typedef Vector3<float> Vector3f;
-typedef Vector3<double> Vector3d;
-
 #endif  // VECTOR3_HPP

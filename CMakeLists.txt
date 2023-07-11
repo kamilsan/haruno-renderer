@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Threads)
 
 set(PROJECT_CODE
+  include/Types.hpp
   include/Color.hpp
   include/Ray.hpp
   include/Camera.hpp

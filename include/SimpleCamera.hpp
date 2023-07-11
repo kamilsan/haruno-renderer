@@ -6,26 +6,26 @@
 
 class SimpleCamera : public Camera {
  public:
-  SimpleCamera(float fov, float lensRadius, float focalLength, const Vector3f& position,
-               const Vector3f& forward, const Vector3f& up);
-  SimpleCamera(float fov, float lensRadius, float focalLength, const Vector3f& position)
-      : SimpleCamera(fov, lensRadius, focalLength, position, Vector3f{0, 0, 1}, Vector3f{0, 1, 0}) {
+  SimpleCamera(Float fov, Float lensRadius, Float focalLength, const Vector3t& position,
+               const Vector3t& forward, const Vector3t& up);
+  SimpleCamera(Float fov, Float lensRadius, Float focalLength, const Vector3t& position)
+      : SimpleCamera(fov, lensRadius, focalLength, position, Vector3t{0, 0, 1}, Vector3t{0, 1, 0}) {
   }
 
-  const Vector3f& getPosition() const { return position_; }
-  const Vector3f& getForward() const { return forward_; }
-  const Vector3f& getUp() const { return up_; }
+  const Vector3t& getPosition() const { return position_; }
+  const Vector3t& getForward() const { return forward_; }
+  const Vector3t& getUp() const { return up_; }
 
-  Ray getCameraRay(float ndcX, float ndcY, RNG& rng) const override;
+  Ray getCameraRay(Float ndcX, Float ndcY, RNG& rng) const override;
 
  private:
-  float tanHalfFov_;
-  float lensRadius_;
-  float focalLength_;
-  Vector3f position_;
-  Vector3f forward_;
-  Vector3f right_;
-  Vector3f up_;
+  Float tanHalfFov_;
+  Float lensRadius_;
+  Float focalLength_;
+  Vector3t position_;
+  Vector3t forward_;
+  Vector3t right_;
+  Vector3t up_;
 };
 
 #endif

@@ -12,17 +12,17 @@ class SpecularBRDF : public BRDF {
   SpecularBRDF() = default;
 
   inline Type getType() const override { return Type::PerfectSpecular; }
-  inline float sample(const Vector3f& wo, RNG& rng, Vector3f& wi, float& pdf) const override;
-  inline Color evaluate(const Vector3f& wi, const Vector3f& wo) const override;
+  inline Float sample(const Vector3t& wo, RNG& rng, Vector3t& wi, Float& pdf) const override;
+  inline Color evaluate(const Vector3t& wi, const Vector3t& wo) const override;
 };
 
-float SpecularBRDF::sample(const Vector3f& wo, RNG&, Vector3f& wi, float& pdf) const {
-  wi = Vector3f(-wo.x, wo.y, -wo.z);
-  pdf = 1.0f;
+Float SpecularBRDF::sample(const Vector3t& wo, RNG&, Vector3t& wi, Float& pdf) const {
+  wi = Vector3t(-wo.x, wo.y, -wo.z);
+  pdf = 1.0;
 
-  return 1.0f / std::fabs(wi.y);
+  return 1.0 / std::fabs(wi.y);
 }
 
-Color SpecularBRDF::evaluate(const Vector3f&, const Vector3f&) const { return 0.0f; }
+Color SpecularBRDF::evaluate(const Vector3t&, const Vector3t&) const { return 0.0; }
 
 #endif

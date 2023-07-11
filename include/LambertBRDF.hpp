@@ -9,31 +9,31 @@
 
 class LambertBRDF : public BRDF {
  public:
-  LambertBRDF(float diffuseFactor) : diffuseFactor_(diffuseFactor) {}
+  LambertBRDF(Float diffuseFactor) : diffuseFactor_(diffuseFactor) {}
 
-  float getDiffuseFactor() const { return diffuseFactor_; }
+  Float getDiffuseFactor() const { return diffuseFactor_; }
 
   inline Type getType() const override { return Type::Regular; }
-  inline float sample(const Vector3f& wo, RNG& rng, Vector3f& wi, float& pdf) const override;
-  inline Color evaluate(const Vector3f& wi, const Vector3f& wo) const override;
+  inline Float sample(const Vector3t& wo, RNG& rng, Vector3t& wi, Float& pdf) const override;
+  inline Color evaluate(const Vector3t& wi, const Vector3t& wo) const override;
 
  private:
-  float diffuseFactor_;
+  Float diffuseFactor_;
 };
 
-float LambertBRDF::sample(const Vector3f&, RNG& rng, Vector3f& wi, float& pdf) const {
-  const float sinTheta = std::sqrt(rng.get());
-  const float cosTheta = std::sqrt(1.0f - sinTheta * sinTheta);
+Float LambertBRDF::sample(const Vector3t&, RNG& rng, Vector3t& wi, Float& pdf) const {
+  const Float sinTheta = std::sqrt(rng.get());
+  const Float cosTheta = std::sqrt(1.0 - sinTheta * sinTheta);
 
-  float phi = TAU * rng.get();
+  Float phi = TAU * rng.get();
 
-  wi = Vector3f(sinTheta * std::cos(phi), cosTheta, sinTheta * std::sin(phi));
+  wi = Vector3t(sinTheta * std::cos(phi), cosTheta, sinTheta * std::sin(phi));
   pdf = cosTheta * ONE_OVER_PI;
 
   return diffuseFactor_ * ONE_OVER_PI;
 }
 
-Color LambertBRDF::evaluate(const Vector3f&, const Vector3f&) const {
+Color LambertBRDF::evaluate(const Vector3t&, const Vector3t&) const {
   return diffuseFactor_ * ONE_OVER_PI;
 }
 

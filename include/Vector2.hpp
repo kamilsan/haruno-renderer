@@ -118,7 +118,4 @@ Vector2<T> Vector2<T>::clamped(T min, T max) const {
   return Vector2{newX, newY};
 }
 
-typedef Vector2<float> Vector2f;
-typedef Vector2<double> Vector2d;
-
 #endif  // VECTOR2_HPP

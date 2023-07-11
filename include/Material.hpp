@@ -14,7 +14,7 @@ class Material {
 
   const BRDF& getBRDF() const { return *brdf_; }
 
-  virtual Color getAlbedo(const Vector2f& uv) const = 0;
+  virtual Color getAlbedo(const Vector2t& uv) const = 0;
 
  private:
   std::unique_ptr<BRDF> brdf_;

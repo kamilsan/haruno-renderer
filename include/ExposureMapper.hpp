@@ -2,15 +2,16 @@
 #define EXPOSURE_MAPPER_HPP
 
 #include "ToneMapper.hpp"
+#include "Types.hpp"
 
 class ExposureMapper : public ToneMapper {
  public:
-  ExposureMapper(float exposure);
+  ExposureMapper(Float exposure);
 
   Image apply(const Image&) const override;
 
  private:
-  float gain_;
+  Float gain_;
 };
 
 #endif  // EXPOSURE_MAPPER_HPP

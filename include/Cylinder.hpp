@@ -11,96 +11,96 @@
 
 class Cylinder : public Object {
  public:
-  Cylinder(const Transformation& transformation, float radius, float height,
+  Cylinder(const Transformation& transformation, Float radius, Float height,
            std::shared_ptr<Material> material)
       : Object(material), transformation_(transformation), radius_(radius), height_(height) {
-    pdf_ = 1.0f / (2.0f * PI * radius * height);
+    pdf_ = 1.0 / (2.0 * PI * radius * height);
   }
 
-  float getRadius() const { return radius_; }
-  float getHeight() const { return height_; }
+  Float getRadius() const { return radius_; }
+  Float getHeight() const { return height_; }
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
   Transformation transformation_;
-  float radius_;
-  float height_;
-  float pdf_;
+  Float radius_;
+  Float height_;
+  Float pdf_;
 };
 
-float Cylinder::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+Float Cylinder::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const auto rayTransformed = transformation_.toObjectCoordinates(ray);
 
   const auto& origin = rayTransformed.getOrigin();
   const auto& direction = rayTransformed.getDirection();
 
-  const float a = direction.x * direction.x + direction.z * direction.z;
-  const float b = 2.0f * (origin.x * direction.x + origin.z * direction.z);
-  const float c = origin.x * origin.x + origin.z * origin.z - radius_ * radius_;
+  const Float a = direction.x * direction.x + direction.z * direction.z;
+  const Float b = 2.0 * (origin.x * direction.x + origin.z * direction.z);
+  const Float c = origin.x * origin.x + origin.z * origin.z - radius_ * radius_;
 
-  float t1, t2;
+  Float t1, t2;
   if (!solveQuadratic(a, b, c, t1, t2)) {
-    return -1.0f;
+    return -1.0;
   }
 
-  const float t = t1 > 0.0f ? t1 : t2;
+  const Float t = t1 > 0.0 ? t1 : t2;
 
-  if (t < 0.0f) {
-    return -1.0f;
+  if (t < 0.0) {
+    return -1.0;
   }
 
   auto position = rayTransformed(t);
 
-  if (2.0f * std::abs(position.y) > height_) {
+  if (2.0 * std::abs(position.y) > height_) {
     position = rayTransformed(t2);
 
-    if (2.0f * std::abs(position.y) > height_) {
-      return -1.0f;
+    if (2.0 * std::abs(position.y) > height_) {
+      return -1.0;
     }
   }
 
-  const auto normal = Vector3f(position.x, 0, position.z) / radius_;
-  const auto normalHomogenous = Vector4f(normal, 0.0f);
+  const auto normal = Vector3t(position.x, 0, position.z) / radius_;
+  const auto normalHomogenous = Vector4t(normal, 0.0);
 
   const auto phi = std::atan2(position.z, position.x);
-  const auto u = 0.5f * phi * ONE_OVER_PI + 0.5f;
-  const auto v = position.y / height_ - 0.5f;
+  const auto u = 0.5 * phi * ONE_OVER_PI + 0.5;
+  const auto v = position.y / height_ - 0.5;
 
   surfaceInfo.normal =
-      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
-  surfaceInfo.uv = Vector2f(u, v);
+      ((Vector3t)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
+  surfaceInfo.uv = Vector2t(u, v);
 
-  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
+  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0) {
     surfaceInfo.normal = -surfaceInfo.normal;
   }
 
   return t;
 }
 
-Vector3f Cylinder::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
-  const float u = rng.get();
-  const float v = rng.get();
+Vector3t Cylinder::sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const {
+  const Float u = rng.get();
+  const Float v = rng.get();
 
-  const float y = (v - 0.5f) * height_;
-  const float phi = TAU * u;
+  const Float y = (v - 0.5) * height_;
+  const Float phi = TAU * u;
 
-  const float sinPhi = std::sin(phi);
-  const float cosPhi = std::cos(phi);
+  const Float sinPhi = std::sin(phi);
+  const Float cosPhi = std::cos(phi);
 
-  const auto normal = Vector3f(cosPhi, 0, sinPhi);
-  const auto normalHomogenous = Vector4f(normal, 0.0f);
+  const auto normal = Vector3t(cosPhi, 0, sinPhi);
+  const auto normalHomogenous = Vector4t(normal, 0.0);
 
-  const auto position = radius_ * normal + Vector3f(0.0f, y, 0.0f);
+  const auto position = radius_ * normal + Vector3t(0.0, y, 0.0);
 
   surfaceInfo.normal =
-      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
-  surfaceInfo.uv = Vector2f(u, v);
+      ((Vector3t)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
+  surfaceInfo.uv = Vector2t(u, v);
 
   pdf = pdf_;
 
-  return transformation_.toWorldCoordinates(Vector4f(position, 1.0f));
+  return transformation_.toWorldCoordinates(Vector4t(position, 1.0));
 }
 
 #endif

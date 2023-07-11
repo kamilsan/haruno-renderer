@@ -3,7 +3,7 @@
 #include "Image.hpp"
 #include "Math.hpp"
 
-ExposureMapper::ExposureMapper(float exposure) : gain_(std::exp2f(exposure)) {}
+ExposureMapper::ExposureMapper(Float exposure) : gain_(std::exp2f(exposure)) {}
 
 Image ExposureMapper::apply(const Image& input) const {
   Image output = input;

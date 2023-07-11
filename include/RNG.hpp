@@ -4,7 +4,7 @@
 #include <chrono>
 #include <random>
 
-#include "Vector3.hpp"
+#include "Types.hpp"
 
 class RNG {
  public:
@@ -13,16 +13,16 @@ class RNG {
 
   RNG createChild(unsigned int id);
 
-  inline float get();
-  Vector3f sampleCircle();
-  Vector3f sampleHemisphereUniform();
-  Vector3f sampleHemisphereCosineWeighted();
+  inline Float get();
+  Vector3t sampleCircle();
+  Vector3t sampleHemisphereUniform();
+  Vector3t sampleHemisphereCosineWeighted();
 
  private:
   std::mt19937 engine_;
-  std::uniform_real_distribution<float> distribution_;
+  std::uniform_real_distribution<Float> distribution_;
 };
 
-float RNG::get() { return distribution_(engine_); }
+Float RNG::get() { return distribution_(engine_); }
 
 #endif

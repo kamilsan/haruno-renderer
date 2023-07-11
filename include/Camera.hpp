@@ -7,7 +7,7 @@ class RNG;
 
 class Camera {
  public:
-  virtual Ray getCameraRay(float ndcX, float ndxY, RNG& rng) const = 0;
+  virtual Ray getCameraRay(Float ndcX, Float ndxY, RNG& rng) const = 0;
 };
 
 #endif

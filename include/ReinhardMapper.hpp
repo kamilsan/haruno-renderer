@@ -9,18 +9,18 @@
 
 class ReinhardMapper : public ToneMapper {
  public:
-  ReinhardMapper(float keyValue = 0.18f, bool useLWhite = false, std::optional<float> Lwhite = {})
+  ReinhardMapper(Float keyValue = 0.18, bool useLWhite = false, std::optional<Float> Lwhite = {})
       : keyValue_(keyValue), useLWhite_(useLWhite), Lwhite_(Lwhite) {}
 
   Image apply(const Image& input) const override;
 
  private:
-  static Vector3f RGBToXYZ(const Color& color);
-  static Color XYZToRGB(const Vector3f& color);
+  static Vector3t RGBToXYZ(const Color& color);
+  static Color XYZToRGB(const Vector3t& color);
 
-  float keyValue_;
+  Float keyValue_;
   bool useLWhite_;
-  std::optional<float> Lwhite_;
+  std::optional<Float> Lwhite_;
 };
 
 #endif  // REINHARD_MAPPER_HPP

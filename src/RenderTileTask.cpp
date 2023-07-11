@@ -14,7 +14,7 @@ RenderTileTask::RenderTileTask(const RenderParameters& parameters,
       camera_(camera),
       scene_(scene),
       rng_(std::move(rng)) {
-  aspectRatio_ = static_cast<float>(parameters.width) / parameters.height;
+  aspectRatio_ = static_cast<Float>(parameters.width) / parameters.height;
 }
 
 void RenderTileTask::renderTile() {
@@ -25,8 +25,8 @@ void RenderTileTask::renderTile() {
 
       Color color{};
       for (unsigned int i = 0; i < parameters_.mcSamples; ++i) {
-        const float ndcX = aspectRatio_ * (2.0f * ((x + rng_.get()) / parameters_.width) - 1.0f);
-        const float ndcY = -2.0f * ((y + rng_.get()) / parameters_.height) + 1.0f;
+        const Float ndcX = aspectRatio_ * (2.0 * ((x + rng_.get()) / parameters_.width) - 1.0);
+        const Float ndcY = -2.0 * ((y + rng_.get()) / parameters_.height) + 1.0;
 
         const Ray primaryRay = camera_.getCameraRay(ndcX, ndcY, rng_);
         color += integrator_->integrate(primaryRay, scene_, rng_);

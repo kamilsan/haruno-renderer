@@ -5,12 +5,12 @@
 
 class AmbientOcclusion : public Integrator {
  public:
-  AmbientOcclusion(float radius) : radius_(radius) {}
+  AmbientOcclusion(Float radius) : radius_(radius) {}
 
   Color integrate(const Ray& ray, const Scene& scene, RNG& rng) const;
 
  private:
-  float radius_ = 1.0f;
+  Float radius_ = 1.0;
 };
 
 #endif

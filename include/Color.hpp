@@ -3,9 +3,11 @@
 
 #include <iostream>
 
+#include "Types.hpp"
+
 struct Color {
-  Color(float r, float g, float b) : r(r), g(g), b(b) {}
-  Color(float v) : r(v), g(v), b(v) {}
+  Color(Float r, Float g, Float b) : r(r), g(g), b(b) {}
+  Color(Float v) : r(v), g(v), b(v) {}
   Color() : r(0), g(0), b(0) {}
 
   bool operator==(const Color& other) const { return r == other.r && g == other.g && b == other.b; }
@@ -17,10 +19,10 @@ struct Color {
 
   Color operator*(const Color& other) const { return {r * other.r, g * other.g, b * other.b}; }
 
-  Color operator*(float weight) const { return {r * weight, g * weight, b * weight}; }
+  Color operator*(Float weight) const { return {r * weight, g * weight, b * weight}; }
 
-  Color operator/(float weight) const {
-    const float f = 1.0 / weight;
+  Color operator/(Float weight) const {
+    const Float f = 1.0 / weight;
     return {r * f, g * f, b * f};
   }
 
@@ -48,7 +50,7 @@ struct Color {
     return *this;
   }
 
-  Color& operator*=(float weight) {
+  Color& operator*=(Float weight) {
     r *= weight;
     g *= weight;
     b *= weight;
@@ -56,8 +58,8 @@ struct Color {
     return *this;
   }
 
-  Color& operator/=(float weight) {
-    const float f = 1.0 / weight;
+  Color& operator/=(Float weight) {
+    const Float f = 1.0 / weight;
 
     r *= f;
     g *= f;
@@ -70,13 +72,13 @@ struct Color {
     return os << "(" << c.r << ", " << c.g << ", " << c.b << ")";
   }
 
-  friend Color operator*(float weight, const Color& color) { return color * weight; }
+  friend Color operator*(Float weight, const Color& color) { return color * weight; }
 
-  friend Color operator/(float weight, const Color& color) { return color / weight; }
+  friend Color operator/(Float weight, const Color& color) { return color / weight; }
 
-  float r;
-  float g;
-  float b;
+  Float r;
+  Float g;
+  Float b;
 };
 
 #endif

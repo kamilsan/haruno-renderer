@@ -3,7 +3,7 @@
 #include "Ray.hpp"
 #include "Sphere.hpp"
 
-BoundingBox::BoundingBox(const std::vector<Vector3f>& points) {
+BoundingBox::BoundingBox(const std::vector<Vector3t>& points) {
   if (points.size() > 0) {
     minCorner_ = points[0];
     maxCorner_ = points[0];
@@ -14,7 +14,7 @@ BoundingBox::BoundingBox(const std::vector<Vector3f>& points) {
   }
 }
 
-void BoundingBox::expand(const Vector3f& point) {
+void BoundingBox::expand(const Vector3t& point) {
   if (point.x < minCorner_.x) {
     minCorner_.x = point.x;
   } else if (point.x > maxCorner_.x) {
@@ -35,13 +35,13 @@ void BoundingBox::expand(const Vector3f& point) {
 }
 
 bool BoundingBox::intersects(const Ray& ray) const {
-  float intersectionIntervalMin = 0.0f;
-  float intersectionIntervalMax = std::numeric_limits<float>::max();
+  Float intersectionIntervalMin = 0.0;
+  Float intersectionIntervalMax = std::numeric_limits<Float>::max();
 
   for (size_t i = 0; i < 3; ++i) {
-    const float invDirection = 1.0f / ray.getDirection()[i];
-    float tMin = (minCorner_[i] - ray.getOrigin()[i]) * invDirection;
-    float tMax = (maxCorner_[i] - ray.getOrigin()[i]) * invDirection;
+    const Float invDirection = 1.0 / ray.getDirection()[i];
+    Float tMin = (minCorner_[i] - ray.getOrigin()[i]) * invDirection;
+    Float tMax = (maxCorner_[i] - ray.getOrigin()[i]) * invDirection;
     if (tMin > tMax) {
       std::swap(tMin, tMax);
     }

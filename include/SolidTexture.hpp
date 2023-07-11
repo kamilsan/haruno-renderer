@@ -7,7 +7,7 @@ class SolidTexture : public BaseTexture {
  public:
   SolidTexture(const Color& color) : color_(color) {}
 
-  Color get(const Vector2f&) const override { return color_; }
+  Color get(const Vector2t&) const override { return color_; }
 
  private:
   Color color_;

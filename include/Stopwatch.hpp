@@ -31,7 +31,7 @@ class Stopwatch {
   double getElapsedSeconds() const { return elapsedSeconds_; }
 
   std::string getElapsedTime() const {
-    float seconds = elapsedSeconds_;
+    double seconds = elapsedSeconds_;
     size_t min = seconds / 60;
     seconds -= min * 60;
     size_t hours = min / 60;

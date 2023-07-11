@@ -7,6 +7,7 @@
 #include "Light.hpp"
 #include "Object.hpp"
 #include "RNG.hpp"
+#include "Types.hpp"
 
 class AreaLight : public Light {
  public:
@@ -15,11 +16,11 @@ class AreaLight : public Light {
 
   std::shared_ptr<Object> getObject() override { return object_; }
 
-  Color evaluate(const Vector3f&) const override { return emittance_; }
-  Ray getShadowRay(const Vector3f&, float&) const override { return Ray{{}, {}}; }
+  Color evaluate(const Vector3t&) const override { return emittance_; }
+  Ray getShadowRay(const Vector3t&, Float&) const override { return Ray{{}, {}}; }
   bool isDelta() const override { return false; }
-  Color sampleLe(Vector3f& position, SurfaceInfo& surfaceInfo, RNG& rng,
-                 float& pdf) const override {
+  Color sampleLe(Vector3t& position, SurfaceInfo& surfaceInfo, RNG& rng,
+                 Float& pdf) const override {
     position = object_->sample(rng, surfaceInfo, pdf);
     return emittance_;
   }

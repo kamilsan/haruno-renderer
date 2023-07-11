@@ -37,8 +37,8 @@ int main() {
 
   std::cout << parameters << "\n";
 
-  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 1.5f, Vector3f{0, 0.1, -1},
-                                               Vector3f{0, 0, 1}, Vector3f{0, 1, 0});
+  auto camera = std::make_unique<SimpleCamera>(90.0f, 0.01f, 1.5f, Vector3t{0, 0.1, -1},
+                                               Vector3t{0, 0, 1}, Vector3t{0, 1, 0});
 
   auto environment = std::make_unique<SimpleEnvironment>(Color{}, Color{}, Color{});
 
@@ -59,36 +59,36 @@ int main() {
   auto materialFloor = std::make_shared<DiffuseMaterial>(floor, 0.8f);
   auto materialMirror = std::make_shared<MirrorMaterial>(colorWhite);
 
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(1, 0, 0),
-                                              Vector3f(0, 0, 1), Vector3f(0, 1, 0), 3, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(-2, -1, -1), Vector3t(1, 0, 0),
+                                              Vector3t(0, 0, 1), Vector3t(0, 1, 0), 3, 3,
                                               materialRed));
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(2, -1, 2), Vector3f(-1, 0, 0),
-                                              Vector3f(0, 0, -1), Vector3f(0, 1, 0), 3, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(2, -1, 2), Vector3t(-1, 0, 0),
+                                              Vector3t(0, 0, -1), Vector3t(0, 1, 0), 3, 3,
                                               materialGreen));
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(0, 1, 0),
-                                              Vector3f(1, 0, 0), Vector3f(0, 0, 1), 4, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(-2, -1, -1), Vector3t(0, 1, 0),
+                                              Vector3t(1, 0, 0), Vector3t(0, 0, 1), 4, 3,
                                               materialFloor));
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, 2, -1), Vector3f(0, -1, 0),
-                                              Vector3f(1, 0, 0), Vector3f(0, 0, 1), 4, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(-2, 2, -1), Vector3t(0, -1, 0),
+                                              Vector3t(1, 0, 0), Vector3t(0, 0, 1), 4, 3,
                                               materialWhite));
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, 2), Vector3f(0, 0, -1),
-                                              Vector3f(1, 0, 0), Vector3f(0, 1, 0), 4, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(-2, -1, 2), Vector3t(0, 0, -1),
+                                              Vector3t(1, 0, 0), Vector3t(0, 1, 0), 4, 3,
                                               materialUvTest));
-  scene.addObject(std::make_shared<Rectangle>(Vector3f(-2, -1, -1), Vector3f(0, 0, 1),
-                                              Vector3f(1, 0, 0), Vector3f(0, 1, 0), 4, 3,
+  scene.addObject(std::make_shared<Rectangle>(Vector3t(-2, -1, -1), Vector3t(0, 0, 1),
+                                              Vector3t(1, 0, 0), Vector3t(0, 1, 0), 4, 3,
                                               materialWhite));
-  scene.addObject(std::make_shared<Sphere>(Vector3f(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
-  scene.addObject(std::make_shared<Sphere>(Vector3f(0.6f, -0.5f, 0.4f), 0.5f, materialMirror));
+  scene.addObject(std::make_shared<Sphere>(Vector3t(-0.8f, -0.5f, 0.8f), 0.5f, materialWhite));
+  scene.addObject(std::make_shared<Sphere>(Vector3t(0.6f, -0.5f, 0.4f), 0.5f, materialMirror));
 
   scene.addLight(std::make_shared<AreaLight>(
-      std::make_shared<Rectangle>(Vector3f(-0.6f, 1.99f, 0.9f), Vector3f(0, -1, 0),
-                                  Vector3f(1, 0, 0), Vector3f(0, 0, 1), 1.2f, 0.3f, materialWhite),
+      std::make_shared<Rectangle>(Vector3t(-0.6f, 1.99f, 0.9f), Vector3t(0, -1, 0),
+                                  Vector3t(1, 0, 0), Vector3t(0, 0, 1), 1.2f, 0.3f, materialWhite),
       Color(20, 20, 20)));
 
   // Transformation meshTransformation;
-  // meshTransformation.setScale(Vector3f(1.3f));
-  // meshTransformation.setTranslation(Vector3f(-0.8f, -1.0f, 0.8f));
-  // meshTransformation.setRotation(Vector3f(0.0f, -PI / 4.0, 0.0f));
+  // meshTransformation.setScale(Vector3t(1.3f));
+  // meshTransformation.setTranslation(Vector3t(-0.8f, -1.0f, 0.8f));
+  // meshTransformation.setRotation(Vector3t(0.0f, -PI / 4.0, 0.0f));
   // auto mesh = ObjLoader::load("./meshes/lucy-low.obj", meshTransformation, materialWhite);
   // scene.addObject(mesh);
 

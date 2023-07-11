@@ -11,23 +11,23 @@
 
 class Paraboloid : public Object {
  public:
-  Paraboloid(const Transformation& transformation, float radius, float height,
+  Paraboloid(const Transformation& transformation, Float radius, Float height,
              std::shared_ptr<Material> material)
       : Object(material), transformation_(transformation), radius_(radius), height_(height) {}
 
-  float getRadius() const { return radius_; }
-  float getHeight() const { return height_; }
+  Float getRadius() const { return radius_; }
+  Float getHeight() const { return height_; }
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
   Transformation transformation_;
-  float radius_;
-  float height_;
+  Float radius_;
+  Float height_;
 };
 
-float Paraboloid::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+Float Paraboloid::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const auto rayTransformed = transformation_.toObjectCoordinates(ray);
 
   const auto& origin = rayTransformed.getOrigin();
@@ -36,19 +36,19 @@ float Paraboloid::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   auto k = height_ / radius_;
   k = k * k;
 
-  const float a = k * (direction.x * direction.x + direction.z * direction.z);
-  const float b = 2.0f * k * (origin.x * direction.x + origin.z * direction.z) - direction.y;
-  const float c = k * (origin.x * origin.x + origin.z * origin.z) - origin.y;
+  const Float a = k * (direction.x * direction.x + direction.z * direction.z);
+  const Float b = 2.0 * k * (origin.x * direction.x + origin.z * direction.z) - direction.y;
+  const Float c = k * (origin.x * origin.x + origin.z * origin.z) - origin.y;
 
-  float t1, t2;
+  Float t1, t2;
   if (!solveQuadratic(a, b, c, t1, t2)) {
-    return -1.0f;
+    return -1.0;
   }
 
-  const float t = t1 > 0.0f ? t1 : t2;
+  const Float t = t1 > 0.0 ? t1 : t2;
 
-  if (t < 0.0f) {
-    return -1.0f;
+  if (t < 0.0) {
+    return -1.0;
   }
 
   auto position = rayTransformed(t);
@@ -57,33 +57,33 @@ float Paraboloid::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
     position = rayTransformed(t2);
 
     if (position.y < 0 || position.y > height_) {
-      return -1.0f;
+      return -1.0;
     }
   }
 
   const auto phi = std::atan2(position.z, position.x);
-  const auto u = 0.5f * phi * ONE_OVER_PI + 0.5f;
+  const auto u = 0.5 * phi * ONE_OVER_PI + 0.5;
   const auto v = position.y / height_;
 
-  Vector3f dpdu(-TAU * position.z, 0.0f, TAU * position.x);
-  Vector3f dpdv =
-      height_ * Vector3f(position.x / (2.0f * position.y), 1.0f, position.z / (2.0f * position.y));
+  Vector3t dpdu(-TAU * position.z, 0.0, TAU * position.x);
+  Vector3t dpdv =
+      height_ * Vector3t(position.x / (2.0 * position.y), 1.0, position.z / (2.0 * position.y));
 
   const auto normal = dpdu.cross(dpdv).normalized();
-  const auto normalHomogenous = Vector4f(normal, 0.0f);
+  const auto normalHomogenous = Vector4t(normal, 0.0);
 
   surfaceInfo.normal =
-      ((Vector3f)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
-  surfaceInfo.uv = Vector2f(u, v);
+      ((Vector3t)(transformation_.getToObjectMatrix().transpose() * normalHomogenous)).normalized();
+  surfaceInfo.uv = Vector2t(u, v);
 
-  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
+  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0) {
     surfaceInfo.normal = -surfaceInfo.normal;
   }
 
   return t;
 }
 
-Vector3f Paraboloid::sample(RNG&, SurfaceInfo&, float&) const {
+Vector3t Paraboloid::sample(RNG&, SurfaceInfo&, Float&) const {
   throw std::runtime_error("Paraboloid sampling is not implemented!");
   return {};
 }

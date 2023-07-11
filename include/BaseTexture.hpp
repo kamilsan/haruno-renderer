@@ -2,13 +2,14 @@
 #define BASE_TEXTURE_HPP
 
 #include "Color.hpp"
+#include "Types.hpp"
 #include "Vector2.hpp"
 
 class BaseTexture {
  public:
   virtual ~BaseTexture(){};
 
-  virtual Color get(const Vector2f& uv) const = 0;
+  virtual Color get(const Vector2t& uv) const = 0;
 };
 
 #endif

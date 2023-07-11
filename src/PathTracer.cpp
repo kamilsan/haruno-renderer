@@ -21,7 +21,7 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
   bool raySpecular = false;
 
   for (unsigned int i = 0;; ++i) {
-    float t = -1;
+    Float t = -1;
     object = scene.intersects(ray, t, surfaceInfo);
 
     if ((i == 0 || raySpecular) && surfaceInfo.emittance) {
@@ -41,24 +41,24 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
           computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
       result += coeff * directLighting;
 
-      Vector3f tangent, bitangent;
+      Vector3t tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
       const auto woShading = transformFromTangentSpace(wo, normal, tangent, bitangent);
 
-      Vector3f sample{};
-      float pdf = 1.0f;
-      const float f = brdf.sample(woShading, rng, sample, pdf);
-      const float coswi = std::max(sample.y, 0.0f);  // wi . (0, 1, 0)
+      Vector3t sample{};
+      Float pdf = 1.0;
+      const Float f = brdf.sample(woShading, rng, sample, pdf);
+      const Float coswi = std::max(sample.y, static_cast<Float>(0.0));  // wi . (0, 1, 0)
 
       coeff *= albedo * f * coswi / pdf;
       raySpecular = brdf.getType() == BRDF::Type::PerfectSpecular;
 
-      Vector3f wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
-      ray = Ray{position + wi * 0.001f, wi};
+      Vector3t wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
+      ray = Ray{position + wi * 0.001, wi};
 
       if (i > 3) {
-        const float maxComponent = std::max(coeff.r, std::max(coeff.g, coeff.b));
-        const float terminationProbability = std::max(0.1f, 1.0f - maxComponent);
+        const Float maxComponent = std::max(coeff.r, std::max(coeff.g, coeff.b));
+        const Float terminationProbability = std::max(0.1, 1.0 - maxComponent);
         if (rng.get() < terminationProbability) {
           break;
         }

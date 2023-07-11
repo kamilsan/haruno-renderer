@@ -3,15 +3,15 @@
 
 #include "Color.hpp"
 #include "RNG.hpp"
-#include "Vector3.hpp"
+#include "Types.hpp"
 
 class BRDF {
  public:
   enum class Type { Regular, PerfectSpecular };
 
   virtual Type getType() const = 0;
-  virtual float sample(const Vector3f& wo, RNG& rng, Vector3f& wi, float& pdf) const = 0;
-  virtual Color evaluate(const Vector3f& wi, const Vector3f& wo) const = 0;
+  virtual Float sample(const Vector3t& wo, RNG& rng, Vector3t& wi, Float& pdf) const = 0;
+  virtual Color evaluate(const Vector3t& wi, const Vector3t& wo) const = 0;
 };
 
 #endif

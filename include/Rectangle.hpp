@@ -12,73 +12,73 @@
 
 class Rectangle : public Object {
  public:
-  Rectangle(const Vector3f& point, const Vector3f& normal, const Vector3f& tangent,
-            const Vector3f& bitangent, float sizeTangent, float sizeBitangent,
+  Rectangle(const Vector3t& point, const Vector3t& normal, const Vector3t& tangent,
+            const Vector3t& bitangent, Float sizeTangent, Float sizeBitangent,
             std::shared_ptr<Material> material)
       : Object(material), point_(point), sizeTangent_(sizeTangent), sizeBitangent_(sizeBitangent) {
-    // Gram-Schidt process
+    // Gram-Schmidt process
     normal_ = normal.normalized();
     tangent_ = (tangent - tangent.dot(normal_) * normal_).normalized();
     bitangent_ = (bitangent - bitangent.dot(normal_) * normal_ - bitangent.dot(tangent_) * tangent_)
                      .normalized();
 
-    pdf_ = 1.0f / (sizeTangent * sizeBitangent);
+    pdf_ = 1.0 / (sizeTangent * sizeBitangent);
   }
 
-  const Vector3f& getPoint() const { return point_; }
-  const Vector3f& getTangent() const { return tangent_; }
-  const Vector3f& getBitangent() const { return bitangent_; }
+  const Vector3t& getPoint() const { return point_; }
+  const Vector3t& getTangent() const { return tangent_; }
+  const Vector3t& getBitangent() const { return bitangent_; }
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
-  Vector3f point_;
-  Vector3f normal_;
-  Vector3f tangent_;
-  Vector3f bitangent_;
-  float sizeTangent_;
-  float sizeBitangent_;
-  float pdf_;
+  Vector3t point_;
+  Vector3t normal_;
+  Vector3t tangent_;
+  Vector3t bitangent_;
+  Float sizeTangent_;
+  Float sizeBitangent_;
+  Float pdf_;
 };
 
-float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-  const float don = ray.getDirection().dot(normal_);
+Float Rectangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  const Float don = ray.getDirection().dot(normal_);
   if (don > -EPSILON && don < EPSILON) {
     return -1;
   }
 
-  const float t = -(ray.getOrigin() - point_).dot(normal_) / don;
-  const Vector3f toPosition = ray(t) - point_;
+  const Float t = -(ray.getOrigin() - point_).dot(normal_) / don;
+  const Vector3t toPosition = ray(t) - point_;
 
-  const float distTangent = toPosition.dot(tangent_);
-  if (distTangent < 0.0f || distTangent > sizeTangent_) {
+  const Float distTangent = toPosition.dot(tangent_);
+  if (distTangent < 0.0 || distTangent > sizeTangent_) {
     return -1;
   }
 
-  const float distBitangent = toPosition.dot(bitangent_);
-  if (distBitangent < 0.0f || distBitangent > sizeBitangent_) {
+  const Float distBitangent = toPosition.dot(bitangent_);
+  if (distBitangent < 0.0 || distBitangent > sizeBitangent_) {
     return -1;
   }
 
-  const float u = distTangent / sizeTangent_;
-  const float v = distBitangent / sizeBitangent_;
+  const Float u = distTangent / sizeTangent_;
+  const Float v = distBitangent / sizeBitangent_;
 
   surfaceInfo.normal = normal_;
-  surfaceInfo.uv = Vector2f(u, v);
+  surfaceInfo.uv = Vector2t(u, v);
 
   return t;
 }
 
-Vector3f Rectangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
-  const float u = rng.get();
-  const float v = rng.get();
+Vector3t Rectangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const {
+  const Float u = rng.get();
+  const Float v = rng.get();
 
-  const float s = u * sizeTangent_;
-  const float t = v * sizeBitangent_;
+  const Float s = u * sizeTangent_;
+  const Float t = v * sizeBitangent_;
 
   surfaceInfo.normal = normal_;
-  surfaceInfo.uv = Vector2f(u, v);
+  surfaceInfo.uv = Vector2t(u, v);
 
   pdf = pdf_;
 

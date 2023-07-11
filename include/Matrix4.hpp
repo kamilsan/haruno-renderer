@@ -213,7 +213,4 @@ Matrix4<T> Matrix4<T>::initRotation(const Vector3<T>& eulerAngles) {
   return rz * ry * rx;
 }
 
-typedef Matrix4<float> Matrix4f;
-typedef Matrix4<double> Matrix4d;
-
 #endif  // MATRIX4_HPP

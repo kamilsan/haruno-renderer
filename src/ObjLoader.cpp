@@ -15,16 +15,16 @@ std::shared_ptr<TriangleMesh> ObjLoader::load(const std::string& filename,
   }
 
   // Those arrays may have different size
-  std::vector<Vector3f> verticesUnique;
-  std::vector<Vector2f> uvsUnique;
-  std::vector<Vector3f> normalsUnique;
+  std::vector<Vector3t> verticesUnique;
+  std::vector<Vector2t> uvsUnique;
+  std::vector<Vector3t> normalsUnique;
 
   std::unordered_map<std::string, unsigned int> vertexDataIndices;
 
   // Those must have the same size
-  std::vector<Vector3f> vertices;
-  std::vector<Vector2f> uvs;
-  std::vector<Vector3f> normals;
+  std::vector<Vector3t> vertices;
+  std::vector<Vector2t> uvs;
+  std::vector<Vector3t> normals;
   std::vector<unsigned int> indices;
 
   std::string line;
@@ -35,17 +35,17 @@ std::shared_ptr<TriangleMesh> ObjLoader::load(const std::string& filename,
     lineStream >> marker;
 
     if (marker == "v") {
-      float x, y, z;
+      Float x, y, z;
       lineStream >> x >> y >> z;
-      verticesUnique.emplace_back(Vector3f(x, y, z));
+      verticesUnique.emplace_back(Vector3t(x, y, z));
     } else if (marker == "vt") {
-      float u, v;
+      Float u, v;
       lineStream >> u >> v;
-      uvsUnique.emplace_back(Vector2f(u, v));
+      uvsUnique.emplace_back(Vector2t(u, v));
     } else if (marker == "vn") {
-      float x, y, z;
+      Float x, y, z;
       lineStream >> x >> y >> z;
-      normalsUnique.emplace_back(Vector3f(x, y, z).normalized());
+      normalsUnique.emplace_back(Vector3t(x, y, z).normalized());
     } else if (marker == "f") {
       std::string vertexIndices;
       for (size_t i = 0; i < 3; ++i) {
@@ -75,7 +75,7 @@ std::shared_ptr<TriangleMesh> ObjLoader::load(const std::string& filename,
           if (uvIndex <= uvsUnique.size()) {
             uvs.emplace_back(uvsUnique[uvIndex - 1]);
           } else {
-            uvs.emplace_back(Vector2f(0.0f, 0.0f));
+            uvs.emplace_back(Vector2t(0.0, 0.0));
           }
 
           normals.emplace_back(normalsUnique[normalIndex - 1]);

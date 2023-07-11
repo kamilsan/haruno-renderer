@@ -3,24 +3,24 @@
 #include "Vector3.hpp"
 
 // Method by Tom Duff et al.
-void createOrthogonalFrame(const Vector3f& normal, Vector3f& tangent, Vector3f& bitangent) {
-  const float sign = std::copysignf(1.0f, normal.z);
-  const float a = -1.0f / (sign + normal.z);
-  const float b = normal.x * normal.y * a;
-  tangent = Vector3f(1.0f + sign * normal.x * normal.x * a, sign * b, -sign * normal.x);
-  bitangent = Vector3f(b, sign + normal.y * normal.y * a, -normal.y);
+void createOrthogonalFrame(const Vector3t& normal, Vector3t& tangent, Vector3t& bitangent) {
+  const Float sign = std::copysignf(1.0, normal.z);
+  const Float a = -1.0 / (sign + normal.z);
+  const Float b = normal.x * normal.y * a;
+  tangent = Vector3t(1.0 + sign * normal.x * normal.x * a, sign * b, -sign * normal.x);
+  bitangent = Vector3t(b, sign + normal.y * normal.y * a, -normal.y);
 }
 
-bool solveQuadratic(float a, float b, float c, float& t1, float& t2) {
-  float delta = b * b - 4.0f * a * c;
+bool solveQuadratic(Float a, Float b, Float c, Float& t1, Float& t2) {
+  Float delta = b * b - 4.0 * a * c;
 
-  if (delta < 0.0f) {
+  if (delta < 0.0) {
     return false;
   }
 
   delta = std::sqrt(delta);
 
-  const float q = -0.5f * (b + std::copysign(1.0f, b) * delta);
+  const Float q = -0.5 * (b + std::copysign(1.0, b) * delta);
 
   t1 = q / a;
   t2 = c / q;
@@ -32,18 +32,18 @@ bool solveQuadratic(float a, float b, float c, float& t1, float& t2) {
   return true;
 }
 
-Vector3f transformToTangentSpace(const Vector3f& v, const Vector3f& normal, const Vector3f& tangent,
-                                 const Vector3f& bitangent) {
-  const Vector3f transformed{v.x * tangent.x + v.y * normal.x + v.z * bitangent.x,
+Vector3t transformToTangentSpace(const Vector3t& v, const Vector3t& normal, const Vector3t& tangent,
+                                 const Vector3t& bitangent) {
+  const Vector3t transformed{v.x * tangent.x + v.y * normal.x + v.z * bitangent.x,
                              v.x * tangent.y + v.y * normal.y + v.z * bitangent.y,
                              v.x * tangent.z + v.y * normal.z + v.z * bitangent.z};
 
   return transformed;
 }
 
-Vector3f transformFromTangentSpace(const Vector3f& v, const Vector3f& normal,
-                                   const Vector3f& tangent, const Vector3f& bitangent) {
-  const Vector3f transformed{v.x * tangent.x + v.y * tangent.y + v.z * tangent.z,
+Vector3t transformFromTangentSpace(const Vector3t& v, const Vector3t& normal,
+                                   const Vector3t& tangent, const Vector3t& bitangent) {
+  const Vector3t transformed{v.x * tangent.x + v.y * tangent.y + v.z * tangent.z,
                              v.x * normal.x + v.y * normal.y + v.z * normal.z,
                              v.x * bitangent.x + v.y * bitangent.y + v.z * bitangent.z};
 

@@ -9,13 +9,13 @@
 #include "Vector3.hpp"
 
 struct TrianglesData {
-  TrianglesData(const std::vector<Vector3f>& vertices, const std::vector<Vector3f>& normals,
-                const std::vector<Vector2f>& uvs, const std::vector<unsigned int>& indices)
+  TrianglesData(const std::vector<Vector3t>& vertices, const std::vector<Vector3t>& normals,
+                const std::vector<Vector2t>& uvs, const std::vector<unsigned int>& indices)
       : vertices(vertices), normals(normals), uvs(uvs), indices(indices) {}
 
-  std::vector<Vector3f> vertices;
-  std::vector<Vector3f> normals;
-  std::vector<Vector2f> uvs;
+  std::vector<Vector3t> vertices;
+  std::vector<Vector3t> normals;
+  std::vector<Vector2t> uvs;
   std::vector<unsigned int> indices;
 };
 
@@ -27,25 +27,25 @@ class Triangle : public Object {
     a_ = trianglesData_.vertices[trianglesData_.indices[index_]];
     e1_ = trianglesData_.vertices[trianglesData_.indices[index_ + 1]] - a_;
     e2_ = trianglesData_.vertices[trianglesData_.indices[index_ + 2]] - a_;
-    pdf_ = 2.0f / e1_.cross(e2_).length();
+    pdf_ = 2.0 / e1_.cross(e2_).length();
   }
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
 
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
   const TrianglesData& trianglesData_;
   unsigned int index_;
-  float pdf_;
-  Vector3f a_;
-  Vector3f e1_;
-  Vector3f e2_;
+  Float pdf_;
+  Vector3t a_;
+  Vector3t e1_;
+  Vector3t e2_;
 };
 
 // Möller, Trumbore - "Fast Minimum Storage Ray-Triangle Intersection"
-float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-  constexpr float EPS = 0.00000001f;
+Float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  constexpr Float EPS = 0.00000001;
   const auto pvec = ray.getDirection().cross(e2_);
   const auto det = e1_.dot(pvec);
 
@@ -56,19 +56,19 @@ float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const auto tvec = ray.getOrigin() - a_;
   auto u = tvec.dot(pvec);
 
-  if (u < 0.0f || u > det) {
+  if (u < 0.0 || u > det) {
     return -1;
   }
 
   const auto qvec = tvec.cross(e1_);
   auto v = ray.getDirection().dot(qvec);
 
-  if (v < 0.0f || u + v > det) {
+  if (v < 0.0 || u + v > det) {
     return -1;
   }
 
   auto t = e2_.dot(qvec);
-  const auto invDet = 1.0f / det;
+  const auto invDet = 1.0 / det;
 
   t *= invDet;
   u *= invDet;
@@ -82,16 +82,16 @@ float Triangle::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
   const auto uv2 = trianglesData_.uvs[trianglesData_.indices[index_ + 1]];
   const auto uv3 = trianglesData_.uvs[trianglesData_.indices[index_ + 2]];
 
-  const auto w = 1.0f - u - v;
+  const auto w = 1.0 - u - v;
   surfaceInfo.normal = (w * normal1 + u * normal2 + v * normal3).normalized();
   surfaceInfo.uv = w * uv1 + u * uv2 + v * uv3;
 
   return t;
 }
 
-Vector3f Triangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
+Vector3t Triangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const {
   const auto s = std::sqrt(rng.get());
-  const auto u = 1.0f - s;
+  const auto u = 1.0 - s;
   const auto v = rng.get() * s;
 
   const auto normal1 = trianglesData_.normals[trianglesData_.indices[index_]];
@@ -102,7 +102,7 @@ Vector3f Triangle::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const 
   const auto uv2 = trianglesData_.uvs[trianglesData_.indices[index_ + 1]];
   const auto uv3 = trianglesData_.uvs[trianglesData_.indices[index_ + 2]];
 
-  const auto w = 1.0f - u - v;
+  const auto w = 1.0 - u - v;
   surfaceInfo.normal = (w * normal1 + u * normal2 + v * normal3).normalized();
   surfaceInfo.uv = w * uv1 + u * uv2 + v * uv3;
 

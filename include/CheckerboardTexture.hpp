@@ -7,21 +7,21 @@
 
 class CheckerboardTexture : public BaseTexture {
  public:
-  CheckerboardTexture(float sizeU, float sizeV) : sizeU_(sizeU), sizeV_(sizeV) {}
+  CheckerboardTexture(Float sizeU, Float sizeV) : sizeU_(sizeU), sizeV_(sizeV) {}
 
-  Color get(const Vector2f& uv) const override {
+  Color get(const Vector2t& uv) const override {
     const auto uScaled = sizeU_ * uv.x;
     const auto vScaled = sizeV_ * uv.y;
     const auto uMod = uScaled - std::floor(uScaled);
     const auto vMod = vScaled - std::floor(vScaled);
 
-    const auto value = (uMod < 0.5f) ^ (vMod < 0.5f);
-    return Color{value * 1.0f};
+    const auto value = (uMod < 0.5) ^ (vMod < 0.5);
+    return Color{value * static_cast<Float>(1.0)};
   }
 
  private:
-  float sizeU_;
-  float sizeV_;
+  Float sizeU_;
+  Float sizeV_;
 };
 
 #endif

@@ -10,73 +10,75 @@
 
 class Sphere : public Object {
  public:
-  Sphere(const Vector3f& center, float radius, std::shared_ptr<Material> material)
+  Sphere(const Vector3t& center, Float radius, std::shared_ptr<Material> material)
       : Object(material), center_(center), radius_(radius) {
     pdf_ = 1.0f / (4.0f * PI * radius * radius);
   }
 
-  const Vector3f& getCenter() const { return center_; }
-  float getRadius() const { return radius_; }
+  const Vector3t& getCenter() const { return center_; }
+  Float getRadius() const { return radius_; }
 
-  inline float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
-  inline Vector3f sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const override;
+  inline Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const override;
+  inline Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const override;
 
  private:
-  Vector3f center_;
-  float radius_;
-  float pdf_;
+  Vector3t center_;
+  Float radius_;
+  Float pdf_;
 };
 
-float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
-  Vector3f centerToOrigin = ray.getOrigin() - center_;
-  const float a = ray.getDirection().lengthSq();
-  const float b = 2.0f * ray.getDirection().dot(centerToOrigin);
-  const float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
+Float Sphere::intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const {
+  Vector3t centerToOrigin = ray.getOrigin() - center_;
+  const Float a = ray.getDirection().lengthSq();
+  const Float b = 2.0 * ray.getDirection().dot(centerToOrigin);
+  const Float c = centerToOrigin.dot(centerToOrigin) - radius_ * radius_;
 
-  float t1, t2;
+  Float t1, t2;
   if (!solveQuadratic(a, b, c, t1, t2)) {
-    return -1.0f;
+    return -1.0;
   }
 
-  const float t = t1 > 0.0f ? t1 : t2;
+  const Float t = t1 > 0.0 ? t1 : t2;
 
-  if (t < 0.0f) {
-    return -1.0f;
+  if (t < 0.0) {
+    return -1.0;
   }
 
   const auto fromCenter = ray(t) - center_;
   const auto normal = fromCenter / radius_;
 
-  const float theta = std::acos(std::max(-1.0f, std::min(1.0f, fromCenter.y / radius_)));
-  const float phi = std::atan2(fromCenter.z, fromCenter.x);
+  const Float theta = std::acos(std::max(
+      static_cast<Float>(-1.0), std::min(static_cast<Float>(1.0), fromCenter.y / radius_)));
+  const Float phi = std::atan2(fromCenter.z, fromCenter.x);
 
-  const float u = 0.5f * phi * ONE_OVER_PI + 0.5f;
-  const float v = theta * ONE_OVER_PI;
+  const Float u = 0.5 * phi * ONE_OVER_PI + 0.5;
+  const Float v = theta * ONE_OVER_PI;
 
   surfaceInfo.normal = normal;
-  surfaceInfo.uv = Vector2f(u, v);
+  surfaceInfo.uv = Vector2t(u, v);
 
-  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0f) {
+  if (surfaceInfo.normal.dot(ray.getDirection()) > 0.0) {
     surfaceInfo.normal = -surfaceInfo.normal;
   }
 
   return t;
 }
 
-Vector3f Sphere::sample(RNG& rng, SurfaceInfo& surfaceInfo, float& pdf) const {
-  const float cosTheta = 2.0f * rng.get() - 1.0f;
-  const float sinTheta = std::sqrt(1.0f - cosTheta * cosTheta);
-  const float phi = TAU * rng.get();
+Vector3t Sphere::sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const {
+  const Float cosTheta = 2.0 * rng.get() - 1.0;
+  const Float sinTheta = std::sqrt(1.0 - cosTheta * cosTheta);
+  const Float phi = TAU * rng.get();
 
   const auto normal =
-      Vector3f(sinTheta * cosf(phi), cosTheta, sinTheta * std::sin(phi)).normalized();
+      Vector3t(sinTheta * cosf(phi), cosTheta, sinTheta * std::sin(phi)).normalized();
 
-  const float theta = std::acos(std::max(-1.0f, std::min(1.0f, cosTheta)));
-  const float u = 0.5f * phi * ONE_OVER_PI + 0.5f;
-  const float v = theta * ONE_OVER_PI;
+  const Float theta =
+      std::acos(std::max(static_cast<Float>(-1.0), std::min(static_cast<Float>(1.0), cosTheta)));
+  const Float u = 0.5 * phi * ONE_OVER_PI + 0.5;
+  const Float v = theta * ONE_OVER_PI;
 
   surfaceInfo.normal = normal;
-  surfaceInfo.uv = Vector2f(u, v);
+  surfaceInfo.uv = Vector2t(u, v);
 
   pdf = pdf_;
 

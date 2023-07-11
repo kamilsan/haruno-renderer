@@ -15,7 +15,7 @@
 Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&) const {
   SurfaceInfo surfaceInfo{};
 
-  float t = -1;
+  Float t = -1;
   std::shared_ptr<Object> object = scene.intersects(cameraRay, t, surfaceInfo);
 
   if (object) {
@@ -29,10 +29,10 @@ Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&)
     if (outputType_ == OutputType::Albedo) {
       return albedo;
     } else if (outputType_ == OutputType::Normal) {
-      const Vector3f color = (normal + Vector3f(1.0f, 1.0f, 1.0f)) * 0.5f;
+      const Vector3t color = (normal + Vector3t(1.0, 1.0, 1.0)) * 0.5;
       return Color{color.x, color.y, color.z};
     } else if (outputType_ == OutputType::Depth) {
-      return Color{1.0f, 1.0f, 1.0f} * position.z;
+      return Color{1.0, 1.0, 1.0} * position.z;
     }
   }
 

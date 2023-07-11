@@ -16,19 +16,19 @@ Color AmbientOcclusion::integrate(const Ray& cameraRay, const Scene& scene, RNG&
   SurfaceInfo surfaceInfo{};
   std::shared_ptr<Object> object = nullptr;
 
-  float t = -1;
+  Float t = -1;
   object = scene.intersects(cameraRay, t, surfaceInfo);
 
   if (object) {
     const auto position = cameraRay(t);
     const auto& normal = surfaceInfo.normal;
 
-    Vector3f tangent, bitangent;
+    Vector3t tangent, bitangent;
     createOrthogonalFrame(normal, tangent, bitangent);
 
-    Vector3f sampleShading = rng.sampleHemisphereCosineWeighted();
-    Vector3f sample = transformToTangentSpace(sampleShading, normal, tangent, bitangent);
-    const Ray sampleRay{position + sample * 0.001f, sample};
+    Vector3t sampleShading = rng.sampleHemisphereCosineWeighted();
+    Vector3t sample = transformToTangentSpace(sampleShading, normal, tangent, bitangent);
+    const Ray sampleRay{position + sample * 0.001, sample};
     const auto occluded = scene.occludes(sampleRay, radius_);
     if (!occluded) {
       return Color{1.0};
@@ -37,5 +37,5 @@ Color AmbientOcclusion::integrate(const Ray& cameraRay, const Scene& scene, RNG&
     }
   }
 
-  return Color{1.0f};
+  return Color{1.0};
 }

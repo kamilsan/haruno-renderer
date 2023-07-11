@@ -28,7 +28,7 @@ class RenderTileTask : public Task<ImageTile> {
 
   RenderParameters parameters_;
   std::shared_ptr<Integrator> integrator_;
-  float aspectRatio_;
+  Float aspectRatio_;
   ImageTile tile_;
   const Camera& camera_;
   const Scene& scene_;
