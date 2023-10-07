@@ -14,7 +14,16 @@ Image::Image(const std::string& filename) {
   int components = 0;
   int width_s = 0;
   int height_s = 0;
-  unsigned char* data = stbi_load(filename.c_str(), &width_s, &height_s, &components, 0);
+
+  bool is_hdr = false;
+  void* data = nullptr;
+
+  if (stbi_is_hdr(filename.c_str())) {
+    data = stbi_loadf(filename.c_str(), &width_s, &height_s, &components, 0);
+    is_hdr = true;
+  } else {
+    data = stbi_load(filename.c_str(), &width_s, &height_s, &components, 0);
+  }
 
   if (!data) {
     throw std::runtime_error("Could not load provided image file: " + filename + "\n");
@@ -30,8 +39,12 @@ Image::Image(const std::string& filename) {
   len_ = 3 * width_ * height_;
   pixels_ = std::make_unique<float[]>(len_);
 
-  for (unsigned int i = 0; i < len_; ++i) {
-    pixels_[i] = sRGBDecode(data[i] / 255.0f);
+  if (is_hdr) {
+    memcpy(pixels_.get(), data, len_ * sizeof(float));
+  } else {
+    for (unsigned int i = 0; i < len_; ++i) {
+      pixels_[i] = sRGBDecode(reinterpret_cast<unsigned char*>(data)[i] / 255.0f);
+    }
   }
 
   stbi_image_free(data);
