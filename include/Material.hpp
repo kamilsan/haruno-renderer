@@ -11,6 +11,7 @@ class Color;
 class Material {
  public:
   Material(std::unique_ptr<BRDF> brdf) : brdf_(std::move(brdf)) {}
+  virtual ~Material() = default;
 
   const BRDF& getBRDF() const { return *brdf_; }
 

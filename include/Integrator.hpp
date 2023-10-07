@@ -14,6 +14,7 @@ class Material;
 
 class Integrator {
  public:
+  virtual ~Integrator() = default;
   virtual Color integrate(const Ray& ray, const Scene& scene, RNG& rng) const = 0;
 
  protected:

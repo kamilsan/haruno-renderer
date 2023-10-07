@@ -33,6 +33,8 @@ Image::Image(const std::string& filename) {
   for (unsigned int i = 0; i < len_; ++i) {
     pixels_[i] = sRGBDecode(data[i] / 255.0f);
   }
+
+  stbi_image_free(data);
 }
 
 Image::Image(unsigned int width, unsigned int height) : width_(width), height_(height) {

@@ -27,6 +27,7 @@ struct SurfaceInfo {
 class Object {
  public:
   Object(std::shared_ptr<Material> material) : material_(material), light_() {}
+  virtual ~Object() = default;
 
   virtual Float intersects(const Ray& ray, SurfaceInfo& surfaceInfo) const = 0;
   virtual Vector3t sample(RNG& rng, SurfaceInfo& surfaceInfo, Float& pdf) const = 0;

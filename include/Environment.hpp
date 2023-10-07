@@ -7,6 +7,7 @@ class Color;
 
 class Environment {
  public:
+  virtual ~Environment() = default;
   virtual Color getColor(const Vector3t& direction) const = 0;
 };
 
