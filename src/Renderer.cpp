@@ -105,11 +105,12 @@ Image Renderer::render(std::unique_ptr<Camera> camera, const Scene& scene) const
     if (parameters_.saveIntermediate) {
       if (i % parameters_.saveFrequency == 0) {
         // TODO: use some callback to delegate image saving to someone else
+        const std::string partialResultFileName = "render_" + std::to_string(i) + ".png";
         if (toneMapper_) {
           const auto resultMapped = toneMapper_->apply(result);
-          resultMapped.save("render_" + std::to_string(i) + ".png");
+          resultMapped.save(partialResultFileName);
         } else {
-          result.save("render_" + std::to_string(i) + ".png");
+          result.save(partialResultFileName);
         }
       }
     }

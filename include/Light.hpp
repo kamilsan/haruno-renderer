@@ -13,6 +13,7 @@ struct SurfaceInfo;
 
 class Light {
  public:
+  virtual ~Light() = default;
   virtual std::shared_ptr<Object> getObject() { return nullptr; }
 
   virtual Color evaluate(const Vector3t& position) const = 0;

@@ -7,7 +7,7 @@
 
 class BaseTexture {
  public:
-  virtual ~BaseTexture(){};
+  virtual ~BaseTexture() = default;
 
   virtual Color get(const Vector2t& uv) const = 0;
 };
