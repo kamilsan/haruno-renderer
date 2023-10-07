@@ -14,8 +14,12 @@ class ImageTexture : public BaseTexture {
     const auto uRepeat = uv.x - std::floor(uv.x);
     const auto vRepeat = 1.0 - (uv.y - std::floor(uv.y));
 
-    const unsigned int s = uRepeat * image_.getWidth();
-    const unsigned int t = vRepeat * image_.getHeight();
+    const unsigned int s =
+        std::max(0u, std::min(static_cast<unsigned int>(uRepeat * (image_.getWidth() - 1)),
+                              image_.getWidth() - 1));
+    const unsigned int t =
+        std::max(0u, std::min(static_cast<unsigned int>(vRepeat * (image_.getHeight() - 1)),
+                              image_.getHeight() - 1));
 
     return image_.getPixel(s, t);
   }
