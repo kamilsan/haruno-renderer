@@ -53,6 +53,7 @@ set(PROJECT_CODE
   include/ReinhardMapper.hpp src/ReinhardMapper.cpp
   include/Integrator.hpp src/Integrator.cpp
   include/PathTracer.hpp src/PathTracer.cpp
+  include/RandomWalk.hpp src/RandomWalk.cpp
   include/DirectLighting.hpp src/DirectLighting.cpp
   include/DebugIntegrator.hpp src/DebugIntegrator.cpp
   include/AmbientOcclusion.hpp src/AmbientOcclusion.cpp
