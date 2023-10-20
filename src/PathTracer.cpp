@@ -37,9 +37,13 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const auto albedo = material.getAlbedo(uv);
       const auto wo = -ray.getDirection();
 
-      const auto directLighting =
-          computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
-      result += coeff * directLighting;
+      raySpecular = brdf.getType() == BRDF::Type::PerfectSpecular;
+
+      if (!raySpecular) {
+        const auto directLighting =
+            computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
+        result += coeff * directLighting;
+      }
 
       Vector3t tangent, bitangent;
       createOrthogonalFrame(normal, tangent, bitangent);
@@ -51,7 +55,6 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const Float coswi = std::max(sample.y, static_cast<Float>(0.0));  // wi . (0, 1, 0)
 
       coeff *= albedo * f * coswi / pdf;
-      raySpecular = brdf.getType() == BRDF::Type::PerfectSpecular;
 
       Vector3t wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
       ray = Ray{position + wi * 0.001, wi};
