@@ -32,7 +32,7 @@ Color DebugIntegrator::integrate(const Ray& cameraRay, const Scene& scene, RNG&)
       const Vector3t color = (normal + Vector3t(1.0, 1.0, 1.0)) * 0.5;
       return Color{color.x, color.y, color.z};
     } else if (outputType_ == OutputType::Depth) {
-      return Color{1.0, 1.0, 1.0} * position.z;
+      return Color{1.0} * position.z;
     }
   }
 

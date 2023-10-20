@@ -37,11 +37,15 @@ Color DirectLighting::integrate(const Ray& cameraRay, const Scene& scene, RNG& r
       const auto albedo = material.getAlbedo(uv);
       const auto wo = -ray.getDirection();
 
-      const auto directLighting =
-          computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
-      result += coeff * directLighting;
+      const auto isSpecular = brdf.getType() == BRDF::Type::PerfectSpecular;
 
-      if (brdf.getType() == BRDF::Type::PerfectSpecular) {
+      if (!isSpecular) {
+        const auto directLighting =
+            computeDirectLighting(scene, position, wo, surfaceInfo, material, rng);
+        result += coeff * directLighting;
+      }
+
+      if (isSpecular) {
         Vector3t tangent, bitangent;
         createOrthogonalFrame(normal, tangent, bitangent);
         const auto woShading = transformFromTangentSpace(wo, normal, tangent, bitangent);
