@@ -55,12 +55,16 @@ Color PathTracer::integrate(const Ray& cameraRay, const Scene& scene, RNG& rng) 
       const Float coswi = std::max(sample.y, static_cast<Float>(0.0));  // wi . (0, 1, 0)
 
       coeff *= albedo * f * coswi / pdf;
+      const Float maxComponent = std::max(coeff.r, std::max(coeff.g, coeff.b));
+
+      if (maxComponent == 0.0) {
+        break;
+      }
 
       Vector3t wi = transformToTangentSpace(sample, normal, tangent, bitangent).normalized();
       ray = Ray{position + wi * 0.001, wi};
 
       if (i > 3) {
-        const Float maxComponent = std::max(coeff.r, std::max(coeff.g, coeff.b));
         const Float terminationProbability = std::max(0.1, 1.0 - maxComponent);
         if (rng.get() < terminationProbability) {
           break;
