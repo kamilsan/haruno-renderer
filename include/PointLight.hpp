@@ -10,7 +10,7 @@ class PointLight : public Light {
   PointLight(const Vector3t& position, const Color& color, Float intensity)
       : position_(position), color_(color), intensity_(intensity) {}
 
-  Color evaluate(const Vector3t& position) const override;
+  Color evaluate(const Vector3t& position, const Vector2t& uv) const override;
   Ray getShadowRay(const Vector3t& position, Float& maxT) const override;
   bool isDelta() const override { return true; }
   Color sampleLe(Vector3t&, SurfaceInfo&, RNG&, Float&) const override { return {}; }
@@ -25,7 +25,7 @@ class PointLight : public Light {
   Float intensity_;
 };
 
-Color PointLight::evaluate(const Vector3t& position) const {
+Color PointLight::evaluate(const Vector3t& position, const Vector2t&) const {
   const auto lengthSq = (position_ - position).lengthSq();
   return (intensity_ / lengthSq) * color_;
 }
