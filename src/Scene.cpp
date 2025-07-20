@@ -21,7 +21,7 @@ std::shared_ptr<Object> Scene::intersects(const Ray& ray, Float& t,
   if (result != nullptr && result->getLight().lock() != nullptr) {
     // Area lights are one sided
     if (surfaceInfo.normal.dot(-ray.getDirection()) > 0) {
-      surfaceInfo.emittance = result->getLight().lock()->evaluate(ray(minT));
+      surfaceInfo.emittance = result->getLight().lock()->evaluate(ray(minT), surfaceInfo.uv);
     }
   }
 

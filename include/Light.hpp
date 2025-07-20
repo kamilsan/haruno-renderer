@@ -16,7 +16,7 @@ class Light {
   virtual ~Light() = default;
   virtual std::shared_ptr<Object> getObject() { return nullptr; }
 
-  virtual Color evaluate(const Vector3t& position) const = 0;
+  virtual Color evaluate(const Vector3t& position, const Vector2t& uv) const = 0;
   virtual Ray getShadowRay(const Vector3t& position, Float& maxT) const = 0;
   virtual bool isDelta() const = 0;
   virtual Color sampleLe(Vector3t& position, SurfaceInfo& surfaceInfo, RNG& rng,

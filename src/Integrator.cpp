@@ -19,7 +19,7 @@ Color Integrator::computeDirectLighting(const Scene& scene, const Vector3t& posi
 
   for (const auto& light : scene.getLights()) {
     if (light->isDelta()) {
-      const auto Li = light->evaluate(position);
+      const auto Li = light->evaluate(position, Vector2t());
       Float maxT = -1;
       const auto shadowRay = light->getShadowRay(position, maxT);
       const auto wi = shadowRay.getDirection();

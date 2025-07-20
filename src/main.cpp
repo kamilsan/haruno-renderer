@@ -26,9 +26,9 @@ int main() {
   RenderParameters parameters;
   parameters.width = 1920;
   parameters.height = 1080;
-  parameters.numTiles = 200;
+  parameters.numTiles = 1000;
   parameters.threads = 8;
-  parameters.mcSamples = 64;
+  parameters.mcSamples = 256;
   parameters.seed = 42;
   parameters.saveIntermediate = true;
 
@@ -47,6 +47,7 @@ int main() {
   auto colorWhite = std::make_shared<SolidTexture>(Color{1.0f, 1.0f, 1.0f});
   auto colorRed = std::make_shared<SolidTexture>(Color{1.0f, 0.0f, 0.0f});
   auto colorGreen = std::make_shared<SolidTexture>(Color{0.0f, 1.0f, 0.0f});
+  auto lightEmittance = std::make_shared<SolidTexture>(Color{20.0f, 20.0f, 20.0f});
 
   auto floor = std::make_shared<CheckerboardTexture>(8.0f, 8.0f);
   auto uvTest = std::make_shared<ImageTexture>("textures/uv.png");
@@ -83,7 +84,7 @@ int main() {
   scene.addLight(std::make_shared<AreaLight>(
       std::make_shared<Rectangle>(Vector3t(-0.6f, 1.99f, 0.9f), Vector3t(0, -1, 0),
                                   Vector3t(1, 0, 0), Vector3t(0, 0, 1), 1.2f, 0.3f, materialWhite),
-      Color(20, 20, 20)));
+      lightEmittance));
 
   // Transformation meshTransformation;
   // meshTransformation.setScale(Vector3t(1.3f));

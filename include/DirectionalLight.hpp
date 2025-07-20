@@ -10,7 +10,7 @@ class DirectionalLight : public Light {
   DirectionalLight(const Vector3t& direction, const Color& color, Float intensity)
       : direction_(direction.normalized()), color_(color), intensity_(intensity) {}
 
-  Color evaluate(const Vector3t& position) const override;
+  Color evaluate(const Vector3t& position, const Vector2t& uv) const override;
   Ray getShadowRay(const Vector3t& position, Float& maxT) const override;
   bool isDelta() const override { return true; };
 
@@ -26,7 +26,9 @@ class DirectionalLight : public Light {
   Float intensity_;
 };
 
-Color DirectionalLight::evaluate(const Vector3t&) const { return intensity_ * color_; }
+Color DirectionalLight::evaluate(const Vector3t&, const Vector2t&) const {
+  return intensity_ * color_;
+}
 
 Ray DirectionalLight::getShadowRay(const Vector3t& position, Float& maxT) const {
   const Vector3t origin = position - direction_ * 0.001;
